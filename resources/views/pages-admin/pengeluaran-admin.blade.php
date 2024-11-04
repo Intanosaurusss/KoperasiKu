@@ -16,17 +16,17 @@
 
     <!-- searchbar -->
     <div class="flex items-center mt-4 w-full">
-        <form>
+    <form method="GET" action="{{ route('pages-admin.pengeluaran-admin') }}">
             <div class="flex items-center border border-gray-300 rounded-lg bg-white">
                 <svg class="w-4 h-4 text-gray-500 ml-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                 </svg>
-                <input type="" id="default-search" class="block w-full p-2 pl-2 text-sm text-gray-900 border-0 rounded-lg focus:ring-blue-500 focus:outline-none" placeholder="Cari pengeluaran...." required />
+                <input type="search" name="search" id="default-search" class="block w-full p-2 pl-2 text-sm text-gray-900 border-0 rounded-lg focus:ring-blue-500 focus:outline-none" placeholder="Cari pengeluaran...." required />
             </div>
         </form>
         <!-- button tambah data pengeluaran -->
         <div class="flex ml-2">
-            <a href="tambah-pengeluaran-admin">
+            <a href="{{ route('tambah-pengeluaran-admin') }}">
             <button type="button" class="flex items-center bg-blue-600 text-white hover:bg-blue-800 focus:outline-none font-medium rounded-lg text-sm px-4 py-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2">
                     <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
@@ -49,14 +49,25 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
+            @if($pengeluaran->isEmpty())
+            <!-- Tampilkan pesan jika tidak ada data setelah pencarian -->
+            <tr>
+                <td colspan="5" class="px-4 py-2 text-center text-gray-700">
+                    Data tidak ditemukan
+                </td>
+            </tr>
+            @else
+            @foreach ($pengeluaran as $index => $item) <!-- Menggunakan $item untuk mengakses setiap item -->
                 <tr class="">
-                    <td class="px-4 py-2 text-sm text-center text-gray-700">1</td>
-                    <td class="px-4 py-2 text-sm text-gray-700">23/10/24</td>
-                    <td class="px-4 py-2 text-sm text-gray-700">Rp. 50.000</td>
+                    <td class="px-4 py-2 text-sm text-center text-gray-700">{{ $index + 1 }}</td>
+                    <td class="px-4 py-2 text-sm text-gray-700">{{ $item->tanggal_pengeluaran }}</td>
+                    <td class="px-4 py-2 text-sm text-gray-700">Rp. {{ $item->total_pengeluaran }}</td>
                     <td class="flex px-6 py-2 whitespace-nowrap text-sm text-gray-900 space-x-2 md:space-x-6 justify-center">
                     @include('components.crud-pengeluaran-admin')
                     </td>
                 </tr>
+                @endforeach
+                @endif
             </tbody>
         </table>
     </div>

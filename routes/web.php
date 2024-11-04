@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DashboardAdminController;
 use App\Http\Controllers\User\DashboardUserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\Admin\PengeluaranController;
 
 // route untuk halaman default
 Route::get('/', function () { return view('welcome'); });
@@ -24,10 +25,13 @@ Route::get('/dashboard-admin', function () { return view('pages-admin.dashboard-
 Route::get('/dashboard-admin', [DashboardAdminController::class, 'index'])->name('pages-admin.dashboard-admin');
 
 // route untuk menampilkan menu pengeluaran admin
-Route::get('/pengeluaran-admin', function () { return view('pages-admin.pengeluaran-admin'); });
-Route::get('/detail-pengeluaran-admin', function () { return view('pages-admin.detail-pengeluaran-admin'); });
-Route::get('/tambah-pengeluaran-admin', function () {return view('pages-admin.form-admin.tambah-pengeluaran-admin'); });
-Route::get('/edit-pengeluaran-admin', function () { return view('pages-admin.form-admin.edit-pengeluaran-admin'); });
+Route::get('/pengeluaran-admin', [PengeluaranController::class, 'index'])->name('pages-admin.pengeluaran-admin');
+Route::get('/pengeluaran-admin/tambah', [PengeluaranController::class, 'create'])->name('tambah-pengeluaran-admin');
+Route::post('/pengeluaran-admin', [PengeluaranController::class, 'store'])->name('pengeluaran-admin');
+Route::get('/detail-pengeluaran-admin/{id}', [PengeluaranController::class, 'show'])->name('detail-pengeluaran-admin');
+Route::get('/pengeluaran/{id}/edit', [PengeluaranController::class, 'edit'])->name('pengeluaran.edit');
+Route::post('/pengeluaran/{id}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
+Route::delete('/pengeluaran/{id}', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
 
 // route untuk menampilkan menu produk admin
 Route::get('/produk-admin', function () { return view('pages-admin.produk-admin'); });

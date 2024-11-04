@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Halaman Login</title>
+    <title>Halaman Register</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
@@ -20,7 +20,7 @@
         </div>
         <!-- Kolom Form Login -->
         <div class="flex-1 px-10 py-2">
-            <h2 class="text-2xl font-semibold mb-5 text-gray-700">Daftar Akun Kantinkita</h2>
+            <h2 class="text-2xl font-semibold mb-4 text-gray-700">Daftar Akun Kantinkita</h2>
             @if ($errors->any())
                 <div class="mb-4">
                     <ul class="text-red-600">
@@ -53,12 +53,12 @@
                     <label for="password" class="block text-sm font-medium text-gray-700">Kata Sandi</label>
                     <input type="password" id="password" name="password" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="********" required>
                 </div>
-                <div class="flex justify-between items-center mb-4">
+                <div class="flex justify-between items-center mb-3">
                     <a href="#" class="text-sm text-blue-400">Lupa Kata Sandi</a>
                 </div>
                 <button type="submit" class="w-full bg-purple-400 text-white font-semibold py-2 rounded-md hover:bg-purple-500">Daftar</button>
             </form>
-            <p class="mt-4 text-sm text-gray-600">Sudah punya akun? <a href="login" class="text-blue-500">Masuk</a></p>
+            <p class="mt-3 text-sm text-gray-600">Sudah punya akun? <a href="login" class="text-blue-500">Masuk</a></p>
         </div>
     </div>
 </body>
