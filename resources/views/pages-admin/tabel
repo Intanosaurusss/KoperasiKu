@@ -1,0 +1,41 @@
+<!-- Tabel dengan overflow-x -->
+    <div class="overflow-x-auto mt-4">
+        <table class="w-[400%] md:w-[100%] border border-gray-300">
+            <thead class="bg-gray-200">
+                <tr>
+                    <th class="px-2 py-2 border ">No</th>
+                    <th class="px-2 py-2 border">Nama Produk</th>
+                    <th class="px-2 py-2 border">Harga</th>
+                    <th class="px-2 py-2 border">Jumlah</th>
+                    <th class="px-2 py-2 border">Total</th>
+                    <th class="px-2 py-2 border">Deskripsi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="px-4 py-2 border">1</td>
+                    <td class="px-4 py-2 border">Produk A</td>
+                    <td class="px-4 py-2 border">Rp. 10.000</td>
+                    <td class="px-4 py-2 border">5</td>
+                    <td class="px-4 py-2 border">Rp. 50.000</td>
+                    <td class="px-4 py-2 border">Deskripsi produk A</td>
+                </tr>
+                <tr>
+                    <td class="px-4 py-2 border">2</td>
+                    <td class="px-4 py-2 border">Produk B</td>
+                    <td class="px-4 py-2 border">Rp. 15.000</td>
+                    <td class="px-4 py-2 border">3</td>
+                    <td class="px-4 py-2 border">Rp. 45.000</td>
+                    <td class="px-4 py-2 border">Deskripsi produk B</td>
+                </tr>
+                <tr>
+                    <td class="px-4 py-2 border">3</td>
+                    <td class="px-4 py-2 border">Produk C</td>
+                    <td class="px-4 py-2 border">Rp. 20.000</td>
+                    <td class="px-4 py-2 border">2</td>
+                    <td class="px-4 py-2 border">Rp. 40.000</td>
+                    <td class="px-4 py-2 border">Deskripsi produk C</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
