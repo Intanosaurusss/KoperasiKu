@@ -32,6 +32,7 @@ Route::get('/detail-pengeluaran-admin/{id}', [PengeluaranController::class, 'sho
 Route::get('/pengeluaran/{id}/edit', [PengeluaranController::class, 'edit'])->name('pengeluaran.edit');
 Route::post('/pengeluaran/{id}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
 Route::delete('/pengeluaran/{id}', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
+Route::get('/pengeluaran/{id}/cetak', [PengeluaranController::class, 'cetakpengeluaranbyid'])->name('cetakpengeluaranbyid.cetak');
 
 // route untuk menampilkan menu produk admin
 Route::get('/produk-admin', function () { return view('pages-admin.produk-admin'); });

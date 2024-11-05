@@ -14,6 +14,7 @@
         </div>
     </div>
 
+    <div class="bg-white pt-1 px-2 pb-6 rounded-md">
     <!-- searchbar -->
     <div class="flex items-center mt-4 w-full">
     <form method="GET" action="{{ route('pages-admin.pengeluaran-admin') }}">
@@ -59,7 +60,7 @@
             @else
             @foreach ($pengeluaran as $index => $item) <!-- Menggunakan $item untuk mengakses setiap item -->
                 <tr class="">
-                    <td class="px-4 py-2 text-sm text-center text-gray-700">{{ $index + 1 }}</td>
+                    <td class="px-4 py-2 text-sm text-center text-gray-700">{{ ($pengeluaran->currentPage() - 1) * $pengeluaran->perPage() + $loop->iteration }}</td>
                     <td class="px-4 py-2 text-sm text-gray-700">{{ $item->tanggal_pengeluaran }}</td>
                     <td class="px-4 py-2 text-sm text-gray-700">Rp. {{ $item->total_pengeluaran }}</td>
                     <td class="flex px-6 py-2 whitespace-nowrap text-sm text-gray-900 space-x-2 md:space-x-6 justify-center">
@@ -70,6 +71,49 @@
                 @endif
             </tbody>
         </table>
+    </div>
+
+   <!-- Pagination -->
+    <div class="mt-4 flex justify-end space-x-2">
+        <!-- Tombol Previous -->
+        @if ($pengeluaran->onFirstPage())
+            <span class="px-3 py-1 bg-gray-300 text-gray-500 text-sm rounded cursor-default">
+                Previous
+            </span>
+        @else
+            <a href="{{ $pengeluaran->previousPageUrl() }}" class="px-3 py-1 bg-white text-gray-700 text-sm rounded border border-gray-300 hover:bg-gray-100">
+                Previous
+            </a>
+        @endif
+        <!-- Tombol Halaman Dinamis -->
+        @php
+            $currentPage = $pengeluaran->currentPage();
+            $lastPage = $pengeluaran->lastPage();
+
+            // Tentukan dua tombol nomor halaman secara dinamis
+            $start = max(1, $currentPage - 1);
+            $end = min($lastPage, $currentPage + 1);
+        @endphp
+        <!-- Tampilkan dua tombol halaman yang sesuai -->
+        @for ($page = $start; $page <= $end; $page++)
+            @if ($page == $currentPage)
+                <span class="px-3 py-1 bg-blue-500 text-white text-sm rounded">{{ $page }}</span>
+            @else
+                <a href="{{ $pengeluaran->url($page) }}" class="px-3 py-1 bg-white text-gray-700 text-sm rounded border border-gray-300 hover:bg-gray-100">{{ $page }}</a>
+            @endif
+        @endfor
+        <!-- Tombol Next -->
+        @if ($pengeluaran->hasMorePages())
+            <a href="{{ $pengeluaran->nextPageUrl() }}" class="px-3 py-1 bg-white text-gray-700 text-sm rounded border border-gray-300 hover:bg-gray-100">
+                Next
+            </a>
+        @else
+            <span class="px-3 py-1 bg-gray-300 text-gray-500 text-sm rounded cursor-default">
+                Next
+            </span>
+        @endif
+    </div>
+
     </div>
 
 </div>

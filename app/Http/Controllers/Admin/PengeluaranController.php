@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Pengeluaran; // Pastikan namespace model ini benar
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PengeluaranController extends Controller
 {
@@ -23,7 +24,7 @@ class PengeluaranController extends Controller
                 ->orWhere('deskripsi_pengeluaran', 'LIKE', "%{$search}%");
         }
 
-        $pengeluaran = $query->get();
+        $pengeluaran = $query->paginate(5); // Batas per halaman 5
 
         // Kirim data ke view
         return view('pages-admin.pengeluaran-admin', compact('pengeluaran')); // Sesuaikan nama view
@@ -102,5 +103,13 @@ class PengeluaranController extends Controller
         $pengeluaran->delete(); // Menghapus data pengeluaran
 
         return redirect()->route('pages-admin.pengeluaran-admin')->with('success', 'Pengeluaran berhasil dihapus!');
+    }
+
+    // Metode di controller
+    public function cetakpengeluaranbyid($id)
+    {
+        $pengeluaran = Pengeluaran::find($id); // Ambil data berdasarkan ID
+        $pdf = PDF::loadView('pages-admin.cetak-laporan.cetak-laporan-pengeluaran-by-id', compact('pengeluaran')); // Ganti dengan path yang sesuai
+        return $pdf->download('detail_pengeluaran.pdf');
     }
 }
