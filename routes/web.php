@@ -7,13 +7,14 @@ use App\Http\Controllers\User\DashboardUserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\Admin\PengeluaranController;
+use App\Http\Controllers\Admin\ProdukController;
 
 // route untuk halaman default
 Route::get('/', function () { return view('welcome'); });
 
 // route untuk menampilkan halaman 
 Route::get('/login', function () { return view('pages.login'); });
-Route::post('/login', [LoginController::class, 'login'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login'); 
 
 //route untuk register
 Route::get('/register', [RegisterController::class, 'index'])->name('pages.register');
@@ -33,11 +34,15 @@ Route::get('/pengeluaran/{id}/edit', [PengeluaranController::class, 'edit'])->na
 Route::post('/pengeluaran/{id}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
 Route::delete('/pengeluaran/{id}', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
 Route::get('/pengeluaran/{id}/cetak', [PengeluaranController::class, 'cetakpengeluaranbyid'])->name('cetakpengeluaranbyid.cetak');
+Route::get('/pengeluaran/cetakbydate', [PengeluaranController::class, 'cetakpengeluaranbydate'])->name('cetakpengeluaranbydate.cetak');
 
 // route untuk menampilkan menu produk admin
-Route::get('/produk-admin', function () { return view('pages-admin.produk-admin'); });
-Route::get('/tambah-produk-admin', function () { return view('pages-admin.form-admin.tambah-produk-admin'); });
-Route::get('/edit-produk-admin', function () { return view('pages-admin.form-admin.edit-produk-admin'); });
+Route::get('/produk-admin', [ProdukController::class, 'index'])->name('pages-admin.produk-admin');
+Route::get('/produk-admin/tambah', [ProdukController::class, 'create'])->name('tambah-produk-admin');
+Route::post('/produk-admin', [ProdukController::class, 'store'])->name('produk-admin');
+Route::get('/produk/{id}/edit', [ProdukController::class, 'edit'])->name('produk-admin.edit');
+Route::post('/produk/{id}', [ProdukController::class, 'update'])->name('produk-admin.update');
+Route::delete('/produk/{id}', [ProdukController::class, 'destroy'])->name('produk-admin.destroy');
 
 // route untuk menampilkan menu riwayat admin
 Route::get('/riwayat-admin', function () { return view('pages-admin.riwayat-admin'); });

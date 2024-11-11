@@ -26,7 +26,7 @@
     </form>
     <!-- button tambah data produk -->
     <div class="flex ml-2">
-        <a href="tambah-produk-admin">
+        <a href="{{ route('tambah-produk-admin') }}">
         <button type="button" class="flex items-center bg-blue-600 text-white hover:bg-blue-800 focus:outline-none font-medium rounded-lg text-sm px-4 py-2">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2">
                 <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
@@ -50,27 +50,29 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
+            @foreach ($produk as $index => $item)
                 <tr>
-                    <td class="px-4 py-2 text-sm text-center text-gray-700">1</td>
+                    <td class="px-4 py-2 text-sm text-center text-gray-700">{{ $loop->iteration }}</td>
                     <td class="px-4 py-2 text-sm text-gray-700">
                     <div class="flex flex-col items-center md:flex-row md:space-x-2">
                         <img 
-                            src="{{ asset('assets/shop.jpg') }}" 
-                            alt="Nabati" 
+                            src="{{ asset($item->foto_produk) }}" 
+                            alt="{{ $item->nama_produk }}" 
                             class="w-16 h-16 cursor-pointer rounded"
                             onclick="openModal()" 
                         />
-                        <span class="mt-2 md:mt-0">Nabati</span>
+                        <span class="mt-2 md:mt-0">{{ $item->nama_produk }}</span>
                     </div>
                     </td>
-                    <td class="px-4 py-2 text-sm text-gray-700">Rp. 2.000</td>
-                    <td class="px-4 py-2 text-sm text-gray-700">10</td>
+                    <td class="px-4 py-2 text-sm text-gray-700">{{ $item->harga_produk }}</td>
+                    <td class="px-4 py-2 text-sm text-gray-700">{{ $item->stok_produk }}</td>
                     <td class="p-4 text-sm text-gray-900">
                         <div class="flex h-full w-full items-center justify-center space-x-2 md:space-x-6">
                             @include('components.crud-produk-admin')
                         </div>
                     </td>
                 </tr>
+                @endforeach
             </tbody>
         </table>
     </div>

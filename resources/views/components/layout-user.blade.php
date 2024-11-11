@@ -144,6 +144,6 @@
     document.getElementById('cancelLogout').addEventListener('click', function() {
         document.getElementById('confirmationLogout').classList.add('hidden');
     });
-</script>
+</script> 
 </body>
 </html>
