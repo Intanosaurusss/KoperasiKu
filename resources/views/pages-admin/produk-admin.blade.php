@@ -14,20 +14,21 @@
         </div>
     </div>
 
+    <div class="bg-white pt-1 px-2 pb-2 rounded-md shadow-sm">
     <!-- searchbar -->
     <div class="flex items-center mt-4 w-full">
-    <form>
+    <form method="GET" action="{{ route('pages-admin.produk-admin') }}">
         <div class="flex items-center border border-gray-300 rounded-lg bg-white">
             <svg class="w-4 h-4 text-gray-500 ml-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
             </svg>
-            <input type="" id="default-search" class="block w-full p-2 pl-2 text-sm text-gray-900 border-0 rounded-lg focus:ring-blue-500 focus:outline-none" placeholder="Cari produk..." required />
+            <input type="search" name="search" id="default-search" class="block w-full p-2 pl-2 text-sm text-gray-900 border-0 rounded-lg focus:ring-blue-500 focus:outline-none" placeholder="Cari produk..." required />
         </div>
     </form>
     <!-- button tambah data produk -->
     <div class="flex ml-2">
         <a href="{{ route('tambah-produk-admin') }}">
-        <button type="button" class="flex items-center bg-blue-600 text-white hover:bg-blue-800 focus:outline-none font-medium rounded-lg text-sm px-4 py-2">
+        <button type="button" class="flex items-center bg-green-400 text-white hover:bg-green-500 focus:outline-none font-medium rounded-lg text-sm px-4 py-2">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2">
                 <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
             </svg>
@@ -50,9 +51,17 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
+            @if($produk->isEmpty())
+            <!-- Tampilkan pesan jika tidak ada data setelah pencarian -->
+            <tr>
+                <td colspan="5" class="px-4 py-2 text-center text-gray-700">
+                    Data tidak ditemukan
+                </td>
+            </tr>
+            @else
             @foreach ($produk as $index => $item)
-                <tr>
-                    <td class="px-4 py-2 text-sm text-center text-gray-700">{{ $loop->iteration }}</td>
+                <tr class="hover:bg-gray-100">
+                    <td class="px-4 py-2 text-sm text-center text-gray-700">{{ ($produk->currentPage() - 1) * $produk->perPage() + $loop->iteration }}</td>
                     <td class="px-4 py-2 text-sm text-gray-700">
                     <div class="flex flex-col items-center md:flex-row md:space-x-2">
                         <img 
@@ -64,7 +73,7 @@
                         <span class="mt-2 md:mt-0">{{ $item->nama_produk }}</span>
                     </div>
                     </td>
-                    <td class="px-4 py-2 text-sm text-gray-700">{{ $item->harga_produk }}</td>
+                    <td class="px-4 py-2 text-sm text-gray-700">Rp. {{ $item->harga_produk }}</td>
                     <td class="px-4 py-2 text-sm text-gray-700">{{ $item->stok_produk }}</td>
                     <td class="p-4 text-sm text-gray-900">
                         <div class="flex h-full w-full items-center justify-center space-x-2 md:space-x-6">
@@ -73,9 +82,53 @@
                     </td>
                 </tr>
                 @endforeach
+                @endif
             </tbody>
         </table>
     </div>
+  </div>
+  
+<!-- Pagination -->
+<div class="mt-4 flex justify-end space-x-2">
+        <!-- Tombol Previous -->
+        @if ($produk->onFirstPage())
+            <span class="px-3 py-1 bg-gray-300 text-gray-500 text-sm rounded cursor-default">
+                Previous
+            </span>
+        @else
+            <a href="{{ $produk->previousPageUrl() }}" class="px-3 py-1 bg-white text-gray-700 text-sm rounded border border-gray-300 hover:bg-gray-100">
+                Previous
+            </a>
+        @endif
+        <!-- Tombol Halaman Dinamis -->
+        @php
+            $currentPage = $produk->currentPage();
+            $lastPage = $produk->lastPage();
+
+            // Tentukan dua tombol nomor halaman secara dinamis
+            $start = max(1, $currentPage - 1);
+            $end = min($lastPage, $currentPage + 1);
+        @endphp
+        <!-- Tampilkan dua tombol halaman yang sesuai -->
+        @for ($page = $start; $page <= $end; $page++)
+            @if ($page == $currentPage)
+                <span class="px-3 py-1 bg-blue-500 text-white text-sm rounded">{{ $page }}</span>
+            @else
+                <a href="{{ $produk->url($page) }}" class="px-3 py-1 bg-white text-gray-700 text-sm rounded border border-gray-300 hover:bg-gray-100">{{ $page }}</a>
+            @endif
+        @endfor
+        <!-- Tombol Next -->
+        @if ($produk->hasMorePages())
+            <a href="{{ $produk->nextPageUrl() }}" class="px-3 py-1 bg-white text-gray-700 text-sm rounded border border-gray-300 hover:bg-gray-100">
+                Next
+            </a>
+        @else
+            <span class="px-3 py-1 bg-gray-300 text-gray-500 text-sm rounded cursor-default">
+                Next
+            </span>
+        @endif
+    </div>
+
 </div>
 
 @endsection

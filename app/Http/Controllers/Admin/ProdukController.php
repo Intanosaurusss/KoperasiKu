@@ -9,9 +9,22 @@ use App\Models\Produk; // Pastikan namespace model ini benar
 class ProdukController extends Controller
 {
     // Menampilkan daftar produk
-    public function index()
+    public function index(Request $request)
     {
-        $produk = Produk::all(); // Mengambil semua data produk
+        $query = Produk::query();
+
+        // Cek apakah ada input pencarian - ini untuk mencari data di searchbar 
+        if ($request->has('search')) {
+            $search = $request->input('search');
+
+            $query->where('nama_produk', 'LIKE', "%{$search}%")
+                ->orWhere('kategori_produk', 'LIKE', "%{$search}%")
+                ->orWhere('harga_produk', 'LIKE', "%{$search}%")
+                ->orWhere('stok_produk', 'LIKE', "%{$search}%");
+        }
+        $produk = $query->get(); // get data yang dicari di searchbar
+        $produk = $query->paginate(5); // Batas per halaman 5
+        
         return view('pages-admin.produk-admin', compact('produk'));
     }
 
@@ -62,7 +75,7 @@ class ProdukController extends Controller
         return view('pages-admin.form-admin.edit-produk-admin', compact('produk'));
     }
 
-    // Mengupdate produk di dalam database
+    // Mengupdate produk ke dalam database
     public function update(Request $request, $id)
     {
         // Validasi input

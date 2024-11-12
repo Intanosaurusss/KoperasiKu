@@ -19,7 +19,7 @@
         <img class="w-auto h-auto mt-10 animate-ping-and-bounce" src="{{ asset('assets/shop.jpg') }}" alt="dashboard image">
         <div class="mt-4 md:mt-0">
             <h2 class="mb-4 text-2xl md:text-4xl tracking-tight font-bold text-purple-400 shadow-white">Belanja Jadi Mudah</h2>
-            <p class="text-gray-700 mb-4">Aplikasi SI Kantin adalah solusi digital yang dirancang untuk mempermudah pengelolaan dan transaksi di kantin, baik dari sisi pengguna (pembeli) maupun admin (pengelola). Dengan aplikasi ini, proses pembelian makanan menjadi lebih cepat dan efisien, serta mempercepat proses pembelian tanpa perlu antri panjang.</p>
+            <p class="text-gray-700 mb-4">Aplikasi SI Kantin adalah solusi digital yang dirancang untuk mempermudah pengelolaan dan transaksi di kantin sekolah, baik dari sisi pengguna (pembeli) maupun admin (pengelola). Dengan aplikasi ini, proses pembelian makanan menjadi lebih cepat dan efisien, serta mempercepat proses pembelian tanpa perlu antri panjang.</p>
             <div class="grid grid-cols-3 gap-2">
             <a href="login" class="inline-flex items-center justify-center text-center text-purple-400 border-2 border-purple-400 hover:text-white hover:bg-purple-400 font-medium rounded-full text-sm py-2 w-auto">
                 Mulai

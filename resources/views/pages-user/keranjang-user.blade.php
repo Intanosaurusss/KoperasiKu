@@ -24,7 +24,7 @@
 
     <!-- Kontrol Jumlah 2 -->
     <div class="quantity-control flex items-center gap-2 mt-4">
-        <button class="decrease bg-red-400 text-white px-2 py-1 rounded-lg hover:bg-gray-400 transition">-</button>
+        <button class="decrease bg-red-400 text-white px-2 py-1 rounded-lg hover:bg-red-500 transition">-</button>
         <span class="quantity w-8 text-center">1</span>
         <button class="increase bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-600 transition">+</button>
         <button class="flex items-center space-x-2 bg-red-400 hover:bg-red-500 p-1 rounded-md text-white">

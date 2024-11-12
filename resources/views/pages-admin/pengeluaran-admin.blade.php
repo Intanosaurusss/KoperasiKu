@@ -14,7 +14,7 @@
         </div>
     </div>
 
-    <div class="bg-white pt-1 px-2 pb-6 rounded-md shadow-sm">
+<div class="bg-white pt-1 px-2 pb-2 rounded-md shadow-sm">
     <!-- searchbar -->
     <div class="flex flex-col md:flex-row items-center mt-4 w-full space-y-3">
         <div class="flex order-1 md:order-1 w-full">
@@ -59,8 +59,7 @@
             </svg>
             Cetak
         </button>
-    </form>
-        
+        </form>    
     </div>
 
     <!-- Tabel Responsif -->
@@ -97,8 +96,9 @@
             </tbody>
         </table>
     </div>
+</div>
 
-   <!-- Pagination -->
+<!-- Pagination -->
     <div class="mt-4 flex justify-end space-x-2">
         <!-- Tombol Previous -->
         @if ($pengeluaran->onFirstPage())
@@ -138,8 +138,5 @@
             </span>
         @endif
     </div>
-
-    </div>
-
 </div>
 @endsection
