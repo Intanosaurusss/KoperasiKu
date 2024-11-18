@@ -19,6 +19,21 @@
         </form>
     </div>
 
+    <!-- popup pesan jika produk akan dimasukkan ke keranjang -->
+    @if (session('success'))
+        <div id="flash-message" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded my-4" role="alert">
+            <strong class="font-bold">Sukses!</strong>
+            <span class="block sm:inline">{{ session('success') }}</span>
+        </div>
+    @endif
+
+    @if (session('warning'))
+        <div id="flash-message" class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded my-4" role="alert">
+            <strong class="font-bold">Peringatan!</strong>
+            <span class="block sm:inline">{{ session('warning') }}</span>
+        </div>
+    @endif
+
     <!-- pembungkus kontainer semua card produk -->
     <div class="mt-6 mx-3 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-5 xl:gap-x-8">
     
@@ -46,11 +61,16 @@
             <p class="mt-1 mb-1 text-sm text-gray-400">stok : {{ $produk->stok_produk }}</p>
             <div class="flex justify-between items-center">
             <p class="font-semibold text-red-400 mr-2 mb-3">Rp. {{ $produk->harga_produk }}</p>
-            <button class="text-sm text-white bg-purple-400 px-1.5 py-1.5 mr-2 mb-3 rounded-md tracking-wide">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5">
-                <path d="M2.25 2.25a.75.75 0 0 0 0 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 0 0-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 0 0 0-1.5H5.378A2.25 2.25 0 0 1 7.5 15h11.218a.75.75 0 0 0 .674-.421 60.358 60.358 0 0 0 2.96-7.228.75.75 0 0 0-.525-.965A60.864 60.864 0 0 0 5.68 4.509l-.232-.867A1.875 1.875 0 0 0 3.636 2.25H2.25ZM3.75 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM16.5 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" />
-                </svg>
-            </button>
+            <form action="{{ route('tambah-ke-keranjang') }}" method="POST" class="inline-block">
+                @csrf
+                <input type="hidden" name="produk_id" value="{{ $produk->id }}">
+                <input type="number" name="qty" value="1" min="1" class="hidden">
+                <button type="submit" class="text-sm text-white bg-purple-400 px-1.5 py-1.5 mr-2 mb-3 rounded-md tracking-wide">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5">
+                        <path d="M2.25 2.25a.75.75 0 0 0 0 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 0 0-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 0 0 0-1.5H5.378A2.25 2.25 0 0 1 7.5 15h11.218a.75.75 0 0 0 .674-.421 60.358 60.358 0 0 0 2.96-7.228.75.75 0 0 0-.525-.965A60.864 60.864 0 0 0 5.68 4.509l-.232-.867A1.875 1.875 0 0 0 3.636 2.25H2.25ZM3.75 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM16.5 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" />
+                    </svg>
+                </button>
+            </form>
             </div>
         </div>
     </div>
@@ -61,6 +81,14 @@
 <!-- penutup kontainer pembungkus semua card -->
 </div>
 
-
+<script>
+    // Menghilangkan popup pesan flash selama 3 detik saat produk dimasukkan ke keranjang
+    setTimeout(() => {
+        const flashMessage = document.getElementById('flash-message');
+        if (flashMessage) {
+            flashMessage.remove();
+        }
+    }, 3000); // 3000 ms = 3 detik
+</script>
 </div>
 @endsection

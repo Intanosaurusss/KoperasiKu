@@ -29,7 +29,7 @@
             <!-- Kontainer Kiri: Teks dan List -->
             <div class="flex flex-col justify-between">
                 <div>
-                    <p class="mb-4">IDNeobilling adalah Applikasi Manajemen untuk pengusaha ISP/mini ISP dalam mengatur manajemen pelanggan.</p>
+                    <p class="mb-4">Kantinkita adalah Aplikasi Manajemen untuk mengelola kegiatan jual-beli di koperasi sekolah</p>
                     <ul class="space-y-2 text-left text-gray-500 dark:text-gray-700">
                         <li class="flex items-center space-x-3 rtl:space-x-reverse">
                             <svg class="flex-shrink-0 w-3.5 h-3.5 text-purple-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">

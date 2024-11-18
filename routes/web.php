@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\Admin\PengeluaranController;
 use App\Http\Controllers\Admin\ProdukController;
+use App\Http\Controllers\User\KeranjangController;
 
 // route untuk halaman default
 Route::get('/', function () { return view('welcome'); });
@@ -60,7 +61,11 @@ Route::put('/profile/{id}', [ProfileController::class, 'update'])->name('profile
 Route::get('/dashboard-user', [DashboardUserController::class, 'index'])->name('pages-user.dashboard-user');
 
 //route untuk menampilkan menu keranjang user
-Route::get('/keranjang-user', function () { return view('pages-user.keranjang-user'); })->name('pages-user.keranjang-user');
+Route::get('/keranjang-user', [KeranjangController::class, 'index'])->name('pages-user.keranjang-user');
+Route::post('/keranjang-user/add', [KeranjangController::class, 'addToCart'])->name('tambah-ke-keranjang');
+Route::delete('/keranjang-user/remove/{id}', [KeranjangController::class, 'removeFromCart'])->name('hapus-dari-keranjang');
+Route::patch('/keranjang-user/increment/{id}', [KeranjangController::class, 'incrementQty'])->name('tambah-qty');
+Route::patch('/keranjang-user/decrement/{id}', [KeranjangController::class, 'decrementQty'])->name('kurang-qty');
 
 //route untuk menampilkan menu riwayat user
 Route::get('/riwayat-user', function () { return view('pages-user.riwayat-user'); });
