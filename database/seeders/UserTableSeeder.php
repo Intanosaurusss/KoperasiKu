@@ -12,22 +12,22 @@ class UserTableSeeder extends Seeder
     {
         // Buat akun admin
         User::create([
-            'name' => 'Admin',
+            'nama' => 'Admin',
             'kelas' => '-',
             'no_telepon' => '0895365544316',
             'email' => 'admin@gmail.com',
-            'password' => Hash::make('password'), // Gunakan bcrypt untuk password
+            'id_member' => 1000000000, // ID Member 10 angka untuk admin
             'foto_profile' => null, // Jika belum ada foto
             'role' => 'admin',
         ]);
 
         // Buat akun user biasa
         User::create([
-            'name' => 'User',
+            'nama' => 'User',
             'kelas' => '12 pplg 3',
             'no_telepon' => '089876543210',
             'email' => 'user@gmail.com',
-            'password' => Hash::make('password'),
+            'id_member' => 1000000001, // ID Member 10 angka untuk user
             'foto_profile' => null,
             'role' => 'user',
         ]);

@@ -35,7 +35,7 @@
 
                 <!-- Kontainer teks user dan user2, disusun vertikal -->
                 <div class="ml-2 flex flex-col">
-                    <p class="font-medium">{{ Auth::user()->name }}</p>
+                    <p class="font-medium">{{ Auth::user()->nama }}</p>
                     <p class="text-sm text-gray-600">{{ Auth::user()->kelas }}</p>
                 </div>
             </div>

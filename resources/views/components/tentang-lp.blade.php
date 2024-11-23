@@ -29,7 +29,7 @@
             <!-- Kontainer Kiri: Teks dan List -->
             <div class="flex flex-col justify-between">
                 <div>
-                    <p class="mb-4">Kantinkita adalah Aplikasi Manajemen untuk mengelola kegiatan jual-beli di koperasi sekolah</p>
+                    <p class="mb-4">KoperasiKu adalah Aplikasi yang berfungsi untuk mengelola transaksi di koperasi sekolah</p>
                     <ul class="space-y-2 text-left text-gray-500 dark:text-gray-700">
                         <li class="flex items-center space-x-3 rtl:space-x-reverse">
                             <svg class="flex-shrink-0 w-3.5 h-3.5 text-purple-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
@@ -56,8 +56,8 @@
             <!-- Kontainer Kanan: Teks dan Button -->
             <div class="flex flex-col">
                 <div>
-                    <p>Kantinkita ini <span class="font-bold text-purple-400"> diharapkan dapat memberikan kemudahan bagi siswa untuk membeli makanan</span></p>
-                    <p class="mb-6">Dengan fasilitas dan kemudahan layanan yang kami berikan, tidak perlu lagi deh antri panjang saat membeli makan di kantin!.</p>
+                    <p>KoperasiKu <span class="font-bold text-purple-400"> diharapkan dapat memberikan kemudahan bagi siswa/warga sekolah untuk membeli berbagai keperluan yang disediakan di koperasi sekolah</span></p>
+                    <p class="mb-6">Dengan fasilitas dan kemudahan layanan yang kami berikan, tidak perlu lagi deh antri panjang saat berbelanja di koperasi sekolah!</p>
                 </div>
                 <div>
                     <a href="login" type="button" class="py-2 px-5 text-sm font-medium text-purple-400 hover:text-white focus:outline-none bg-white rounded-lg border-2 border-purple-400 focus:z-10 hover:bg-purple-400">

@@ -52,26 +52,22 @@ class ProfileController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'nama' => 'required|string|max:255',
             'kelas' => 'nullable|string|max:255',
             'no_telepon' => 'nullable|string|max:15',
             'email' => 'required|email|max:255|unique:users,email,' . $id,
-            'password' => 'nullable|min:8',
+            'id_member' => 'nullable|digits:10', // Validasi ID Member dengan 10 angka
             'foto_profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240'
         ]);
 
         $user = User::findOrFail($id);
         
         // Update the user fields
-        $user->name = $request->name;
+        $user->nama = $request->nama;
         $user->kelas = $request->kelas;
         $user->no_telepon = $request->no_telepon;
         $user->email = $request->email;
-        
-        // Update password only if a new one is provided
-        if ($request->filled('password')) {
-            $user->password = bcrypt($request->password);
-        }
+        $user->id_member = $request->id_member;
 
         // Handle image upload
         if ($request->hasFile('foto_profile')) {

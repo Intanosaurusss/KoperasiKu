@@ -18,7 +18,7 @@
     <!-- searchbar -->
     <div class="flex flex-col md:flex-row items-center mt-4 w-full space-y-3">
         <div class="flex order-1 md:order-1 w-full">
-            <form method="GET" action="{{ route('pages-admin.pengeluaran-admin') }}" class="w-full mr-2 md:w-auto space-x-4">
+            <form method="GET" action="{{ route('pages-admin.pengeluaran-admin') }}" class="w-full mr-2 md:w-auto space-x-4" id="search-form">
                     <div class="flex items-center border border-gray-300 rounded-lg bg-white">
                         <svg class="w-4 h-4 text-gray-500 ml-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
@@ -139,4 +139,21 @@
         @endif
     </div>
 </div>
+
+<script>
+    //js untuk fitur search otomatis tanpa enter
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('search-form');
+        const searchInput = document.getElementById('default-search');
+
+        // Trigger form submit on input in search bar (debounced to avoid excessive submits)
+        let timeout = null;
+        searchInput.addEventListener('input', function () {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                form.submit(); //kirim form otomatis jika sudah berenti mengetik
+            }, 500); // Delay setengah detik
+        });
+    });
+</script>
 @endsection

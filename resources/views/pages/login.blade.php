@@ -20,7 +20,7 @@
         </div>
         <!-- Kolom Form Login -->
         <div class="flex-1 p-10">
-            <h2 class="text-2xl font-semibold mb-5 text-gray-700">Masuk Akun Kantinkita</h2>
+            <h2 class="text-2xl font-semibold mb-5 text-gray-700">Masuk Akun KoperasiKu</h2>
 
             <!-- Tampilkan Error -->
             @if ($errors->any())
@@ -40,15 +40,15 @@
                     <input type="email" name="email" id="email" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="email@example.com" required>
                 </div>
                 <div class="mb-4">
-                    <label for="password" class="block text-sm font-medium text-gray-700">Kata Sandi</label>
-                    <input type="password" name="password" id="password" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="********" required>
+                    <label for="id_member" class="block text-sm font-medium text-gray-700">ID Member</label>
+                    <input type="number" name="id_member" id="id_member" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Masukkan ID Member" required>
                 </div>
-                <div class="flex justify-between items-center mb-4">
+                <!-- <div class="flex justify-between items-center mb-4">
                     <a href="#" class="text-sm text-blue-500">Lupa Kata Sandi</a>
-                </div>
+                </div> -->
                 <button type="submit" class="w-full bg-purple-400 text-white font-semibold py-2 rounded-md hover:bg-purple-500">Masuk</button>
             </form>
-            <p class="mt-4 text-sm text-gray-600">Belum punya akun? <a href="register" class="text-blue-500">Daftar</a></p>
+            <!-- <p class="mt-4 text-sm text-gray-600">Belum punya akun? <a href="register" class="text-blue-500">Daftar</a></p> -->
         </div>
     </div>
 </body>

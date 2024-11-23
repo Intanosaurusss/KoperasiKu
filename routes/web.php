@@ -9,6 +9,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\Admin\PengeluaranController;
 use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\User\KeranjangController;
+use App\Http\Controllers\RegisterMemberController;
 
 // route untuk halaman default
 Route::get('/', function () { return view('welcome'); });
@@ -18,8 +19,21 @@ Route::get('/login', function () { return view('pages.login'); });
 Route::post('/login', [LoginController::class, 'login'])->name('login'); 
 
 //route untuk register
-Route::get('/register', [RegisterController::class, 'index'])->name('pages.register');
-Route::post('/register', [RegisterController::class, 'register'])->name('register');
+// Route::get('/register', [RegisterController::class, 'index'])->name('pages.register');
+// Route::post('/register', [RegisterController::class, 'register'])->name('register');
+
+//route untuk member atau pengganti register
+// Route::get('/member', function () { return view('pages-admin.member'); });
+// Route::get('/detail-member', function () { return view('pages-admin.detail-member'); });
+// Route::get('/member/tambah', function () { return view('pages-admin.form-admin.tambah-member'); });
+
+// Menampilkan halaman member
+Route::get('/member', [App\Http\Controllers\RegisterMemberController::class, 'index'])->name('pages-admin.member');
+Route::get('/member/{id}', [App\Http\Controllers\RegisterMemberController::class, 'show'])->name('detail-member');  // Menampilkan detail member berdasarkan ID
+Route::get('/tambah-member', [App\Http\Controllers\RegisterMemberController::class, 'create'])->name('tambah-member.create');
+Route::post('/member', [App\Http\Controllers\RegisterMemberController::class, 'store'])->name('tambah-member');
+Route::delete('/member/{id}', [App\Http\Controllers\RegisterMemberController::class, 'destroy'])->name('member.destroy');
+
 
 // HALAMAN ADMIN //
 // route untuk menampilkan dashboard admin

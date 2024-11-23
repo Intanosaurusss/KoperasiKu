@@ -53,7 +53,7 @@ class PengeluaranController extends Controller
         $request->validate([
             'tanggal_pengeluaran' => 'required|date',
             'total_pengeluaran' => 'required|string|min:0', // Pastikan jumlah pengeluaran tidak negatif
-            'deskripsi_pengeluaran' => 'nullable|string', // Deskripsi opsional
+            'deskripsi_pengeluaran' => 'required|string', // Deskripsi opsional
         ]);
 
         // Simpan data pengeluaran baru ke dalam database

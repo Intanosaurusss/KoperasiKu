@@ -17,7 +17,7 @@
     <div class="bg-white pt-1 px-2 pb-2 rounded-md shadow-sm">
     <!-- searchbar -->
     <div class="flex items-center mt-4 w-full">
-    <form method="GET" action="{{ route('pages-admin.produk-admin') }}">
+    <form method="GET" action="{{ route('pages-admin.produk-admin') }}"  id="search-form">
         <div class="flex items-center border border-gray-300 rounded-lg bg-white">
             <svg class="w-4 h-4 text-gray-500 ml-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
@@ -130,5 +130,21 @@
     </div>
 
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('search-form');
+        const searchInput = document.getElementById('default-search');
+
+        // Trigger form submit on input in search bar (debounced to avoid excessive submits)
+        let timeout = null;
+        searchInput.addEventListener('input', function () {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                form.submit(); // Submit form automatically after 3 seconds of no typing
+            }, 500); // Delay for 3 seconds
+        });
+    });
+</script>
 
 @endsection

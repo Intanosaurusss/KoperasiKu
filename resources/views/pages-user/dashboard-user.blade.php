@@ -5,16 +5,37 @@
 @section('content')
 <div class="p-2">
     <!-- Konten dashboard pengguna Anda di sini -->
-    <h2 class="text-xl font-semibold text-gray-700">Selamat datang User, hari ini mau jajan apa?</h2>
+    <h2 class="text-xl font-semibold text-gray-700">Selamat datang {{ Auth::user()->name }}, kamu mau beli apa?</h2>
 
-    <!-- searchbar -->
-    <div class="flex items-center mt-4 w-full">
-        <form  method="GET" action="{{ route('pages-user.dashboard-user') }}">
-            <div class="flex items-center border border-gray-300 rounded-lg bg-white">
-                <svg class="w-4 h-4 text-gray-500 ml-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                </svg>
-                <input type="search" name="search" id="default-search" class="block w-full p-2 pl-2 text-sm text-gray-900 border-0 rounded-lg focus:ring-blue-500 focus:outline-none" placeholder="Cari produk..." required />
+    <!-- Dropdown dengan Search Bar -->
+    <div class="flex flex-col sm:flex-row items-center mt-4 w-full">
+        <form method="GET" action="{{ route('pages-user.dashboard-user') }}" id="search-form" class="w-full">
+            <div class="flex flex-col sm:flex-row items-stretch gap-2">
+                <!-- Dropdown Kategori -->
+                <div class="relative sm:w-1/4 w-full max-w-xs">
+                    <select name="kategori_produk" id="kategori-dropdown" class="block w-full p-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:outline-none">
+                        <option value="">Semua Kategori</option>
+                        <option value="makanan">Makanan</option>
+                        <option value="minuman">Minuman</option>
+                        <option value="alat tulis kantor">Alat Tulis Kantor</option>
+                        <option value="peralatan/lainnya">Peralatan/Lainnya</option>
+                    </select>
+                </div>
+
+                <!-- Search Input -->
+                <div class="relative flex-1 max-w-xs">
+                    <div class="flex items-center border border-gray-300 rounded-lg bg-white w-full">
+                        <svg class="w-4 h-4 text-gray-500 ml-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                        </svg>
+                        <input 
+                            type="search" 
+                            name="search" 
+                            id="default-search" 
+                            class="block w-full p-2 pl-2 text-sm text-gray-900 border-0 rounded-lg focus:ring-blue-500 focus:outline-none" 
+                            placeholder="Cari produk..." />
+                    </div>
+                </div>
             </div>
         </form>
     </div>
@@ -89,6 +110,28 @@
             flashMessage.remove();
         }
     }, 3000); // 3000 ms = 3 detik
+
+    // Mengirim form search (di bagian searchbar/dropdown) secara otomatis tanpa mengklik button cari/enter
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('search-form');
+        const kategoriDropdown = document.getElementById('kategori-dropdown');
+        const searchInput = document.getElementById('default-search');
+
+        // Trigger form submit when dropdown value changes
+        kategoriDropdown.addEventListener('change', function () {
+            form.submit();
+        });
+
+        // Trigger form submit on input in search bar (debounced to avoid excessive submits)
+        let timeout = null;
+        searchInput.addEventListener('input', function () {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                form.submit();
+            }, 500); // Delay for 500ms
+        });
+    });
+
 </script>
 </div>
 @endsection

@@ -10,19 +10,30 @@ class DashboardUserController extends Controller
 {
     // function untuk menampilkan halaman dashboard user
     public function index(Request $request)
-    {
-        $query = Produk::query();
-        // Cek apakah ada input pencarian - ini untuk mencari data di searchbar 
-        if ($request->has('search')) {
-            $search = $request->input('search');
+{
+    $query = Produk::query();
 
-            $query->where('nama_produk', 'LIKE', "%{$search}%")
-                ->orWhere('kategori_produk', 'LIKE', "%{$search}%")
+    // Filter berdasarkan kategori jika dipilih
+    if ($request->filled('kategori_produk')) {
+        $kategori = $request->input('kategori_produk');
+        $query->where('kategori_produk', $kategori);
+    }
+
+    // Filter berdasarkan pencarian teks
+    if ($request->filled('search')) {
+        $search = $request->input('search');
+        $query->where(function ($q) use ($search) {
+            $q->where('nama_produk', 'LIKE', "%{$search}%")
                 ->orWhere('harga_produk', 'LIKE', "%{$search}%")
                 ->orWhere('stok_produk', 'LIKE', "%{$search}%");
-        }
-        $produk = $query->get(); // get data yang dicari di searchbar
-
-        return view('pages-user.dashboard-user', compact('produk'));  //kirim data produk ke view nya
+        });
     }
+
+    // Ambil data produk berdasarkan filter
+    $produk = $query->get();
+
+    // Kirim data ke view
+    return view('pages-user.dashboard-user', compact('produk'));
+}
+
 }

@@ -42,6 +42,7 @@
                         <option value="" disabled selected class="text-gray-600">Pilih kategori produk</option>
                         <option value="makanan">Makanan</option>
                         <option value="minuman">Minuman</option>
+                        <option value="alat tulis kantor">Alat Tulis Kantor</option>
                         <option value="peralatan">Peralatan/Lainnya</option>
                     </select>
                     </div>
@@ -69,7 +70,7 @@
             </div>
 
             <div class="mt-6 mb-10 flex justify-end gap-x-6">
-                <a href="">
+                <a href="{{ route('pages-admin.produk-admin') }}">
                     <button id="cancelbutton" type="button" class="px-2 py-1.5 bg-red-500 text-white rounded-md hover:bg-red-400 focus:ring focus:ring-red-300 mb-6">Batal</button>
                 </a>
                 <button id="submitbutton" type="submit" class="px-2 py-1.5 bg-indigo-600 text-white rounded-md hover:bg-indigo-500 focus:ring focus:ring-blue-300 mb-6">Tambah</button>

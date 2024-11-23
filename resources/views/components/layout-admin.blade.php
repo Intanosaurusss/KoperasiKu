@@ -35,7 +35,7 @@
 
                 <!-- Kontainer teks user dan user2, disusun vertikal -->
                 <div class="ml-2 flex flex-col">
-                    <p class="font-medium">{{ Auth::user()->name }}</p>
+                    <p class="font-medium">{{ Auth::user()->nama }}</p>
                     <p class="text-sm text-gray-600">{{ Auth::user()->kelas }}</p>
                 </div>
             </div>
@@ -62,6 +62,25 @@
                     </li>
                 </a>
 
+                <a href="{{ route('pages-admin.produk-admin') }}" class="block">
+                    <li class="flex items-center px-4 py-2 hover:bg-purple-200 rounded-xl space-x-4 {{ request()->is('produk-admin') ? 'bg-purple-400 text-white' : 'hover:bg-purple-300' }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5">
+                            <path d="M2.25 2.25a.75.75 0 0 0 0 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 0 0-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 0 0 0-1.5H5.378A2.25 2.25 0 0 1 7.5 15h11.218a.75.75 0 0 0 .674-.421 60.358 60.358 0 0 0 2.96-7.228.75.75 0 0 0-.525-.965A60.864 60.864 0 0 0 5.68 4.509l-.232-.867A1.875 1.875 0 0 0 3.636 2.25H2.25ZM3.75 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM16.5 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" />
+                        </svg>
+                        <span>Produk</span>
+                    </li>
+                </a>
+
+                <a href="{{ route('pages-admin.member') }}" class="block">
+                    <li class="flex items-center px-4 py-2 hover:bg-purple-200 rounded-xl space-x-4 {{ request()->is('member') ? 'bg-purple-400 text-white' : 'hover:bg-purple-300' }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5">
+                        <path d="M4.5 3.75a3 3 0 0 0-3 3v.75h21v-.75a3 3 0 0 0-3-3h-15Z" />
+                        <path fill-rule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3v-7.5Zm-18 3.75a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 0 1.5h-6a.75.75 0 0 1-.75-.75Zm.75 2.25a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5h-3Z" clip-rule="evenodd" />
+                    </svg>
+                        <span>Member</span>
+                    </li>
+                </a>
+                
                 <a href="{{ route('pages-admin.pengeluaran-admin') }}" class="block">
                     <li class="flex items-center px-4 py-2 hover:bg-purple-200 rounded-xl space-x-4 {{ request()->is('pengeluaran-admin') ? 'bg-purple-400 text-white' : 'hover:bg-purple-300' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5">
@@ -69,15 +88,6 @@
                             <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v.816a3.836 3.836 0 0 0-1.72.756c-.712.566-1.112 1.35-1.112 2.178 0 .829.4 1.612 1.113 2.178.502.4 1.102.647 1.719.756v2.978a2.536 2.536 0 0 1-.921-.421l-.879-.66a.75.75 0 0 0-.9 1.2l.879.66c.533.4 1.169.645 1.821.75V18a.75.75 0 0 0 1.5 0v-.81a4.124 4.124 0 0 0 1.821-.749c.745-.559 1.179-1.344 1.179-2.191 0-.847-.434-1.632-1.179-2.191a4.122 4.122 0 0 0-1.821-.75V8.354c.29.082.559.213.786.393l.415.33a.75.75 0 0 0 .933-1.175l-.415-.33a3.836 3.836 0 0 0-1.719-.755V6Z" clip-rule="evenodd" />
                         </svg>
                         <span>Pengeluaran</span>
-                    </li>
-                </a>
-
-                <a href="{{ route('pages-admin.produk-admin') }}" class="block">
-                    <li class="flex items-center px-4 py-2 hover:bg-purple-200 rounded-xl space-x-4 {{ request()->is('produk-admin') ? 'bg-purple-400 text-white' : 'hover:bg-purple-300' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5">
-                            <path d="M2.25 2.25a.75.75 0 0 0 0 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 0 0-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 0 0 0-1.5H5.378A2.25 2.25 0 0 1 7.5 15h11.218a.75.75 0 0 0 .674-.421 60.358 60.358 0 0 0 2.96-7.228.75.75 0 0 0-.525-.965A60.864 60.864 0 0 0 5.68 4.509l-.232-.867A1.875 1.875 0 0 0 3.636 2.25H2.25ZM3.75 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM16.5 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" />
-                        </svg>
-                        <span>Produk</span>
                     </li>
                 </a>
 

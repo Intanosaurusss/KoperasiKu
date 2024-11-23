@@ -24,8 +24,8 @@
                 <div class="mt-1 grid grid-cols-1 gap-x-6 gap-y-2 md:grid-cols-2">
 
                     <div class="col-span-full mt-1">
-                        <label for="name" class="block font-medium leading-6 text-gray-700">Username</label>
-                        <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi username">
+                        <label for="nama" class="block font-medium leading-6 text-gray-700">Username</label>
+                        <input type="text" id="nama" name="nama" value="{{ old('nama', $user->nama) }}" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi username">
                     </div>
 
                     <div class="col-span-full mt-1">
@@ -44,8 +44,8 @@
                     </div>
 
                     <div class="col-span-full mt-1">
-                        <label for="password" class="block font-medium leading-6 text-gray-700">Password</label>
-                        <input type="password" id="password" name="password" value="{{ old('password') }}" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi password">
+                        <label for="id_member" class="block font-medium leading-6 text-gray-700">ID Member</label>
+                        <input type="number" id="id_member" name="id_member" value="{{ old('id_member', $user->id_member) }}" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi id member">
                     </div>
 
                     <div class="col-span-full mt-1">
@@ -62,7 +62,7 @@
                                     </label>
                                     <p class="pl-1">or drag and drop</p>
                                 </div>
-                                <p class="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
+                                <p class="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 5MB</p>
                             </div>
                         </div>
                     </div>

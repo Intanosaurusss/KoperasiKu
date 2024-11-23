@@ -10,23 +10,23 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up()
-{
+    {
     Schema::create('users', function (Blueprint $table) {
         $table->id();
-        $table->string('name');
+        $table->string('nama');
         $table->string('kelas');
         $table->string('no_telepon');
         $table->string('email')->unique();
-        $table->string('password');
+        $table->integer('id_member'); // Mengganti password dengan id_member
         $table->string('foto_profile')->nullable();
         $table->enum('role', ['admin', 'user'])->default('user');
         $table->timestamps();
     });
-}
+    }
 
-public function down()
-{
-    Schema::dropIfExists('users');
-}
+    public function down()
+    {
+        Schema::dropIfExists('users');
+    }
 
 };

@@ -33,6 +33,7 @@
                         <option value="" disabled class="text-gray-600" @if (!$produk->kategori_produk) selected @endif>Pilih kategori produk</option>
                         <option value="makanan" @if ($produk->kategori_produk === 'makanan') selected @endif>Makanan</option>
                         <option value="minuman" @if ($produk->kategori_produk === 'minuman') selected @endif>Minuman</option>
+                        <option value="alat tulis kantor" @if ($produk->kategori_produk === 'alat tulis kantor') selected @endif>Alat Tulis Kantor</option>
                         <option value="peralatan" @if ($produk->kategori_produk === 'peralatan') selected @endif>Peralatan/Lainnya</option>
                     </select>
                     </div>
@@ -60,7 +61,7 @@
             </div>
 
             <div class="mt-6 mb-10 flex justify-end gap-x-6">
-                <a href="">
+                <a href="{{ route('pages-admin.produk-admin') }}">
                     <button id="cancelbutton" type="button" class="px-2 py-1.5 bg-red-500 text-white rounded-md hover:bg-red-400 focus:ring focus:ring-red-300 mb-6">Batal</button>
                 </a>
                 <button id="submitbutton" type="submit" class="px-2 py-1.5 bg-indigo-600 text-white rounded-md hover:bg-indigo-500 focus:ring focus:ring-blue-300 mb-6">Edit</button>

@@ -20,7 +20,7 @@
         </div>
         <!-- Kolom Form Login -->
         <div class="flex-1 px-10 py-2">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-700">Daftar Akun Kantinkita</h2>
+            <h2 class="text-2xl font-semibold my-3 text-gray-700">Daftar Akun KoperasiKu</h2>
             @if ($errors->any())
                 <div class="mb-4">
                     <ul class="text-red-600">
@@ -33,32 +33,32 @@
 
             <form action="{{ route('register') }}" method="POST">
             @csrf
-                <div class="mb-4">
+                <div class="mb-2">
                     <label for="name" class="block text-sm font-medium text-gray-700">Nama</label>
-                    <input type="name" id="name" name="name" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="nama lengkap" required>
+                    <input type="name" id="name" name="name" class="mt-1 block w-full border border-gray-300 rounded-md p-1.5" placeholder="nama lengkap" required>
                 </div>
-                <div class="mb-4">
+                <div class="mb-2">
                     <label for="kelas" class="block text-sm font-medium text-gray-700">Kelas</label>
-                    <input type="kelas" id="kelas" name="kelas" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="kelas berapa?" required>
+                    <input type="kelas" id="kelas" name="kelas" class="mt-1 block w-full border border-gray-300 rounded-md p-1.5" placeholder="kelas berapa?" required>
                 </div>
-                <div class="mb-4">
+                <div class="mb-2">
                     <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                    <input type="email" id="email" name="email" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="email@example.com" required>
+                    <input type="email" id="email" name="email" class="mt-1 block w-full border border-gray-300 rounded-md p-1.5" placeholder="email@example.com" required>
                 </div>
-                <div class="mb-4">
+                <div class="mb-2">
                     <label for="no_telepon" class="block text-sm font-medium text-gray-700">Nomor Telepon</label>
-                    <input type="text" id="no_telepon" name="no_telepon" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Nomor telepon" required>
+                    <input type="text" id="no_telepon" name="no_telepon" class="mt-1 block w-full border border-gray-300 rounded-md p-1.5" placeholder="Nomor telepon" required>
                 </div>
-                <div class="mb-4">
+                <div class="mb-2">
                     <label for="password" class="block text-sm font-medium text-gray-700">Kata Sandi</label>
-                    <input type="password" id="password" name="password" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="********" required>
+                    <input type="password" id="password" name="password" class="mt-1 block w-full border border-gray-300 rounded-md p-1.5" placeholder="********" required>
                 </div>
                 <div class="flex justify-between items-center mb-3">
                     <a href="#" class="text-sm text-blue-400">Lupa Kata Sandi</a>
                 </div>
                 <button type="submit" class="w-full bg-purple-400 text-white font-semibold py-2 rounded-md hover:bg-purple-500">Daftar</button>
             </form>
-            <p class="mt-3 text-sm text-gray-600">Sudah punya akun? <a href="login" class="text-blue-500">Masuk</a></p>
+            <p class="my-3 text-sm text-gray-600">Sudah punya akun? <a href="login" class="text-blue-500">Masuk</a></p>
         </div>
     </div>
 </body>

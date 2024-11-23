@@ -17,7 +17,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <p class="text-gray-500">Username</p>
-                    <p class="font-medium text-gray-800 break-words">{{ $user->name }}</p>
+                    <p class="font-medium text-gray-800 break-words">{{ $user->nama }}</p>
                 </div>
                 <div>
                     <p class="text-gray-500">Kelas</p>
@@ -32,19 +32,30 @@
                     <p class="font-medium text-gray-800 break-words">{{ $user->email }}</p>
                 </div>
                 <div>
-                    <p class="text-gray-500">Password</p>
-                    <p class="font-medium text-gray-800 break-words">••••••••</p> <!-- Password disembunyikan -->
+                    <p class="text-gray-500">ID Member</p>
+                    <p class="font-medium text-gray-800 break-words">{{ $user->id_member }}</p>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="flex justify-end mt-4 gap-4">
+    <!-- <a href="">
+        <div class="flex justify-end mt-4">
+            <button class="px-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                Daftar Member
+            </button>
+        </div>
+    </a> -->
+
     <a href="{{ route('pages.edit-profile', ['id' => $user->id]) }}">
         <div class="flex justify-end mt-4">
-            <button class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-                Edit
+            <button class="px-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                Edit Profil
             </button>
         </div>
     </a>
+    </div>
+
 </div>
 @endsection
