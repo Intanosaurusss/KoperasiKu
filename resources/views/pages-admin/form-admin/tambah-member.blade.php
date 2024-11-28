@@ -15,7 +15,7 @@
         </div>
      @endif
     <form action="{{ route('tambah-member') }}" method="POST">
-        @csrf  <!-- CSRF token for security -->
+        @csrf  <!-- token CSRF untuk keamanan-->
         <div class="space-y-5 m-4">
             <h2 class="text-xl font-semibold text-gray-700 pt-4 text-center">Tambah Member</h2>
             <div class="mt-1 grid grid-cols-1 gap-x-6 gap-y-2 md:grid-cols-2">

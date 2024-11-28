@@ -19,18 +19,18 @@ class KeranjangController extends Controller
             ->where('user_id', Auth::id())
             ->get();
 
-        $subtotal = $keranjang->sum(function ($item) {
-            // Menghapus titik (jika ada) dan mengonversi harga ke float
-            $harga = (float) str_replace('.', '', $item->produk->harga_produk);
-                
-            // Menghitung subtotal (harga * quantity)
-            return $harga * $item->qty;
-        });
+            $subtotal = $keranjang->sum(function ($item) {
+                // Pastikan harga_produk memiliki nilai, jika null atau kosong, set ke 0
+                $harga = (float) str_replace('.', '', $item->produk->harga_produk ?? '0');
             
-        // Format subtotal untuk menampilkan dengan pemisah ribuan
-        $Subtotal = number_format($subtotal, 0, ',', '.');
+                // Menghitung subtotal (harga * quantity)
+                return $harga * $item->qty;
+            });
+            
+            // Gunakan hanya untuk tampilan di frontend
+            $formattedSubtotal = number_format($subtotal, 0, ',', '.');
 
-        return view('pages-user.keranjang-user', compact('keranjang', 'Subtotal'));
+        return view('pages-user.keranjang-user', compact('keranjang', 'formattedSubtotal'));
     }
 
     /**

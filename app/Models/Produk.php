@@ -25,4 +25,10 @@ class Produk extends Model
     {
         return $this->hasMany(Keranjang::class);
     }
+
+    public function riwayat()
+    {
+        return $this->hasMany(Riwayat::class, 'produk_id');
+    }
+
 }

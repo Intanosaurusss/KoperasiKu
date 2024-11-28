@@ -79,12 +79,27 @@
     @endforeach 
     
     <div class="flex justify-end mt-5 space-x-2">
-        <p class=" flex items-center text-gray-700">Subtotal pembelian : <span class="font-semibold text-red-500">Rp. {{ $Subtotal }}</span></p>
-        <button class="flex items-center space-x-2 bg-purple-400 hover:bg-purple-600 p-2 rounded-md text-white">
+        <p class=" flex items-center text-gray-700">Subtotal pembelian : <span class="font-semibold text-red-500">Rp. {{ $formattedSubtotal}}</span></p>
+        <button onclick="openModal()" class="flex items-center space-x-2 bg-purple-400 hover:bg-purple-600 p-2 rounded-md text-white">
             <span class="text-sm">checkout</span>
         </button>
     </div>
     
+</div>
+
+<!-- modal pilih metode pembayaran -->
+<div id="paymentModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="closeModalOnOutsideClick(event)">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-80">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">Pilih Metode Pembayaran</h2>
+        <div class="flex justify-between space-x-4">
+            <button class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md" onclick="selectPayment('cash')">
+                Cash
+            </button>
+            <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md" onclick="selectPayment('digital')">
+                Digital Payment
+            </button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -130,5 +145,29 @@
             }, 3000); // Hapus pesan setelah 3 detik
         }
     });
+
+
+    //javascript untuk mengatur popup metode pembayaran saat checkout
+    const modal = document.getElementById('paymentModal');
+
+    function openModal() {
+        modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+        modal.classList.add('hidden');
+    }
+
+    function selectPayment(method) {
+        alert(`Anda memilih metode pembayaran: ${method}`);
+        closeModal();
+    }
+
+// Tutup modal jika mengklik di luar area modal
+function closeModalOnOutsideClick(event) {
+    if (event.target === modal) {
+        closeModal();
+    }
+    }
 </script>
 @endsection

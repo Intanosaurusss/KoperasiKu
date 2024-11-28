@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="p-2">
-    <div class="flex items-center p-4 mb-4 text-sm text-blue-700 rounded-lg bg-blue-100" role="alert">
+    <div class="flex items-center p-4 mb-4 text-sm text-purple-700 rounded-lg bg-purple-200" role="alert">
         <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
             <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
         </svg>
@@ -67,16 +67,7 @@
                     <td class="px-4 py-2 text-sm text-gray-700">user@gmail.com</td>
                     <td class="px-4 py-2 text-sm text-gray-700">28/10/24</td>
                     <td class="flex px-6 py-2 whitespace-nowrap text-sm text-gray-900 space-x-2 md:space-x-6 justify-center">
-                    <!-- Detail -->
-                    <a href="detail-riwayat-pembelian">
-                        <button class="flex items-center space-x-2 bg-blue-400 hover:bg-blue-500 p-1 rounded-md text-white ">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                            </svg>
-                            <span class="hidden lg:block text-sm">Detail</span>
-                        </button>
-                    </a>
+                        @include('components.crud-riwayat')
                     </td>
                 </tr>
             </tbody>
@@ -84,5 +75,69 @@
     </div>
 </div>
 </div>
+
+<!-- Modal -->
+<div class="modal hidden fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-lg p-4 w-full max-w-xs sm:max-w-sm text-sm  overflow-y-auto">
+        <h2 class="text-center font-bold text-lg mb-2">KoperasiKu</h2>
+        <p class="text-center mb-1">SMKN 1 Ciomas</p>
+        <p class="text-center mb-4">Telp: (021) 123-4567</p>
+
+        <hr class="border-t border-dashed mb-4">
+
+        <div>
+            <p><strong>Email:</strong> user@gmail.com</p>
+            <p><strong>Tanggal:</strong> 28/10/24</p>
+        </div>
+
+        <hr class="border-t border-dashed my-4">
+
+        <div class="flex justify-between">
+            <span>Produk</span>
+            <span>Qty</span>
+            <span>Subtotal</span>
+        </div>
+        <hr class="border-t border-dashed my-2">
+        <div class="flex justify-between">
+            <span>Nabati</span>
+            <span>2x</span>
+            <span>Rp.4000</span>
+        </div>
+
+        <div class="flex justify-between">
+            <span>Nabati</span>
+            <span>2x</span>
+            <span>Rp.4000</span>
+        </div>
+
+        <hr class="border-t border-dashed my-4">
+
+        <div class="flex justify-between">
+            <span><strong>Total:</strong></span>
+            <span><strong>Rp.4000</strong></span>
+        </div>
+
+        <hr class="border-t border-dashed my-4">
+
+        <p class="text-center">Terima Kasih</p>
+        <p class="text-center">Selamat Belanja Kembali</p>
+
+        <button class="btn-close mt-4 bg-red-500 text-white px-4 py-2 rounded-lg w-full">Tutup</button>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.btn-detail').forEach((button) => {
+        button.addEventListener('click', () => {
+            document.querySelector('.modal').classList.remove('hidden');
+        });
+    });
+
+    document.querySelectorAll('.btn-close').forEach((button) => {
+        button.addEventListener('click', () => {
+            document.querySelector('.modal').classList.add('hidden');
+        });
+    });
+</script>
 
 @endsection

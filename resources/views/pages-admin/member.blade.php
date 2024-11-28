@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="p-2">
-    <div class="flex items-center p-4 mb-4 text-sm text-blue-700 rounded-lg bg-blue-100" role="alert">
+    <div class="flex items-center p-4 mb-4 text-sm text-purple-700 rounded-lg bg-purple-200" role="alert">
         <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
             <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
         </svg>
@@ -27,13 +27,15 @@
     </div>
 
     <!-- Search Bar -->
-    <form class="flex sm:order-2 order-1 items-center gap-4">
-        <div class="flex items-center border border-gray-300 rounded-lg bg-white">
-            <svg class="w-4 h-4 text-gray-500 ml-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-            </svg>
-            <input type="search" name="search" id="default-search" class="block w-full p-2 pl-2 text-sm text-gray-900 border-0 rounded-lg focus:ring-blue-500 focus:outline-none" placeholder="Cari member..." required />
-        </div>
+    <form id="search-form" action="{{ route('pages-admin.member') }}" method="GET" class="flex sm:order-2 order-1 items-center gap-4">
+    <div class="flex items-center border border-gray-300 rounded-lg bg-white">
+        <svg class="w-4 h-4 text-gray-500 ml-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+        </svg>
+        <input type="search" name="search" id="default-search" 
+            class="block w-full p-2 pl-2 text-sm text-gray-900 border-0 rounded-lg focus:ring-blue-500 focus:outline-none" 
+            placeholder="Cari member..." value="{{ request('search') }}" />
+    </div>
     </form>
 
     <!-- Button Tambah Data Member -->
@@ -70,8 +72,8 @@
             </thead>
             <tbody class="divide-y divide-gray-200">
             @foreach($members as $index => $member)
-                <tr>
-                    <td class="px-4 py-2 text-sm text-center text-gray-700">{{ $index + 1 }}</td>
+                <tr class="hover:bg-gray-100">
+                    <td class="px-4 py-2 text-sm text-center text-gray-700">{{ ($members->currentPage() - 1) * $members->perPage() + $index + 1 }}</td>
                     <td class="px-4 py-2 text-sm text-gray-700">{{ $member->nama }}</td>
                     <td class="px-4 py-2 text-sm text-gray-700">{{ $member->id_member }}</td>
                     <td class="flex px-6 py-2 whitespace-nowrap text-sm text-gray-900 space-x-2 md:space-x-6 justify-center">
@@ -87,4 +89,59 @@
 
 </div>
 </div>
+
+<!-- Pagination -->
+<div class="mt-4 flex justify-end space-x-2">
+    @if ($members->onFirstPage())
+        <span class="px-3 py-1 bg-gray-300 text-gray-500 text-sm rounded cursor-default">
+            Previous
+        </span>
+    @else
+        <a href="{{ $members->previousPageUrl() }}" class="px-3 py-1 bg-white text-gray-700 text-sm rounded border border-gray-300 hover:bg-gray-100">
+            Previous
+        </a>
+    @endif
+
+    @php
+        $currentPage = $members->currentPage();
+        $lastPage = $members->lastPage();
+        $start = max(1, $currentPage - 1);
+        $end = min($lastPage, $currentPage + 1);
+        @endphp
+
+        @for ($page = $start; $page <= $end; $page++)
+        @if ($page == $currentPage)
+            <span class="px-3 py-1 bg-blue-500 text-white text-sm rounded">{{ $page }}</span>
+        @else
+            <a href="{{ $members->url($page) }}" class="px-3 py-1 bg-white text-gray-700 text-sm rounded border border-gray-300 hover:bg-gray-100">{{ $page }}</a>
+        @endif
+        @endfor
+
+        @if ($members->hasMorePages())
+            <a href="{{ $members->nextPageUrl() }}" class="px-3 py-1 bg-white text-gray-700 text-sm rounded border border-gray-300 hover:bg-gray-100">
+                Next
+            </a>
+        @else
+            <span class="px-3 py-1 bg-gray-300 text-gray-500 text-sm rounded cursor-default">
+                Next
+            </span>
+        @endif
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('search-form');
+        const searchInput = document.getElementById('default-search');
+
+        // Trigger form submit on input in search bar (debounced to avoid excessive submits)
+        let timeout = null;
+        searchInput.addEventListener('input', function () {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                form.submit(); // Submit form automatically after 3 seconds of no typing
+            }, 500); // Delay for 3 seconds
+        });
+    });
+</script>
+
 @endsection

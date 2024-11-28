@@ -12,7 +12,7 @@ class PengeluaranController extends Controller
     
     // Menampilkan halaman daftar pengeluaran
     public function index(Request $request)
-    {
+    { 
         $query = Pengeluaran::query();
 
         // Cek apakah ada input pencarian - ini untuk mencari data di searchbar 
@@ -57,7 +57,7 @@ class PengeluaranController extends Controller
         ]);
 
         // Simpan data pengeluaran baru ke dalam database
-        Pengeluaran::create([
+        Pengeluaran::create([ 
             'tanggal_pengeluaran' => $request->tanggal_pengeluaran,
             'total_pengeluaran' => $request->total_pengeluaran,
             'deskripsi_pengeluaran' => $request->deskripsi_pengeluaran,

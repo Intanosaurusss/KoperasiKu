@@ -5,7 +5,7 @@
 @section('content')
 <div class="p-2">
     <!-- Konten dashboard pengguna Anda di sini -->
-    <h2 class="text-xl font-semibold text-gray-700">Selamat datang {{ Auth::user()->name }}, kamu mau beli apa?</h2>
+    <h2 class="text-xl font-semibold text-gray-700">Selamat datang {{ Auth::user()->nama }}, kamu mau beli apa?</h2>
 
     <!-- Dropdown dengan Search Bar -->
     <div class="flex flex-col sm:flex-row items-center mt-4 w-full">

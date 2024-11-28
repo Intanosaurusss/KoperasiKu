@@ -5,13 +5,36 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\MembersImport;
+
 
 class RegisterMemberController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $members = User::where('role', 'user')->get(); // Mengambil data member dari tabel 'users' tetapi hanya yang memiliki role sebagai "user" saja
-        return view('pages-admin.member', compact('members'));  // Mengirim data member ke view
+    // Ambil parameter search dari query string
+    $search = $request->input('search');
+    
+    // Query untuk mengambil data user dengan role 'user'
+    $query = User::where('role', 'user');
+
+    // Jika ada kata kunci pencarian, tambahkan filter
+    if ($search) {
+        $query->where(function ($q) use ($search) {
+            $q->where('nama', 'like', "%{$search}%")
+              ->orWhere('kelas', 'like', "%{$search}%")
+              ->orWhere('no_telepon', 'like', "%{$search}%")
+              ->orWhere('email', 'like', "%{$search}%")
+              ->orWhere('id_member', 'like', "%{$search}%");
+        });
+    }
+
+    // Paginate hasil pencarian
+    $members = $query->paginate(5);
+
+    // Kirim data ke view
+    return view('pages-admin.member', compact('members'));
     }
 
     // Menampilkan detail member berdasarkan ID
@@ -35,8 +58,8 @@ class RegisterMemberController extends Controller
             'nama' => 'required|string|max:255',
             'kelas' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'id_member' => 'required|numeric|min:10|unique:users,id_member',
-            'no_telepon' => 'required|string|max:15|unique:users',
+            'id_member' => 'required|string|max:10|regex:/^\d+$/|unique:users', // regex agar hanya menerima angka
+            'no_telepon' => 'required|string|max:15|regex:/^\d+$/|unique:users',
         ]);
 
         // Jika validasi gagal
@@ -57,6 +80,17 @@ class RegisterMemberController extends Controller
         // Redirect ke halaman member setelah registrasi berhasil
         return redirect()->route('pages-admin.member')->with('message', 'Member berhasil ditambahkan.');
     }
+
+    // public function import(Request $request)  //register member import via excel
+    // {
+    //     $request->validate([
+    //         'file' => 'required|mimes:xlsx,csv',
+    //     ]);
+
+    //     Excel::import(new MembersImport, $request->file('file'));
+
+    //     return back()->with('success', 'Data berhasil diimport.');
+    // }
 
     // Menghapus member berdasarkan ID
     public function destroy($id)
