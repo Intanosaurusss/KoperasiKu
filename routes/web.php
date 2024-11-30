@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\PengeluaranController;
 use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\User\KeranjangController;
 use App\Http\Controllers\RegisterMemberController;
+use App\Http\Controllers\CheckoutController;
 
 // route untuk halaman default
 Route::get('/', function () { return view('welcome'); });
@@ -83,3 +84,6 @@ Route::patch('/keranjang-user/decrement/{id}', [KeranjangController::class, 'dec
 
 //route untuk menampilkan menu riwayat user
 Route::get('/riwayat-user', function () { return view('pages-user.riwayat-user'); });
+
+Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+Route::post('/midtrans/callback', [CheckoutController::class, 'callback'])->name('midtrans.callback');

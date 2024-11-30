@@ -73,7 +73,7 @@
                         <span class="mt-2 md:mt-0">{{ $item->nama_produk }}</span>
                     </div>
                     </td>
-                    <td class="px-4 py-2 text-sm text-gray-700">Rp. {{ $item->harga_produk }}</td>
+                    <td class="px-4 py-2 text-sm text-gray-700">Rp. {{ number_format($item->harga_produk, 0, ',', '.') }}</td>
                     <td class="px-4 py-2 text-sm text-gray-700">{{ $item->stok_produk }}</td>
                     <td class="p-4 text-sm text-gray-900">
                         <div class="flex h-full w-full items-center justify-center space-x-2 md:space-x-6">

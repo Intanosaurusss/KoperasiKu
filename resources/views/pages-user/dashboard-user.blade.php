@@ -14,7 +14,7 @@
                 <!-- Dropdown Kategori -->
                 <div class="relative sm:w-1/4 w-full max-w-xs">
                     <select name="kategori_produk" id="kategori-dropdown" class="block w-full p-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:outline-none">
-                        <option value="">Semua Kategori</option>
+                        <option value="">Filter Kategori</option>
                         <option value="makanan">Makanan</option>
                         <option value="minuman">Minuman</option>
                         <option value="alat tulis kantor">Alat Tulis Kantor</option>
@@ -81,7 +81,7 @@
             </h3>
             <p class="mt-1 mb-1 text-sm text-gray-400">stok : {{ $produk->stok_produk }}</p>
             <div class="flex justify-between items-center">
-            <p class="font-semibold text-red-400 mr-2 mb-3">Rp. {{ $produk->harga_produk }}</p>
+            <p class="font-semibold text-red-400 mr-2 mb-3">Rp. {{ number_format($produk->harga_produk, 0, ',', '.') }}</p>
             <form action="{{ route('tambah-ke-keranjang') }}" method="POST" class="inline-block">
                 @csrf
                 <input type="hidden" name="produk_id" value="{{ $produk->id }}">

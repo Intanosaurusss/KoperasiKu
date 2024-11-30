@@ -10,7 +10,7 @@ class DashboardUserController extends Controller
 {
     // function untuk menampilkan halaman dashboard user
     public function index(Request $request)
-{
+    {
     $query = Produk::query();
 
     // Filter berdasarkan kategori jika dipilih
@@ -34,6 +34,5 @@ class DashboardUserController extends Controller
 
     // Kirim data ke view
     return view('pages-user.dashboard-user', compact('produk'));
-}
-
+    }
 }

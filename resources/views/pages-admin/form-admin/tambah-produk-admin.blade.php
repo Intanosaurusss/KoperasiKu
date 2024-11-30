@@ -6,13 +6,13 @@
 <div class="pl-2">
     <div class="bg-white rounded-md shadow-md">
     @if ($errors->any())
-                <div class="mb-4">
-                    <ul class="text-red-600">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
+        <div class="mb-4">
+            <ul class="text-red-600">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
      @endif
     <form action="{{ route('produk-admin') }}" method="POST" enctype="multipart/form-data">
     @csrf

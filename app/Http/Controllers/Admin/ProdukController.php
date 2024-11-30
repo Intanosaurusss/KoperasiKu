@@ -39,11 +39,14 @@ class ProdukController extends Controller
     {
         // Validasi input
         $request->validate([
-            'nama_produk' => 'required|string|max:255',
+            'nama_produk' => 'required|string|max:255|unique:produk,nama_produk',
             'kategori_produk' => 'required|string|max:255',
             'harga_produk' => 'required|numeric',
             'stok_produk' => 'required|integer',
             'foto_produk' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ], [
+            // Custom message untuk validasi
+            'nama_produk.unique' => 'Produk dengan nama ini sudah ada.',
         ]);
 
         // Menyimpan data produk ke database

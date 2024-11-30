@@ -14,6 +14,8 @@ class Transaksi extends Model
      *
      * @var array
      */
+    protected $table = 'transaksi'; // Pastikan nama tabel sesuai dengan yang ada di database
+
     protected $fillable = [
         'user_id',
         'metode_pembayaran',
@@ -28,6 +30,6 @@ class Transaksi extends Model
      */
     public function riwayat()
     {
-        return $this->hasMany(Riwayat::class, 'transaksi_id');
+        return $this->hasMany(Riwayat::class, 'transaksi_id', 'id');
     }
 }

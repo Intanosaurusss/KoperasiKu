@@ -3,6 +3,10 @@
 @section('title', 'Keranjang User')
 
 @section('content')
+
+<!-- IMPORT JAVASCRIPT DARI MIDTRANS -->
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ ('services.midtrans.client_key') }}"></script>
+
 <div>
     @if ($keranjang->isNotEmpty())
         <p class="text-md text-gray-600">Ayo monggo, silahkan di checkout...</p>
@@ -39,7 +43,7 @@
     <div class="flex-1 space-y-1">
         <h2 class="text-sm font-semibold text-gray-700">{{ $produk->produk->nama_produk }}</h2>
         <p class="text-sm text-gray-500">Stok: <span class="font-medium">{{ $produk->produk->stok_produk }}</span></p>
-        <p class="text-red-400 font-semibold">{{ $produk->produk->harga_produk }}</p>
+        <p class="text-red-400 font-semibold">{{ number_format($produk->produk->harga_produk, 0, ',', '.') }}</p>
     </div>
 
     <!-- Kontrol Jumlah 2 -->
@@ -146,7 +150,6 @@
         }
     });
 
-
     //javascript untuk mengatur popup metode pembayaran saat checkout
     const modal = document.getElementById('paymentModal');
 
@@ -158,16 +161,86 @@
         modal.classList.add('hidden');
     }
 
-    function selectPayment(method) {
-        alert(`Anda memilih metode pembayaran: ${method}`);
-        closeModal();
+    // Fungsi untuk memilih metode pembayaran
+function selectPayment(method) {
+    // Tampilkan pesan metode pembayaran yang dipilih
+    alert(`Anda memilih metode pembayaran: ${method}`);
+
+    // Tentukan logika untuk masing-masing metode pembayaran
+    if (method === 'cash') {
+        // Kirim permintaan ke server untuk pembayaran cash
+        fetch("{{ route('checkout') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({ metode_pembayaran: 'cash' })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Gagal melakukan checkout.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Tampilkan pesan sukses
+            alert(data.message);
+            // Refresh halaman
+            location.reload();
+        })
+        .catch(error => {
+            // Tampilkan pesan error
+            alert('Terjadi kesalahan: ' + error.message);
+        });
+    } else if (method === 'digital') {
+        // Kirim permintaan ke server untuk pembayaran digital
+        fetch("{{ route('checkout') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({ metode_pembayaran: 'digital' })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Gagal melakukan checkout.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.snapToken) {
+                // Jalankan Midtrans Snap jika token ada
+                snap.pay(data.snapToken, {
+                    onSuccess: function () {
+                        alert('Pembayaran berhasil!');
+                        location.reload();
+                    },
+                    onPending: function () {
+                        alert('Menunggu pembayaran...');
+                    },
+                    onError: function () {
+                        alert('Pembayaran gagal!');
+                    }
+                });
+            }
+        })
+        .catch(error => {
+            // Tampilkan pesan error
+            alert('Terjadi kesalahan: ' + error.message);
+        });
     }
 
-// Tutup modal jika mengklik di luar area modal
-function closeModalOnOutsideClick(event) {
-    if (event.target === modal) {
-        closeModal();
-    }
+    // Tutup modal setelah memilih metode pembayaran
+    closeModal();
+}
+
+    // Tutup modal jika mengklik di luar area modal
+    function closeModalOnOutsideClick(event) {
+        if (event.target === modal) {
+            closeModal();
+        }
     }
 </script>
 @endsection
