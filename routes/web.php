@@ -86,4 +86,5 @@ Route::patch('/keranjang-user/decrement/{id}', [KeranjangController::class, 'dec
 Route::get('/riwayat-user', function () { return view('pages-user.riwayat-user'); });
 
 Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+Route::post('/payment/success', [CheckoutController::class, 'paymentSuccess'])->name('payment.success');
 Route::post('/midtrans/callback', [CheckoutController::class, 'callback'])->name('midtrans.callback');

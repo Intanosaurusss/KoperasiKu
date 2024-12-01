@@ -194,46 +194,60 @@ function selectPayment(method) {
             alert('Terjadi kesalahan: ' + error.message);
         });
     } else if (method === 'digital') {
-        // Kirim permintaan ke server untuk pembayaran digital
-        fetch("{{ route('checkout') }}", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': "{{ csrf_token() }}"
-            },
-            body: JSON.stringify({ metode_pembayaran: 'digital' })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Gagal melakukan checkout.');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.snapToken) {
-                // Jalankan Midtrans Snap jika token ada
-                snap.pay(data.snapToken, {
-                    onSuccess: function () {
-                        alert('Pembayaran berhasil!');
-                        location.reload();
-                    },
-                    onPending: function () {
-                        alert('Menunggu pembayaran...');
-                    },
-                    onError: function () {
-                        alert('Pembayaran gagal!');
-                    }
-                });
-            }
-        })
-        .catch(error => {
-            // Tampilkan pesan error
-            alert('Terjadi kesalahan: ' + error.message);
-        });
-    }
-
-    // Tutup modal setelah memilih metode pembayaran
-    closeModal();
+    fetch("{{ route('checkout') }}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+        },
+        body: JSON.stringify({ metode_pembayaran: 'digital' })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Gagal melakukan checkout.');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.snapToken) {
+            snap.pay(data.snapToken, {
+                onSuccess: function (result) {
+                    // Kirim data ke server untuk memperbarui status pembayaran
+                    fetch("{{ route('payment.success') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        },
+                        body: JSON.stringify({ order_id: result.order_id })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Gagal memperbarui status pembayaran.');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        alert(data.message);
+                        location.reload(); // Refresh halaman setelah sukses
+                    })
+                    .catch(error => {
+                        alert('Terjadi kesalahan: ' + error.message);
+                    });
+                },
+                onPending: function () {
+                    alert('Menunggu pembayaran...');
+                },
+                onError: function () {
+                    alert('Pembayaran gagal!');
+                }
+            });
+        }
+    })
+    .catch(error => {
+        alert('Terjadi kesalahan: ' + error.message);
+    });
+}
 }
 
     // Tutup modal jika mengklik di luar area modal

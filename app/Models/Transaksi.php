@@ -32,4 +32,10 @@ class Transaksi extends Model
     {
         return $this->hasMany(Riwayat::class, 'transaksi_id', 'id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

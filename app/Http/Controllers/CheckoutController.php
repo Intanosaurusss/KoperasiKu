@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Midtrans\Config;
 use Midtrans\Snap;
 
+
 class CheckoutController extends Controller
 {
     public function __construct()
@@ -39,13 +40,18 @@ class CheckoutController extends Controller
                 'subtotal' => $subtotal,
             ]);
 
-            // Tambahkan riwayat
+            // Tambahkan riwayat dan kurangi stok
             foreach ($keranjang as $item) {
                 Riwayat::create([
                     'transaksi_id' => $transaksi->id,
                     'produk_id' => $item->produk_id,
                     'qty' => $item->qty,
                 ]);
+
+                // Kurangi stok produk
+                $produk = $item->produk;
+                $produk->stok_produk -= $item->qty;
+                $produk->save();
             }
 
             // Kosongkan keranjang
@@ -63,7 +69,7 @@ class CheckoutController extends Controller
                 'status_pembayaran' => 'pending',
                 'subtotal' => $subtotal,
             ]);
-        
+
             // Siapkan data untuk Snap Midtrans
             $payload = [
                 'transaction_details' => [
@@ -84,66 +90,112 @@ class CheckoutController extends Controller
                     ];
                 })->toArray(),
             ];
-        
+
             $snapToken = Snap::getSnapToken($payload);
-        
+
             return response()->json([
                 'snapToken' => $snapToken,
             ]);
         }
-    }        
-
-    public function callback(Request $request)
-    {
-    $notification = new \Midtrans\Notification($request->all()); // Terima request dengan benar
-
-    $transactionStatus = $notification->transaction_status;
-    $orderId = $notification->order_id; // Ini adalah id transaksi dari database
-
-    // Cari transaksi berdasarkan id
-    $transaksi = Transaksi::find($orderId);
-
-    if (!$transaksi) {
-        return response()->json([
-            'message' => 'Transaksi tidak ditemukan.',
-        ], 404);
     }
 
-    if ($transactionStatus == 'capture' || $transactionStatus == 'settlement') {
-        // Pembayaran berhasil
-        $transaksi->update([
-            'status_pembayaran' => 'success',
-        ]);
+    public function paymentSuccess(Request $request)
+    {
+        $orderId = $request->input('order_id');
 
-        // Tambahkan riwayat dari keranjang
-        $user = $transaksi->user;
-        $keranjang = $user->keranjang;
+        // Cari transaksi berdasarkan order_id
+        $transaksi = Transaksi::find($orderId);
 
+        if (!$transaksi) {
+            return response()->json(['message' => 'Transaksi tidak ditemukan'], 404);
+        }
+
+        // Perbarui status pembayaran
+        $transaksi->status_pembayaran = 'success';
+        $transaksi->save();
+
+        // Ambil keranjang milik pengguna
+        $keranjang = $transaksi->user->keranjang;
+
+        if ($keranjang->isEmpty()) {
+            return response()->json(['message' => 'Keranjang kosong, tidak ada data yang dipindahkan ke riwayat.'], 400);
+        }
+
+        // Proses setiap item di keranjang dan tambahkan ke riwayat serta kurangi stok produk
         foreach ($keranjang as $item) {
             Riwayat::create([
                 'transaksi_id' => $transaksi->id,
                 'produk_id' => $item->produk_id,
                 'qty' => $item->qty,
             ]);
+
+            // Kurangi stok produk
+            $produk = $item->produk;
+            $produk->stok_produk -= $item->qty;
+            $produk->save();
         }
 
-        // Kosongkan keranjang
-        $keranjang->each->delete();
-    } elseif ($transactionStatus == 'pending') {
-        // Pembayaran pending
-        $transaksi->update([
-            'status_pembayaran' => 'pending',
-        ]);
-    } elseif (in_array($transactionStatus, ['deny', 'expire', 'cancel'])) {
-        // Pembayaran gagal
-        $transaksi->update([
-            'status_pembayaran' => 'failed',
+        // Hapus produk dari keranjang setelah ditambahkan ke riwayat
+        $keranjang->each(function ($item) {
+            $item->delete();
+        });
+
+        return response()->json([
+            'message' => 'Pembayaran berhasil!',
+            'transaksi' => $transaksi,
         ]);
     }
 
-    return response()->json([
-        'message' => 'Callback berhasil diproses.',
-    ]);
-    }
-    
+    // public function callback(Request $request)
+    // {
+    // $notification = new \Midtrans\Notification($request->all()); // Terima request dengan benar
+
+    // $transactionStatus = $notification->transaction_status;
+    // $orderId = $notification->order_id; // Ini adalah id transaksi dari database
+
+    // // Cari transaksi berdasarkan id
+    // $transaksi = Transaksi::find($orderId);
+
+    // if (!$transaksi) {
+    //     return response()->json([
+    //         'message' => 'Transaksi tidak ditemukan.',
+    //     ], 404);
+    // }
+
+    // if ($transactionStatus == 'capture' || $transactionStatus == 'settlement') {
+    //     // Pembayaran berhasil
+    //     $transaksi->update([
+    //         'status_pembayaran' => 'success',
+    //     ]);
+
+    //     // Tambahkan riwayat dari keranjang
+    //     $user = $transaksi->user;
+    //     $keranjang = $user->keranjang;
+
+    //     foreach ($keranjang as $item) {
+    //         Riwayat::create([
+    //             'transaksi_id' => $transaksi->id,
+    //             'produk_id' => $item->produk_id,
+    //             'qty' => $item->qty,
+    //         ]);
+    //     }
+
+    //     // Kosongkan keranjang
+    //     $keranjang->each->delete();
+    // } elseif ($transactionStatus == 'pending') {
+    //     // Pembayaran pending
+    //     $transaksi->update([
+    //         'status_pembayaran' => 'pending',
+    //     ]);
+    // } elseif (in_array($transactionStatus, ['deny', 'expire', 'cancel'])) {
+    //     // Pembayaran gagal
+    //     $transaksi->update([
+    //         'status_pembayaran' => 'failed',
+    //     ]);
+    // }
+
+    // return response()->json([
+    //     'message' => 'Callback berhasil diproses.',
+    // ]);
+    // }
 }
