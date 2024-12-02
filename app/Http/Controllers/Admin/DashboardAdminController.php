@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Produk;
 use App\Models\Pengeluaran; 
-use App\Models\User;// Pastikan sudah mengimport model Product
+use App\Models\User;
+use App\Models\Transaksi;
+use App\Models\Riwayat;
 
 class DashboardAdminController extends Controller
 {
@@ -22,6 +24,12 @@ class DashboardAdminController extends Controller
         // Mengambil jumlah produk
         $totaluser = User::count();
 
-        return view('pages-admin.dashboard-admin', compact('totalproduk', 'totalpengeluaran', 'totaluser')); // Sesuaikan dengan nama view yang Anda gunakan
+        // Mengambil total pemasukan dari subtotal di tabel transaksi
+        $totalpemasukan = Transaksi::sum('subtotal'); // Menjumlahkan semua nilai di kolom 'subtotal'
+
+        // Mengambil total riwayat 
+        $totalriwayat = Riwayat::count();
+
+        return view('pages-admin.dashboard-admin', compact('totalproduk', 'totalpengeluaran', 'totaluser', 'totalpemasukan', 'totalriwayat')); // Sesuaikan dengan nama view yang Anda gunakan
     }
 }

@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\User\KeranjangController;
 use App\Http\Controllers\RegisterMemberController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\RiwayatController;
 
 // route untuk halaman default
 Route::get('/', function () { return view('welcome'); });
@@ -83,8 +84,11 @@ Route::patch('/keranjang-user/increment/{id}', [KeranjangController::class, 'inc
 Route::patch('/keranjang-user/decrement/{id}', [KeranjangController::class, 'decrementQty'])->name('kurang-qty');
 
 //route untuk menampilkan menu riwayat user
-Route::get('/riwayat-user', function () { return view('pages-user.riwayat-user'); });
+// Route::get('/riwayat-user', function () { return view('pages-user.riwayat-user'); });
+Route::get('/riwayat-user', [RiwayatController::class, 'index'])->name('riwayat.index');
+Route::get('/riwayat-user/{id}', [RiwayatController::class, 'show'])->name('riwayat.show');
 
+//ROUTE UNTUK MENGHANDLE PEMBAYARAN
 Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
 Route::post('/payment/success', [CheckoutController::class, 'paymentSuccess'])->name('payment.success');
-Route::post('/midtrans/callback', [CheckoutController::class, 'callback'])->name('midtrans.callback');
+// Route::post('/midtrans/callback', [CheckoutController::class, 'callback'])->name('midtrans.callback');     //route callback midtrans

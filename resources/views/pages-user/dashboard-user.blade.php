@@ -12,7 +12,7 @@
         <form method="GET" action="{{ route('pages-user.dashboard-user') }}" id="search-form" class="w-full">
             <div class="flex flex-col sm:flex-row items-stretch gap-2">
                 <!-- Dropdown Kategori -->
-                <div class="relative sm:w-1/4 w-full max-w-xs">
+                <div class="sm:w-1/4 w-full max-w-xs">
                     <select name="kategori_produk" id="kategori-dropdown" class="block w-full p-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:outline-none">
                         <option value="">Filter Kategori</option>
                         <option value="makanan">Makanan</option>
@@ -23,7 +23,7 @@
                 </div>
 
                 <!-- Search Input -->
-                <div class="relative flex-1 max-w-xs">
+                <div class="flex-1 max-w-xs">
                     <div class="flex items-center border border-gray-300 rounded-lg bg-white w-full">
                         <svg class="w-4 h-4 text-gray-500 ml-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />

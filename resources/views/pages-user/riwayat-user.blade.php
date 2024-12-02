@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="">
-    <div class="flex items-center p-4 mb-4 text-sm text-blue-700 rounded-lg bg-blue-100" role="alert">
+    <div class="flex items-center p-4 mb-4 text-sm text-purple-700 rounded-lg bg-purple-200" role="alert">
         <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
             <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
         </svg>
@@ -62,59 +62,96 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
+                    @if($transaksi->isEmpty())
+                    <!-- Tampilkan pesan jika tidak ada data setelah pencarian -->
                     <tr>
-                        <td class="px-4 py-2 text-sm text-center text-gray-700">1</td>
-                        <td class="px-4 py-2 text-sm text-gray-700">28/10/24</td>
-                        <td class="px-4 py-2 text-sm text-gray-700">Rp.4000</td>
+                        <td colspan="5" class="px-4 py-2 text-center text-gray-700">
+                            Belum ada riwayat nih, kamu belum jajan di KoperasiKu ya?
+                        </td>
+                    </tr>
+                    @else
+                    @foreach($transaksi as $key => $item)
+                    <tr>
+                        <td class="px-4 py-2 text-sm text-center text-gray-700">{{ ($transaksi->currentPage() - 1) * $transaksi->perPage() + $loop->iteration }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-700">{{ $item->created_at->format('d/m/Y') }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-700">Rp.{{ number_format($item->subtotal, 0, ',', '.') }}</td>
                         <td class="flex px-6 py-2 whitespace-nowrap text-sm text-gray-900 space-x-2 md:space-x-6 justify-center">
                         @include('components.crud-riwayat')
                         </td>
                     </tr>
+                    @endforeach
+                    @endif
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Pagination -->
+<div class="mt-4 flex justify-end space-x-2">
+        <!-- Tombol Previous -->
+        @if ($transaksi->onFirstPage())
+            <span class="px-3 py-1 bg-gray-300 text-gray-500 text-sm rounded cursor-default">
+                Previous
+            </span>
+        @else
+            <a href="{{ $transaksi->previousPageUrl() }}" class="px-3 py-1 bg-white text-gray-700 text-sm rounded border border-gray-300 hover:bg-gray-100">
+                Previous
+            </a>
+        @endif
+        <!-- Tombol Halaman Dinamis -->
+        @php
+            $currentPage = $transaksi->currentPage();
+            $lastPage = $transaksi->lastPage();
+
+            // Tentukan dua tombol nomor halaman secara dinamis
+            $start = max(1, $currentPage - 1);
+            $end = min($lastPage, $currentPage + 1);
+        @endphp
+        <!-- Tampilkan dua tombol halaman yang sesuai -->
+        @for ($page = $start; $page <= $end; $page++)
+            @if ($page == $currentPage)
+                <span class="px-3 py-1 bg-blue-500 text-white text-sm rounded">{{ $page }}</span>
+            @else
+                <a href="{{ $transaksi->url($page) }}" class="px-3 py-1 bg-white text-gray-700 text-sm rounded border border-gray-300 hover:bg-gray-100">{{ $page }}</a>
+            @endif
+        @endfor
+        <!-- Tombol Next -->
+        @if ($transaksi->hasMorePages())
+            <a href="{{ $transaksi->nextPageUrl() }}" class="px-3 py-1 bg-white text-gray-700 text-sm rounded border border-gray-300 hover:bg-gray-100">
+                Next
+            </a>
+        @else
+            <span class="px-3 py-1 bg-gray-300 text-gray-500 text-sm rounded cursor-default">
+                Next
+            </span>
+        @endif
+    </div>
+</div>
+
+<!-- Modal Detail  -->
 <div class="modal hidden fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center">
-    <div class="bg-white rounded-lg shadow-lg p-4 w-full max-w-xs sm:max-w-sm text-sm  overflow-y-auto">
+    <div class="modal-content bg-white rounded-lg shadow-lg p-4 w-full max-w-xs sm:max-w-sm text-sm overflow-y-auto">
         <h2 class="text-center font-bold text-lg mb-2">KoperasiKu</h2>
-        <p class="text-center mb-1">SMKN 1 Ciomas</p>
-        <p class="text-center mb-4">Telp: (021) 123-4567</p>
+        <p class="text-center mb-1"></p> <!-- Email -->
+        <p class="text-center mb-4"></p> <!-- Tanggal -->
 
         <hr class="border-t border-dashed mb-4">
 
-        <div>
-            <p><strong>Email:</strong> user@gmail.com</p>
-            <p><strong>Tanggal:</strong> 28/10/24</p>
-        </div>
-
-        <hr class="border-t border-dashed my-4">
-
-        <div class="flex justify-between">
+        <div class="flex justify-between font-semibold">
             <span>Produk</span>
             <span>Qty</span>
+            <span>Harga</span>
             <span>Subtotal</span>
         </div>
-        <hr class="border-t border-dashed my-2">
-        <div class="flex justify-between">
-            <span>Nabati</span>
-            <span>2x</span>
-            <span>Rp.4000</span>
-        </div>
-
-        <div class="flex justify-between">
-            <span>Nabati</span>
-            <span>2x</span>
-            <span>Rp.4000</span>
-        </div>
+        <hr class="border-t border-dashed my-2 text-center">
+        <div class="produk-list"></div>
 
         <hr class="border-t border-dashed my-4">
 
         <div class="flex justify-between">
             <span><strong>Total:</strong></span>
-            <span><strong>Rp.4000</strong></span>
+            <span class="total"><strong>Rp.0</strong></span>
         </div>
 
         <hr class="border-t border-dashed my-4">
@@ -126,17 +163,56 @@
     </div>
 </div>
 
+
 <script>
-    document.querySelectorAll('.btn-detail').forEach((button) => {
-        button.addEventListener('click', () => {
-            document.querySelector('.modal').classList.remove('hidden');
-        });
+    document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.querySelector('.modal');
+    const modalClose = document.querySelector('.btn-close');
+    const detailButtons = document.querySelectorAll('.btn-detail');
+    const modalContent = modal.querySelector('.modal-content');
+
+    // Tutup modal
+    modalClose.addEventListener('click', () => {
+        modal.classList.add('hidden');
     });
 
-    document.querySelectorAll('.btn-close').forEach((button) => {
-        button.addEventListener('click', () => {
-            document.querySelector('.modal').classList.add('hidden');
+    // Klik tombol detail
+    detailButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+            const transaksiId = button.getAttribute('data-id');
+            try {
+                const response = await fetch(`/riwayat-user/${transaksiId}`);
+                if (!response.ok) throw new Error('Gagal memuat data.');
+
+                const data = await response.json();
+
+                // Isi data ke modal
+                modal.querySelector('p:nth-of-type(1)').innerText = `Email: ${data.user.email}`;
+                modal.querySelector('p:nth-of-type(2)').innerText = `Tanggal: ${new Date(data.created_at).toLocaleDateString()}`;
+
+                // Daftar produk
+                const produkHtml = data.riwayat.map(riwayat => `
+                    <div class="flex justify-between">
+                        <span>${riwayat.produk}</span>
+                        <span>${riwayat.qty}x</span>
+                        <span>Rp.${new Intl.NumberFormat('id-ID').format(riwayat.harga)}</span>
+                        <span>Rp.${new Intl.NumberFormat('id-ID').format(riwayat.subtotal)}</span>
+                    </div>
+                `).join('');
+                modal.querySelector('.modal-content .produk-list').innerHTML = produkHtml;
+
+                // Total berdasarkan subtotal yang sudah dihitung di controller
+                const total = data.riwayat.reduce((sum, item) => sum + item.subtotal, 0);
+                modal.querySelector('.modal-content .total').innerText = `Rp.${new Intl.NumberFormat('id-ID').format(total)}`;
+
+                // Tampilkan modal
+                modal.classList.remove('hidden');
+            } catch (error) {
+                alert(error.message);
+            }
         });
     });
+});
+
 </script>
 @endsection

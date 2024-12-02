@@ -67,7 +67,7 @@
                     <td class="px-4 py-2 text-sm text-gray-700">user@gmail.com</td>
                     <td class="px-4 py-2 text-sm text-gray-700">28/10/24</td>
                     <td class="flex px-6 py-2 whitespace-nowrap text-sm text-gray-900 space-x-2 md:space-x-6 justify-center">
-                        @include('components.crud-riwayat')
+                        @include('components.crud-riwayat-admin')
                     </td>
                 </tr>
             </tbody>
