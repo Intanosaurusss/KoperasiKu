@@ -86,7 +86,7 @@
                 <tr class="hover:bg-gray-100">
                     <td class="px-4 py-2 text-sm text-center text-gray-700">{{ ($pengeluaran->currentPage() - 1) * $pengeluaran->perPage() + $loop->iteration }}</td>
                     <td class="px-4 py-2 text-sm text-gray-700">{{ $item->tanggal_pengeluaran }}</td>
-                    <td class="px-4 py-2 text-sm text-gray-700">Rp. {{ $item->total_pengeluaran }}</td>
+                    <td class="px-4 py-2 text-sm text-gray-700">Rp. {{ number_format($item->total_pengeluaran, 0, ',', '.') }}</td>
                     <td class="flex px-6 py-2 whitespace-nowrap text-sm text-gray-900 space-x-2 md:space-x-6 justify-center">
                     @include('components.crud-pengeluaran-admin')
                     </td>

@@ -19,7 +19,7 @@ class DashboardAdminController extends Controller
         $totalproduk = Produk::count();
 
         // Mengambil jumlah produk
-        $totalpengeluaran = Pengeluaran::count();
+        $totalpengeluaran = Pengeluaran::sum('total_pengeluaran');
 
         // Mengambil jumlah produk
         $totaluser = User::count();

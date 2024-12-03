@@ -87,6 +87,7 @@ Route::patch('/keranjang-user/decrement/{id}', [KeranjangController::class, 'dec
 // Route::get('/riwayat-user', function () { return view('pages-user.riwayat-user'); });
 Route::get('/riwayat-user', [RiwayatController::class, 'index'])->name('riwayat.index');
 Route::get('/riwayat-user/{id}', [RiwayatController::class, 'show'])->name('riwayat.show');
+Route::get('/riwayat-user{id}/cetak', [RiwayatController::class, 'cetakriwayat'])->name('cetakriwayatbyid');
 
 //ROUTE UNTUK MENGHANDLE PEMBAYARAN
 Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');

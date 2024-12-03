@@ -73,7 +73,7 @@
                     @foreach($transaksi as $key => $item)
                     <tr>
                         <td class="px-4 py-2 text-sm text-center text-gray-700">{{ ($transaksi->currentPage() - 1) * $transaksi->perPage() + $loop->iteration }}</td>
-                        <td class="px-4 py-2 text-sm text-gray-700">{{ $item->created_at->format('d/m/Y') }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-700">{{ $item->created_at->format('d-m-Y') }}</td>
                         <td class="px-4 py-2 text-sm text-gray-700">Rp.{{ number_format($item->subtotal, 0, ',', '.') }}</td>
                         <td class="flex px-6 py-2 whitespace-nowrap text-sm text-gray-900 space-x-2 md:space-x-6 justify-center">
                         @include('components.crud-riwayat')
@@ -138,14 +138,19 @@
 
         <hr class="border-t border-dashed mb-4">
 
-        <div class="flex justify-between font-semibold">
-            <span>Produk</span>
-            <span>Qty</span>
-            <span>Harga</span>
-            <span>Subtotal</span>
+        <div class="mb-2">
+            <table class="w-full">
+                <thead>
+                    <tr class="font-semibold">
+                        <th class="px-2 py-1 text-left">Produk</th>
+                        <th class="px-2 py-1 text-center">Qty</th>
+                        <th class="px-2 py-1 text-right">Harga</th>
+                        <th class="px-2 py-1 text-right">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody class="produk-list"></tbody>
+            </table>
         </div>
-        <hr class="border-t border-dashed my-2 text-center">
-        <div class="produk-list"></div>
 
         <hr class="border-t border-dashed my-4">
 
@@ -188,16 +193,20 @@
 
                 // Isi data ke modal
                 modal.querySelector('p:nth-of-type(1)').innerText = `Email: ${data.user.email}`;
-                modal.querySelector('p:nth-of-type(2)').innerText = `Tanggal: ${new Date(data.created_at).toLocaleDateString()}`;
+                modal.querySelector('p:nth-of-type(2)').innerText = `Tanggal: ${new Date(data.created_at).toLocaleDateString('id-ID', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                })}`;
 
                 // Daftar produk
                 const produkHtml = data.riwayat.map(riwayat => `
-                    <div class="flex justify-between">
-                        <span>${riwayat.produk}</span>
-                        <span>${riwayat.qty}x</span>
-                        <span>Rp.${new Intl.NumberFormat('id-ID').format(riwayat.harga)}</span>
-                        <span>Rp.${new Intl.NumberFormat('id-ID').format(riwayat.subtotal)}</span>
-                    </div>
+                    <tr>
+                        <td class="px-2 py-1 text-left">${riwayat.produk}</td>
+                        <td class="px-2 py-1 text-center">${riwayat.qty}</td>
+                        <td class="px-2 py-1 text-right">Rp.${new Intl.NumberFormat('id-ID').format(riwayat.harga)}</td>
+                        <td class="px-2 py-1 text-right">Rp.${new Intl.NumberFormat('id-ID').format(riwayat.subtotal)}</td>
+                    </tr>
                 `).join('');
                 modal.querySelector('.modal-content .produk-list').innerHTML = produkHtml;
 
@@ -213,6 +222,5 @@
         });
     });
 });
-
 </script>
 @endsection

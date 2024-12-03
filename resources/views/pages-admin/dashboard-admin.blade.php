@@ -33,7 +33,7 @@
                     </div>
                     <h3 class="text-lg font-medium text-gray-700">Pengeluaran</h3>
                 </div>
-                <p class="text-3xl font-bold mt-2 text-gray-700">{{ $totalpengeluaran }}</p>
+                <p class="text-3xl font-bold mt-2 text-gray-700">{{ number_format($totalpengeluaran, 0, ',', '.') }}</p>
                 <p class="text-sm text-gray-500">Ini adalah jumlah pengeluaran untuk belanja produk</p>
             </div>
 

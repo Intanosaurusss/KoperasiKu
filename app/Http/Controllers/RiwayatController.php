@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class RiwayatController extends Controller
 {
@@ -23,7 +24,8 @@ class RiwayatController extends Controller
         return view('pages-user.riwayat-user', compact('transaksi'));
     }
 
-    public function show($id)
+    // function untuk menampilkan detail riwayat pembelian dalam bentuk popup di halaman riwayat user
+    public function show($id) 
     {
         $transaksi = Transaksi::with(['riwayat.produk']) // Memuat relasi produk
             ->where('id', $id)
@@ -45,4 +47,36 @@ class RiwayatController extends Controller
             'created_at' => $transaksi->created_at->toISOString(), // Pastikan tanggal dikirim dalam format ISO 8601
         ]);
     }
+
+    public function cetakriwayat($id)
+    {
+        // Ambil data transaksi berdasarkan ID
+        $transaksi = Transaksi::with(['user', 'riwayat.produk'])->findOrFail($id);
+
+        // Format data riwayat untuk PDF
+        $riwayatData = $transaksi->riwayat->map(function ($riwayat) {
+            $subtotal = $riwayat->qty * $riwayat->produk->harga_produk; // Perhitungan subtotal
+            return [
+                'produk' => $riwayat->produk->nama_produk, // Pastikan atribut 'nama' sesuai dengan model Produk Anda
+                'qty' => $riwayat->qty,
+                'harga' => $riwayat->produk->harga_produk, // Pastikan atribut harga tersedia
+                'subtotal' => $subtotal,
+            ];
+        });
+
+        // Data yang akan dikirim ke PDF
+        $data = [
+            'email' => $transaksi->user->email,
+            'tanggal' => $transaksi->created_at->translatedFormat('d F Y'),
+            'riwayat' => $riwayatData,
+            'total' => $riwayatData->sum('subtotal'),
+        ];
+
+        // Generate PDF
+        $pdf = PDF::loadView('pages.cetak-laporan-riwayat.cetak-laporan-riwayat-by-id', $data);
+
+        // Unduh file PDF
+        return $pdf->download("Riwayat_Transaksi_{$id}.pdf");
+    }
+
 }
