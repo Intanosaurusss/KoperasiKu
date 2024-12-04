@@ -29,7 +29,8 @@
             </div>
 
             <!-- input date awal dan akhir beserta tombol cetak -->
-            <form class="flex items-center md:pl-2 ml-auto order-2 md:order-1">
+            <form action="{{ route('cetakriwayatbydate') }}" method="POST" class="flex items-center md:pl-2 ml-auto order-2 md:order-1">
+            @csrf
                 <input type="date" name="date_start" class="border border-gray-300 rounded-lg p-1.5 text-sm" placeholder="Tanggal Awal" required />
                 <span class="mx-2">s.d.</span>
                 <input type="date" name="date_end" class="border border-gray-300 rounded-lg p-1.5 text-sm" placeholder="Tanggal Akhir" required />

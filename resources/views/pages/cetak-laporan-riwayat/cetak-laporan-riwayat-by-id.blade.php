@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riwayat Transaksi</title>
+    <title>Riwayat Transaksi by Id Transaksi</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -33,7 +33,7 @@
             margin-bottom: 20px;
         }
         .table th, .table td {
-            border: 1px solid #ddd;
+            border: 1px solid #000;
             padding: 8px;
             text-align: left;
         }
@@ -53,6 +53,12 @@
     </style>
 </head>
 <body>
+
+    @php
+        use Carbon\Carbon;
+        Carbon::setLocale('id'); // Set locale ke Indonesia, format untuk tanggalnya
+    @endphp
+
     <!-- Header Section -->
     <div class="header">
         <h1>KoperasiKu</h1>
@@ -61,10 +67,10 @@
     <!-- User Info Section -->
     <div class="info">
         <p>Email: {{ $email }}</p>
-        <p>Tanggal: {{ $tanggal }}</p>
+        <p>Tanggal: {{ Carbon::parse($tanggal)->translatedFormat('d F Y') }}</p>
     </div>
 
-    <hr style="border: 1px dashed;">
+    <!-- <hr style="border: 1px dashed;"> -->
 
     <!-- Table Section -->
     <table class="table">
@@ -88,14 +94,14 @@
         </tbody>
     </table>
 
-    <hr style="border: 1px dashed;">
+    <!-- <hr style="border: 1px dashed;"> -->
 
     <!-- Total Section -->
     <div style="text-align: right;">
-        <strong>Total: Rp.{{ number_format($total, 0, ',', '.') }}</strong>
+        <strong>Total Belanja : Rp.{{ number_format($total, 0, ',', '.') }}</strong>
     </div>
 
-    <hr style="border: 1px dashed;">
+    <!-- <hr style="border: 1px dashed;"> -->
 
     <!-- Footer Section -->
     <div class="footer">

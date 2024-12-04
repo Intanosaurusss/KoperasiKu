@@ -67,7 +67,7 @@ class RiwayatController extends Controller
         // Data yang akan dikirim ke PDF
         $data = [
             'email' => $transaksi->user->email,
-            'tanggal' => $transaksi->created_at->translatedFormat('d F Y'),
+            'tanggal' => $transaksi->created_at,
             'riwayat' => $riwayatData,
             'total' => $riwayatData->sum('subtotal'),
         ];
@@ -79,4 +79,48 @@ class RiwayatController extends Controller
         return $pdf->download("Riwayat_Transaksi_{$id}.pdf");
     }
 
+    public function cetakriwayatdate(Request $request)
+    {
+        // Validasi input tanggal
+        $request->validate([
+            'date_start' => 'required|date',
+            'date_end' => 'required|date|after_or_equal:date_start',
+        ]);
+
+        // Ambil data transaksi berdasarkan rentang tanggal
+        $transaksi = Transaksi::with(['user', 'riwayat.produk'])
+            ->whereDate('created_at', '>=', $request->date_start)
+            ->whereDate('created_at', '<=', $request->date_end)
+            ->get();
+
+        if ($transaksi->isEmpty()) {
+            return redirect()->back()->with('error', 'Tidak ada transaksi pada rentang tanggal yang dipilih.');
+        }
+
+        // Format data untuk PDF
+        $data = $transaksi->map(function ($transaksi) {
+            $riwayatData = $transaksi->riwayat->map(function ($riwayat) {
+                $subtotal = $riwayat->qty * $riwayat->produk->harga_produk;
+                return [
+                    'produk' => $riwayat->produk->nama_produk,
+                    'qty' => $riwayat->qty,
+                    'harga' => $riwayat->produk->harga_produk,
+                    'subtotal' => $subtotal,
+                ];
+            });
+
+            return [
+                'email' => $transaksi->user->email,
+                'tanggal' => $transaksi->created_at,
+                'riwayat' => $riwayatData,
+                'total' => $riwayatData->sum('subtotal'),
+            ];
+        });
+
+        // Generate PDF
+        $pdf = PDF::loadView('pages.cetak-laporan-riwayat.cetak-laporan-riwayat-by-date', ['data' => $data]);
+
+        // Unduh file PDF
+        return $pdf->download('Laporan_Transaksi_by_Date.pdf');
+    }
 }
