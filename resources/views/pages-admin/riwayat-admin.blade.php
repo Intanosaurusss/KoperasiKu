@@ -18,14 +18,14 @@
     <!-- searchbar -->
     <div class="flex flex-col md:flex-row items-center mt-4 w-full space-y-3">
         <div class="flex order-1 md:order-1 w-full">
-            <form class="w-full mr-2 md:w-auto space-x-4">
+            <form method="GET" action="{{ route('riwayat-admin.index') }}" id="search-form" class="w-full mr-2 md:w-auto space-x-4">
                     <div class="flex items-center border border-gray-300 rounded-lg bg-white">
                         <svg class="w-4 h-4 text-gray-500 ml-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                         </svg>
-                        <input type="search" name="search" id="default-search" class="block w-full p-2 pl-2 text-sm text-gray-900 border-0 rounded-lg focus:ring-blue-500 focus:outline-none" placeholder="Cari riwayat..." required />
+                        <input type="search" name="search" id="default-search" value="{{ request('search') }}" class="block w-full p-2 pl-2 text-sm text-gray-900 border-0 rounded-lg focus:ring-blue-500 focus:outline-none" placeholder="Cari riwayat..." required />
                     </div>
-                </form>
+            </form>
         </div>
 
         <!-- input date awal dan akhir beserta tombol cetak -->
@@ -62,59 +62,101 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
+            @if($transaksi->isEmpty())
+                    <!-- Tampilkan pesan jika tidak ada data setelah pencarian -->
+                    <tr>
+                        <td colspan="5" class="px-4 py-2 text-center text-gray-700">
+                            Belum ada riwayat nih, kamu belum jajan di KoperasiKu ya?
+                        </td>
+                    </tr>
+                    @else
+            @foreach ($transaksi as $item)
                 <tr>
                     <td class="px-4 py-2 text-sm text-center text-gray-700">1</td>
-                    <td class="px-4 py-2 text-sm text-gray-700">user@gmail.com</td>
-                    <td class="px-4 py-2 text-sm text-gray-700">28/10/24</td>
+                    <td class="px-4 py-2 text-sm text-gray-700">{{ $item->user->email ?? '-' }}</td>
+                    <td class="px-4 py-2 text-sm text-gray-700">{{ $item->created_at->format('d-m-Y') }}</td>
                     <td class="flex px-6 py-2 whitespace-nowrap text-sm text-gray-900 space-x-2 md:space-x-6 justify-center">
-                        @include('components.crud-riwayat-admin')
+                        @include('components.crud-riwayat-admin', ['item' => $item])
                     </td>
                 </tr>
+            @endforeach
+            @endif
             </tbody>
         </table>
     </div>
 </div>
 </div>
 
-<!-- Modal -->
+<!-- Pagination -->
+<div class="mt-4 flex justify-end space-x-2">
+        <!-- Tombol Previous -->
+        @if ($transaksi->onFirstPage())
+            <span class="px-3 py-1 bg-gray-300 text-gray-500 text-sm rounded cursor-default">
+                Previous
+            </span>
+        @else
+            <a href="{{ $transaksi->previousPageUrl() }}" class="px-3 py-1 bg-white text-gray-700 text-sm rounded border border-gray-300 hover:bg-gray-100">
+                Previous
+            </a>
+        @endif
+        <!-- Tombol Halaman Dinamis -->
+        @php
+            $currentPage = $transaksi->currentPage();
+            $lastPage = $transaksi->lastPage();
+
+            // Tentukan dua tombol nomor halaman secara dinamis
+            $start = max(1, $currentPage - 1);
+            $end = min($lastPage, $currentPage + 1);
+        @endphp
+        <!-- Tampilkan dua tombol halaman yang sesuai -->
+        @for ($page = $start; $page <= $end; $page++)
+            @if ($page == $currentPage)
+                <span class="px-3 py-1 bg-blue-500 text-white text-sm rounded">{{ $page }}</span>
+            @else
+                <a href="{{ $transaksi->url($page) }}" class="px-3 py-1 bg-white text-gray-700 text-sm rounded border border-gray-300 hover:bg-gray-100">{{ $page }}</a>
+            @endif
+        @endfor
+        <!-- Tombol Next -->
+        @if ($transaksi->hasMorePages())
+            <a href="{{ $transaksi->nextPageUrl() }}" class="px-3 py-1 bg-white text-gray-700 text-sm rounded border border-gray-300 hover:bg-gray-100">
+                Next
+            </a>
+        @else
+            <span class="px-3 py-1 bg-gray-300 text-gray-500 text-sm rounded cursor-default">
+                Next
+            </span>
+        @endif
+    </div>
+</div>
+
+<!-- Modal Detail  -->
 <div class="modal hidden fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center">
-    <div class="bg-white rounded-lg shadow-lg p-4 w-full max-w-xs sm:max-w-sm text-sm  overflow-y-auto">
+    <div class="modal-content bg-white rounded-lg shadow-lg p-4 w-full max-w-xs sm:max-w-sm text-sm overflow-y-auto">
         <h2 class="text-center font-bold text-lg mb-2">KoperasiKu</h2>
-        <p class="text-center mb-1">SMKN 1 Ciomas</p>
-        <p class="text-center mb-4">Telp: (021) 123-4567</p>
+        <p class="text-center mb-1"></p> <!-- Email -->
+        <p class="text-center mb-4"></p> <!-- Tanggal -->
 
         <hr class="border-t border-dashed mb-4">
 
-        <div>
-            <p><strong>Email:</strong> user@gmail.com</p>
-            <p><strong>Tanggal:</strong> 28/10/24</p>
-        </div>
-
-        <hr class="border-t border-dashed my-4">
-
-        <div class="flex justify-between">
-            <span>Produk</span>
-            <span>Qty</span>
-            <span>Subtotal</span>
-        </div>
-        <hr class="border-t border-dashed my-2">
-        <div class="flex justify-between">
-            <span>Nabati</span>
-            <span>2x</span>
-            <span>Rp.4000</span>
-        </div>
-
-        <div class="flex justify-between">
-            <span>Nabati</span>
-            <span>2x</span>
-            <span>Rp.4000</span>
+        <div class="mb-2">
+            <table class="w-full">
+                <thead>
+                    <tr class="font-semibold">
+                        <th class="px-2 py-1 text-left">Produk</th>
+                        <th class="px-2 py-1 text-center">Qty</th>
+                        <th class="px-2 py-1 text-right">Harga</th>
+                        <th class="px-2 py-1 text-right">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody class="produk-list"></tbody>
+            </table>
         </div>
 
         <hr class="border-t border-dashed my-4">
 
         <div class="flex justify-between">
             <span><strong>Total:</strong></span>
-            <span><strong>Rp.4000</strong></span>
+            <span class="total"><strong>Rp.0</strong></span>
         </div>
 
         <hr class="border-t border-dashed my-4">
@@ -127,17 +169,73 @@
 </div>
 
 <script>
-    document.querySelectorAll('.btn-detail').forEach((button) => {
-        button.addEventListener('click', () => {
-            document.querySelector('.modal').classList.remove('hidden');
-        });
+    document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.querySelector('.modal');
+    const modalClose = document.querySelector('.btn-close');
+    const detailButtons = document.querySelectorAll('.btn-detail');
+    const modalContent = modal.querySelector('.modal-content');
+
+    // Tutup modal
+    modalClose.addEventListener('click', () => {
+        modal.classList.add('hidden');
     });
 
-    document.querySelectorAll('.btn-close').forEach((button) => {
-        button.addEventListener('click', () => {
-            document.querySelector('.modal').classList.add('hidden');
+    // Klik tombol detail
+    detailButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+            const transaksiId = button.getAttribute('data-id');
+            try {
+                const response = await fetch(`/riwayat-user/${transaksiId}`);
+                if (!response.ok) throw new Error('Gagal memuat data.');
+
+                const data = await response.json();
+
+                // Isi data ke modal
+                modal.querySelector('p:nth-of-type(1)').innerText = `Email: ${data.user.email}`;
+                modal.querySelector('p:nth-of-type(2)').innerText = `Tanggal: ${new Date(data.created_at).toLocaleDateString('id-ID', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                })}`;
+
+                // Daftar produk
+                const produkHtml = data.riwayat.map(riwayat => `
+                    <tr>
+                        <td class="px-2 py-1 text-left">${riwayat.produk}</td>
+                        <td class="px-2 py-1 text-center">${riwayat.qty}</td>
+                        <td class="px-2 py-1 text-right">Rp.${new Intl.NumberFormat('id-ID').format(riwayat.harga)}</td>
+                        <td class="px-2 py-1 text-right">Rp.${new Intl.NumberFormat('id-ID').format(riwayat.subtotal)}</td>
+                    </tr>
+                `).join('');
+                modal.querySelector('.modal-content .produk-list').innerHTML = produkHtml;
+
+                // Total berdasarkan subtotal yang sudah dihitung di controller
+                const total = data.riwayat.reduce((sum, item) => sum + item.subtotal, 0);
+                modal.querySelector('.modal-content .total').innerText = `Rp.${new Intl.NumberFormat('id-ID').format(total)}`;
+
+                // Tampilkan modal
+                modal.classList.remove('hidden');
+            } catch (error) {
+                alert(error.message);
+            }
         });
     });
+});
+
+    //trigger search form agar otomatis search tanpa perlu dienter terlebih dahulu
+    document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('search-form');
+            const searchInput = document.getElementById('default-search');
+
+            // Trigger form submit di form input searchbar
+            let timeout = null;
+            searchInput.addEventListener('input', function () {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    form.submit(); // kirim form otomatis setelah 3 detik typing berenti
+                }, 500); // delay 3 detik
+            });
+        });
 </script>
 
 @endsection

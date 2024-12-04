@@ -18,12 +18,12 @@
         <!-- searchbar -->
         <div class="flex flex-col md:flex-row items-center mt-4 w-full space-y-3">
             <div class="flex order-1 md:order-1 w-full">
-                <form class="w-full mr-2 md:w-auto space-x-4">
+                <form method="GET" action="{{ route('riwayat.index') }}" id="search-form" class="w-full mr-2 md:w-auto space-x-4">
                     <div class="flex items-center border border-gray-300 rounded-lg bg-white">
                         <svg class="w-4 h-4 text-gray-500 ml-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                         </svg>
-                        <input type="search" name="search" id="default-search" class="block w-full p-2 pl-2 text-sm text-gray-900 border-0 rounded-lg focus:ring-blue-500 focus:outline-none" placeholder="Cari riwayat..." required />
+                        <input type="search" name="search" id="default-search" value="{{ request('search') }}" class="block w-full p-2 pl-2 text-sm text-gray-900 border-0 rounded-lg focus:ring-blue-500 focus:outline-none" placeholder="Cari riwayat..." required />
                     </div>
                 </form>
             </div>
@@ -223,5 +223,20 @@
         });
     });
 });
+
+    //trigger search form agar otomatis search tanpa perlu dienter terlebih dahulu
+    document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('search-form');
+            const searchInput = document.getElementById('default-search');
+
+            // Trigger form submit di form input searchbar
+            let timeout = null;
+            searchInput.addEventListener('input', function () {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    form.submit(); // kirim form otomatis setelah 3 detik typing berenti
+                }, 500); // delay 3 detik
+            });
+        });
 </script>
 @endsection

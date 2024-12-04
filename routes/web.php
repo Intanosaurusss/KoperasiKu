@@ -62,7 +62,10 @@ Route::post('/produk/{id}', [ProdukController::class, 'update'])->name('produk-a
 Route::delete('/produk/{id}', [ProdukController::class, 'destroy'])->name('produk-admin.destroy');
 
 // route untuk menampilkan menu riwayat admin
-Route::get('/riwayat-admin', function () { return view('pages-admin.riwayat-admin'); });
+// Route::get('/riwayat-admin', function () { return view('pages-admin.riwayat-admin'); });
+Route::get('/riwayat-admin', [RiwayatController::class, 'indexadmin'])->name('riwayat-admin.index');
+Route::get('/riwayat-admin/{id}', [RiwayatController::class, 'showadmin'])->name('riwayat-admin.show');
+
 Route::get('/detail-riwayat-pembelian', function () { return view('pages-admin.detail-riwayat-pembelian'); });
 Route::get('/detail-riwayat-pembelian-by-date', function () { return view('pages-admin.detail-riwayat-pembelian-by-date'); }); //untuk template file pdf laporan pembelian by date
 

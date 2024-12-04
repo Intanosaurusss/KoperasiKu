@@ -9,19 +9,91 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class RiwayatController extends Controller
 {
-    public function index(Request $request)
+    //CONTROLLER RIWAYAT UNTUK ADMIN//
+    //function untuk mengirim data riwayat transaksi di halaman admin
+    public function indexadmin(Request $request)
     {
-        // Mendapatkan ID user yang sedang login
-        $userId = Auth::id();
+        // Mendapatkan parameter pencarian
+        $search = $request->input('search');
 
-        // Ambil transaksi beserta riwayat dan produk terkait sesuai dengan ID user
-        $transaksi = Transaksi::with(['riwayat.produk'])
-            ->where('user_id', $userId)
+        // Ambil transaksi beserta riwayat dan produk terkait
+        $transaksi = Transaksi::with(['riwayat.produk', 'user'])
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->whereDate('created_at', 'like', '%' . $search . '%') // Pencarian berdasarkan tanggal
+                        ->orWhere('subtotal', 'like', '%' . $search . '%') // Pencarian berdasarkan subtotal
+                        ->orWhereHas('riwayat.produk', function ($q) use ($search) {
+                            $q->where('nama_produk', 'like', '%' . $search . '%'); // Pencarian berdasarkan nama produk
+                        })
+                        ->orWhereHas('user', function ($q) use ($search) {
+                            $q->where('email', 'like', '%' . $search . '%'); // Pencarian berdasarkan email pengguna
+                        });
+                });
+            })
             ->orderBy('created_at', 'desc')
             ->paginate(5); // Batas per halaman 5
 
         // Return view dengan data transaksi
-        return view('pages-user.riwayat-user', compact('transaksi'));
+        return view('pages-admin.riwayat-admin', compact('transaksi'));
+    }
+
+    // function untuk menampilkan detail riwayat pembelian dalam bentuk popup di halaman riwayat user
+    public function showadmin($id) 
+    {
+        $transaksi = Transaksi::with(['riwayat.produk']) // Memuat relasi produk
+            ->where('id', $id)
+            ->firstOrFail();
+
+        return response()->json([
+            'transaksi' => $transaksi,
+            'user' => $transaksi->user,
+            'riwayat' => $transaksi->riwayat->map(function ($item) {
+                $hargaProduk = $item->produk->harga_produk ?? 0; // Default harga 0 jika produk tidak ditemukan
+                $subtotal = $hargaProduk * $item->qty; // Hitung subtotal
+                return [
+                    'produk' => $item->produk->nama_produk ?? 'Produk tidak ditemukan', // Mendapatkan nama produk
+                    'qty' => $item->qty,
+                    'harga' => $item->produk->harga_produk ?? 'gatau harganya', // kirim harga produknya ges
+                    'subtotal' => $subtotal, // Kirim subtotal
+                ];
+            }),
+            'created_at' => $transaksi->created_at->toISOString(), // Pastikan tanggal dikirim dalam format ISO 8601
+        ]);
+    }
+
+
+
+
+
+
+
+
+    //CONTROLLER RIWAYAT UNTUK USER//
+    public function index(Request $request)
+    {
+    // Mendapatkan ID user yang sedang login
+    $userId = Auth::id();
+
+    // Mendapatkan parameter pencarian
+    $search = $request->input('search');
+
+    // Ambil transaksi beserta riwayat dan produk terkait sesuai dengan ID user
+    $transaksi = Transaksi::with(['riwayat.produk'])
+        ->where('user_id', $userId)
+        ->when($search, function ($query) use ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('created_at', 'like', '%' . $search . '%') // Pencarian berdasarkan tanggal
+                    ->orWhere('subtotal', 'like', '%' . $search . '%') // Pencarian berdasarkan subtotal
+                    ->orWhereHas('riwayat.produk', function ($q) use ($search) {
+                        $q->where('nama_produk', 'like', '%' . $search . '%'); // Pencarian berdasarkan nama produk
+                    });
+            });
+        })
+        ->orderBy('created_at', 'desc')
+        ->paginate(5); // Batas per halaman 5
+
+    // Return view dengan data transaksi
+    return view('pages-user.riwayat-user', compact('transaksi'));
     }
 
     // function untuk menampilkan detail riwayat pembelian dalam bentuk popup di halaman riwayat user
