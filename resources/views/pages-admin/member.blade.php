@@ -18,13 +18,13 @@
     <!-- searchbar, dropddown dan button tambah member -->
 <div class="flex flex-wrap items-center mt-4 w-full gap-4">
     <!-- Dropdown Kategori -->
-    <div class="sm:order-1 order-2 sm:w-1/4 w-full max-w-xs">
+    <!-- <div class="sm:order-1 order-2 sm:w-1/4 w-full max-w-xs">
         <select name="kategori_produk" id="kategori-dropdown" class="block w-full p-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:outline-none">
             <option value="">filter berdasarkan</option>
             <option value="pembelian tersering">pembelian tersering</option>
             <option value="total pembelian">total pembelian</option>
         </select>
-    </div>
+    </div> -->
 
     <!-- Search Bar -->
     <form id="search-form" action="{{ route('pages-admin.member') }}" method="GET" class="flex sm:order-2 order-1 items-center gap-4">
