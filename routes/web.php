@@ -12,6 +12,7 @@ use App\Http\Controllers\User\KeranjangController;
 use App\Http\Controllers\RegisterMemberController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\RiwayatController;
+use App\Http\Controllers\Admin\TransaksiController;
 
 // route untuk halaman default
 Route::get('/', function () { return view('welcome'); });
@@ -68,8 +69,18 @@ Route::get('/riwayat-admin/{id}', [RiwayatController::class, 'showadmin'])->name
 Route::get('/riwayat-admin/{id}/cetak', [RiwayatController::class, 'cetakriwayatadmin'])->name('cetakriwayatadminbyid');
 Route::post('/riwayat-admin/cetakbydate', [RiwayatController::class, 'cetakriwayatadminbydate'])->name('cetakriwayatadminbydate');
 
-Route::get('/detail-riwayat-pembelian', function () { return view('pages-admin.detail-riwayat-pembelian'); });
-Route::get('/detail-riwayat-pembelian-by-date', function () { return view('pages-admin.detail-riwayat-pembelian-by-date'); }); //untuk template file pdf laporan pembelian by date
+// route untuk menampilkan menu transaksi admin 
+Route::get('/transaksi-admin', [TransaksiController::class, 'index'])->name('transaksi.index');
+Route::post('/transaksi-admin/addtokeranjang', [TransaksiController::class, 'addtransaksitokeranjang'])->name('transaksi.addtokeranjang');
+Route::delete('/transaksi-admin/delete', [TransaksiController::class, 'hapuskeranjangbyadmin'])->name('transaksi.deletekeranjang');
+
+
+// route untuk menghandle search suggestion di halaman transaksi admin
+Route::get('/search-id-member', [TransaksiController::class, 'searchidmember'])->name('search.member.id');
+Route::get('/search-produk', [TransaksiController::class, 'searchproduk'])->name('search.produk');
+
+// Route::get('/detail-riwayat-pembelian', function () { return view('pages-admin.detail-riwayat-pembelian'); });
+// Route::get('/detail-riwayat-pembelian-by-date', function () { return view('pages-admin.detail-riwayat-pembelian-by-date'); }); //untuk template file pdf laporan pembelian by date
 
 // route untuk menampilkan menu profile admin dan user
 Route::get('/profile', function () { return view('pages.profile'); });
