@@ -73,8 +73,9 @@ Route::post('/riwayat-admin/cetakbydate', [RiwayatController::class, 'cetakriway
 Route::get('/transaksi-admin', [TransaksiController::class, 'index'])->name('transaksi.index');
 Route::post('/transaksi-admin/addtokeranjang', [TransaksiController::class, 'addtransaksitokeranjang'])->name('transaksi.addtokeranjang');
 Route::delete('/transaksi-admin/delete', [TransaksiController::class, 'hapuskeranjangbyadmin'])->name('transaksi.deletekeranjang');
-
-
+// route untuk menghandle pembayaran/checkout di menu transaksi admin
+Route::post('/transaksi-checkoutbyadmin', [TransaksiController::class, 'checkoutbyadmin'])->name('checkoutbyadmin');
+Route::post('/payment/successbyadmin', [TransaksiController::class, 'paymentsuccessbyadmin'])->name('paymentsuccessbyadmin');
 // route untuk menghandle search suggestion di halaman transaksi admin
 Route::get('/search-id-member', [TransaksiController::class, 'searchidmember'])->name('search.member.id');
 Route::get('/search-produk', [TransaksiController::class, 'searchproduk'])->name('search.produk');

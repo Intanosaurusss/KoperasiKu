@@ -73,7 +73,7 @@
                     @else
             @foreach ($transaksi as $item)
                 <tr>
-                    <td class="px-4 py-2 text-sm text-center text-gray-700">1</td>
+                    <td class="px-4 py-2 text-sm text-center text-gray-700"> {{ ($transaksi->currentPage() - 1) * $transaksi->perPage() + $loop->iteration }}</td>
                     <td class="px-4 py-2 text-sm text-gray-700">{{ $item->user->email ?? '-' }}</td>
                     <td class="px-4 py-2 text-sm text-gray-700">{{ $item->created_at->format('d-m-Y') }}</td>
                     <td class="flex px-6 py-2 whitespace-nowrap text-sm text-gray-900 space-x-2 md:space-x-6 justify-center">

@@ -162,7 +162,7 @@
     }
 
     // Fungsi untuk memilih metode pembayaran
-function selectPayment(method) {
+    function selectPayment(method) {
     // Tampilkan pesan metode pembayaran yang dipilih
     alert(`Anda memilih metode pembayaran: ${method}`);
 

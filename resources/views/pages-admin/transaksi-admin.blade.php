@@ -3,6 +3,10 @@
 @section('title', 'Transaksi Pembelian')
 
 @section('content')
+
+<!-- IMPORT JAVASCRIPT DARI MIDTRANS -->
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ ('services.midtrans.client_key') }}"></script>
+
 <div class="p-2">
 
     <!-- informasi halaman -->
@@ -18,12 +22,12 @@
     
     <!-- popup pesan sukses/gagal respon dari backend -->
     @if(session('success'))
-        <div id="success-message" class="alert bg-green-100 text-green-700 text-sm border border-green-400 rounded p-1 mb-2">
+        <div id="success-message" class="alert bg-green-100 text-green-700 text-sm border border-green-400 rounded p-2 mb-2">
              {{ session('success') }}
         </div>
         @endif
     @if(session('error'))
-        <div id="error-message" class="alert bg-red-100 text-red-700 text-sm border border-red-400 rounded p-1 mb-2">
+        <div id="error-message" class="alert bg-red-100 text-red-700 text-sm border border-red-400 rounded p-2 mb-2">
             {{ session('error') }}
         </div>
     @endif
@@ -65,10 +69,7 @@
 
     <!-- Data Transaksi -->
     <div class="bg-white p-6 rounded-lg shadow flex-1">
-        <div class="flex justify-between items-center mb-2">
-            <h2 class="text-lg font-semibold text-gray-800">Data Transaksi</h2>
-            <button type="button" onclick="addTransaksi()" class="px-2 py-1.5 bg-purple-600 text-white rounded hover:bg-purple-700">Bayar</button>
-        </div>
+            <h2 class="text-lg font-semibold text-gray-800 mb-2">Data Transaksi</h2>
         <!-- input search data member untuk ditampilkan datanya -->
         <div class="space-y-1 mb-2">
             <form method="GET" action="{{ route('transaksi.index') }}">
@@ -119,6 +120,31 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+        <div class="flex justify-end mt-1 space-x-2 items-center">
+            <p>Subtotal : <span class="text-red-400 font-semibold">Rp {{ $formattedSubtotal }}</span></p>
+            <button 
+            type="button" 
+            onclick="openModal()" 
+            class="px-2 py-1.5 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            {{ $formattedSubtotal === 0 ? 'disabled' : '' }}>
+            Bayar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- modal pilih metode pembayaran -->
+<div id="paymentModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="closeModalOnOutsideClick(event)">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-80">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">Pilih Metode Pembayaran</h2>
+        <div class="flex justify-between space-x-4">
+            <button class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md" onclick="selectPayment('cash')">
+                Cash
+            </button>
+            <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md" onclick="selectPayment('digital')">
+                Digital Payment
+            </button>
         </div>
     </div>
 </div>
@@ -208,5 +234,116 @@
         if (successMessage) successMessage.style.display = 'none';
         if (errorMessage) errorMessage.style.display = 'none';
     }, 3000); 
+
+    //javascript untuk mengatur popup metode pembayaran saat checkout
+    const modal = document.getElementById('paymentModal');
+
+    // Fungsi untuk membuka modal
+    function openModal() {
+        const subtotal = {{ $formattedSubtotal }}; // Ambil nilai subtotal dari backend
+        if (subtotal > 0) {
+            modal.classList.remove('hidden');
+        }
+    }
+
+    function closeModal() {
+        modal.classList.add('hidden');
+    }
+
+    // Tutup modal jika mengklik di luar area modal
+    function closeModalOnOutsideClick(event) {
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+
+    // Fungsi untuk memilih metode pembayaran
+    function selectPayment(method) {
+    // Tampilkan pesan metode pembayaran yang dipilih
+    alert(`Anda memilih metode pembayaran: ${method}`);
+
+    // Tentukan logika untuk masing-masing metode pembayaran
+    if (method === 'cash') {
+        // Kirim permintaan ke server untuk pembayaran cash
+        fetch("{{ route('checkoutbyadmin') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({ metode_pembayaran: 'cash' })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Gagal melakukan checkout.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Tampilkan pesan sukses
+            alert(data.message);
+            // Refresh halaman
+            location.reload();
+        })
+        .catch(error => {
+            // Tampilkan pesan error
+            alert('Terjadi kesalahan: ' + error.message);
+        });
+    } else if (method === 'digital') {
+    fetch("{{ route('checkoutbyadmin') }}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+        },
+        body: JSON.stringify({ metode_pembayaran: 'digital' })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Gagal melakukan checkout.');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.snapToken) {
+            snap.pay(data.snapToken, {
+                onSuccess: function (result) {
+                    // Kirim data ke server untuk memperbarui status pembayaran
+                    fetch("{{ route('paymentsuccessbyadmin') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        },
+                        body: JSON.stringify({ order_id: result.order_id })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Gagal memperbarui status pembayaran.');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        alert(data.message);
+                        location.reload(); // Refresh halaman setelah sukses
+                    })
+                    .catch(error => {
+                        alert('Terjadi kesalahan: ' + error.message);
+                    });
+                },
+                onPending: function () {
+                    alert('Menunggu pembayaran...');
+                },
+                onError: function () {
+                    alert('Pembayaran gagal!');
+                }
+            });
+        }
+    })
+    .catch(error => {
+        alert('Terjadi kesalahan: ' + error.message);
+    });
+}
+}
 </script>
 @endsection
