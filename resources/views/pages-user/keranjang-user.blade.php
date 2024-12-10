@@ -63,7 +63,7 @@
     <form action="{{ route('tambah-qty', $produk->id) }}" method="POST" class="inline">
         @csrf
         @method('PATCH')
-        <button type="submit" class="increase bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-600 transition">+</button>
+        <button type="submit" class="increase bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-600 transition disabled:bg-gray-400 disabled:cursor-not-allowed" @if($produk->qty >= $produk->produk->stok_produk) disabled @endif>+</button>
     </form>
 
     <!-- button hapus produk dari keranjang -->
@@ -82,9 +82,22 @@
     </div>
     @endforeach 
     
+    <!-- logika pengechekan stok produk untuk menentukan disable atau tidaknya button checkout -->
+    @php
+    $jikastokprodukkosong = false;
+
+    foreach ($keranjang as $item) {
+        if ($item->produk->stok_produk == 0) {
+            $jikastokprodukkosong = true;
+            break;
+        }
+    }
+    @endphp
+    <!-- akhir dari logika pengechekan stok produk -->
+
     <div class="flex justify-end mt-5 space-x-2">
         <p class=" flex items-center text-gray-700">Subtotal pembelian : <span class="font-semibold text-red-500">Rp. {{ $formattedSubtotal}}</span></p>
-        <button onclick="openModal()" class="flex items-center space-x-2 bg-purple-400 hover:bg-purple-600 p-2 rounded-md text-white disabled:bg-gray-400 disabled:cursor-not-allowed" {{ $formattedSubtotal == 0 ? 'disabled' : '' }}>
+        <button onclick="openModal()" class="flex items-center space-x-2 bg-purple-400 hover:bg-purple-600 p-2 rounded-md text-white disabled:bg-gray-400 disabled:cursor-not-allowed"  {{ $formattedSubtotal == 0 || $jikastokprodukkosong ? 'disabled' : '' }}>
             <span class="text-sm">checkout</span>
         </button>
     </div>
