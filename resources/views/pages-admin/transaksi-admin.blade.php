@@ -126,8 +126,7 @@
             <button 
             type="button" 
             onclick="openModal()" 
-            class="px-2 py-1.5 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-            {{ $formattedSubtotal === 0 ? 'disabled' : '' }}>
+            class="px-2 py-1.5 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed" {{ $formattedSubtotal == 0 ? 'disabled' : '' }}>
             Bayar
             </button>
         </div>
@@ -240,10 +239,7 @@
 
     // Fungsi untuk membuka modal
     function openModal() {
-        const subtotal = {{ $formattedSubtotal }}; // Ambil nilai subtotal dari backend
-        if (subtotal > 0) {
-            modal.classList.remove('hidden');
-        }
+        modal.classList.remove('hidden');
     }
 
     function closeModal() {

@@ -18,7 +18,7 @@
     <div class="md:col-span-3 flex items-center gap-2">
       <!-- Logo -->
        <div class="">
-        <img src="{{ asset('assets/shop.jpg') }}" alt="image description" class="rounded-full bg-white w-12 h-12 p-2">
+        <img src="{{ asset('assets/logo koperasiku.png') }}" alt="image description" class="rounded-full bg-white w-12 h-12 p-2">
        </div>
       <!-- End Logo -->
 

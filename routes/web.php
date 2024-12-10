@@ -14,8 +14,13 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\Admin\TransaksiController;
 
+use App\Models\Produk;
+
 // route untuk halaman default
-Route::get('/', function () { return view('welcome'); });
+Route::get('/', function () {
+    $produk = Produk::take(5)->get(); // Ambil 5 data produk untuk ditampilkan di landingpage section produk
+    return view('welcome', ['produk' => $produk]);
+});
 
 // route untuk menampilkan halaman 
 Route::get('/login', function () { return view('pages.login'); });
@@ -107,7 +112,7 @@ Route::get('/riwayat-user/{id}', [RiwayatController::class, 'show'])->name('riwa
 Route::get('/riwayat-user{id}/cetak', [RiwayatController::class, 'cetakriwayat'])->name('cetakriwayatbyid');
 Route::post('/riwayat-user/cetakbydate', [RiwayatController::class, 'cetakriwayatdate'])->name('cetakriwayatbydate');
 
-//ROUTE UNTUK MENGHANDLE PEMBAYARAN
+//ROUTE UNTUK MENGHANDLE PEMBAYARAN/TRANSAKSI USER
 Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
 Route::post('/payment/success', [CheckoutController::class, 'paymentSuccess'])->name('payment.success');
 // Route::post('/midtrans/callback', [CheckoutController::class, 'callback'])->name('midtrans.callback');     //route callback midtrans

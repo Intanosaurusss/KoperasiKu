@@ -84,7 +84,7 @@
     
     <div class="flex justify-end mt-5 space-x-2">
         <p class=" flex items-center text-gray-700">Subtotal pembelian : <span class="font-semibold text-red-500">Rp. {{ $formattedSubtotal}}</span></p>
-        <button onclick="openModal()" class="flex items-center space-x-2 bg-purple-400 hover:bg-purple-600 p-2 rounded-md text-white">
+        <button onclick="openModal()" class="flex items-center space-x-2 bg-purple-400 hover:bg-purple-600 p-2 rounded-md text-white disabled:bg-gray-400 disabled:cursor-not-allowed" {{ $formattedSubtotal == 0 ? 'disabled' : '' }}>
             <span class="text-sm">checkout</span>
         </button>
     </div>
@@ -94,7 +94,7 @@
 <!-- modal pilih metode pembayaran -->
 <div id="paymentModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="closeModalOnOutsideClick(event)">
     <div class="bg-white rounded-lg shadow-lg p-6 w-80">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">Pilih Metode Pembayaran</h2>
+        <h2 class="text-lg font-semibold text-gray-800 mb-4 text-center">Pilih Metode Pembayaran</h2>
         <div class="flex justify-between space-x-4">
             <button class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md" onclick="selectPayment('cash')">
                 Cash
