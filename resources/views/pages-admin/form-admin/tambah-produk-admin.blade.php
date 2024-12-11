@@ -23,22 +23,22 @@
 
                     <div class="col-span-full mt-1">
                         <label for="" class="block font-medium leading-6 text-gray-700">Nama produk</label>
-                        <input type="text" id="nama_produk" name="nama_produk" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi nama produk">
+                        <input type="text" id="nama_produk" name="nama_produk" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi nama produk">
                     </div>
 
                     <div class="col-span-full mt-1">
                         <label for="" class="block font-medium leading-6 text-gray-700">Harga</label>
-                        <input type="text" id="harga_produk" name="harga_produk" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi harga produk">
+                        <input type="text" id="harga_produk" name="harga_produk" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi harga produk">
                     </div>
 
                     <div class="col-span-full mt-1">
                         <label for="" class="block font-medium leading-6 text-gray-700">Stok</label>
-                        <input type="text" id="stok_produk" name="stok_produk" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi stok produk">
+                        <input type="text" id="stok_produk" name="stok_produk" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi stok produk">
                     </div>
 
                     <div class="col-span-full mt-1">
                     <label for="kategori" class="block font-medium leading-6 text-gray-700">Kategori</label>
-                    <select id="kategori_produk" name="kategori_produk" class="block w-full text-sm text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md">
+                    <select id="kategori_produk" name="kategori_produk" class="block w-full text-sm text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md">
                         <option value="" disabled selected class="text-gray-600">Pilih kategori produk</option>
                         <option value="makanan">Makanan</option>
                         <option value="minuman">Minuman</option>
@@ -61,7 +61,7 @@
                                     </label>
                                     <p class="pl-1">or drag and drop</p>
                                 </div>
-                                <p class="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
+                                <p class="text-xs leading-5 text-gray-600">PNG, JPG, JPEG up to 2MB</p>
                             </div>
                         </div>
                     </div>

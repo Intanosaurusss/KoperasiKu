@@ -22,7 +22,7 @@
             <svg class="w-4 h-4 text-gray-500 ml-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
             </svg>
-            <input type="search" name="search" id="default-search" class="block w-full p-2 pl-2 text-sm text-gray-900 border-0 rounded-lg focus:ring-blue-500 focus:outline-none" placeholder="Cari produk..." required />
+            <input type="search" name="search" id="default-search" class="block w-full p-2 pl-2 text-sm text-gray-900 border-0 rounded-lg focus:border-purple-500 focus:outline-none" placeholder="Cari produk..." required />
         </div>
     </form>
     <!-- button tambah data produk -->
@@ -112,7 +112,7 @@
         <!-- Tampilkan dua tombol halaman yang sesuai -->
         @for ($page = $start; $page <= $end; $page++)
             @if ($page == $currentPage)
-                <span class="px-3 py-1 bg-blue-500 text-white text-sm rounded">{{ $page }}</span>
+                <span class="px-3 py-1 bg-purple-500 text-white text-sm rounded">{{ $page }}</span>
             @else
                 <a href="{{ $produk->url($page) }}" class="px-3 py-1 bg-white text-gray-700 text-sm rounded border border-gray-300 hover:bg-gray-100">{{ $page }}</a>
             @endif

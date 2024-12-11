@@ -122,7 +122,7 @@
         <!-- Tampilkan dua tombol halaman yang sesuai -->
         @for ($page = $start; $page <= $end; $page++)
             @if ($page == $currentPage)
-                <span class="px-3 py-1 bg-blue-500 text-white text-sm rounded">{{ $page }}</span>
+                <span class="px-3 py-1 bg-purple-500 text-white text-sm rounded">{{ $page }}</span>
             @else
                 <a href="{{ $pengeluaran->url($page) }}" class="px-3 py-1 bg-white text-gray-700 text-sm rounded border border-gray-300 hover:bg-gray-100">{{ $page }}</a>
             @endif

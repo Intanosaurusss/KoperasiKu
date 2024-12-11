@@ -43,7 +43,7 @@ class ProdukController extends Controller
             'kategori_produk' => 'required|string|max:255',
             'harga_produk' => 'required|numeric',
             'stok_produk' => 'required|integer',
-            'foto_produk' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'foto_produk' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ], [
             // Custom message untuk validasi
             'nama_produk.unique' => 'Produk dengan nama ini sudah ada.',

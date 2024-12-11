@@ -26,15 +26,6 @@ Route::get('/', function () {
 Route::get('/login', function () { return view('pages.login'); });
 Route::post('/login', [LoginController::class, 'login'])->name('login'); 
 
-//route untuk register
-// Route::get('/register', [RegisterController::class, 'index'])->name('pages.register');
-// Route::post('/register', [RegisterController::class, 'register'])->name('register');
-
-//route untuk member atau pengganti register
-// Route::get('/member', function () { return view('pages-admin.member'); });
-// Route::get('/detail-member', function () { return view('pages-admin.detail-member'); });
-// Route::get('/member/tambah', function () { return view('pages-admin.form-admin.tambah-member'); });
-
 // Menampilkan halaman member
 Route::get('/member', [App\Http\Controllers\RegisterMemberController::class, 'index'])->name('pages-admin.member');
 Route::get('/member/{id}', [App\Http\Controllers\RegisterMemberController::class, 'show'])->name('detail-member');  // Menampilkan detail member berdasarkan ID
@@ -42,11 +33,11 @@ Route::get('/tambah-member', [App\Http\Controllers\RegisterMemberController::cla
 Route::post('/member', [App\Http\Controllers\RegisterMemberController::class, 'store'])->name('tambah-member');
 Route::delete('/member/{id}', [App\Http\Controllers\RegisterMemberController::class, 'destroy'])->name('member.destroy');
 
-
 // HALAMAN ADMIN //
 // route untuk menampilkan dashboard admin
 Route::get('/dashboard-admin', function () { return view('pages-admin.dashboard-admin'); });
 Route::get('/dashboard-admin', [DashboardAdminController::class, 'index'])->name('pages-admin.dashboard-admin');
+Route::get('/grafik-data', [DashboardAdminController::class, 'getgrafikdata']); //untuk grafik data di dashboard admin
 
 // route untuk menampilkan menu pengeluaran admin
 Route::get('/pengeluaran-admin', [PengeluaranController::class, 'index'])->name('pages-admin.pengeluaran-admin');
@@ -84,9 +75,6 @@ Route::post('/payment/successbyadmin', [TransaksiController::class, 'paymentsucc
 // route untuk menghandle search suggestion di halaman transaksi admin
 Route::get('/search-id-member', [TransaksiController::class, 'searchidmember'])->name('search.member.id');
 Route::get('/search-produk', [TransaksiController::class, 'searchproduk'])->name('search.produk');
-
-// Route::get('/detail-riwayat-pembelian', function () { return view('pages-admin.detail-riwayat-pembelian'); });
-// Route::get('/detail-riwayat-pembelian-by-date', function () { return view('pages-admin.detail-riwayat-pembelian-by-date'); }); //untuk template file pdf laporan pembelian by date
 
 // route untuk menampilkan menu profile admin dan user
 Route::get('/profile', function () { return view('pages.profile'); });

@@ -23,17 +23,17 @@
                 <div class="mt-1 grid grid-cols-1 gap-x-6 gap-y-2 md:grid-cols-2">
                     <div class="col-span-full mt-1">
                         <label for="tanggal_pengeluaran" class="block font-medium leading-6 text-gray-700">Tanggal Pengeluaran</label>
-                        <input type="date" id="tanggal_pengeluaran" name="tanggal_pengeluaran" class="block text-sm w-full py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md text-gray-600" value="{{ $pengeluaran->tanggal_pengeluaran }}">
+                        <input type="date" id="tanggal_pengeluaran" name="tanggal_pengeluaran" class="block text-sm w-full py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md text-gray-600" value="{{ $pengeluaran->tanggal_pengeluaran }}">
                     </div>
 
                     <div class="col-span-full mt-1">
                         <label for="total_pengeluaran" class="block font-medium leading-6 text-gray-700">Jumlah Pengeluaran</label>
-                        <input type="text" id="total_pengeluaran" name="total_pengeluaran" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi jumlah pengeluaran" value="{{ $pengeluaran->total_pengeluaran }}">
+                        <input type="text" id="total_pengeluaran" name="total_pengeluaran" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi jumlah pengeluaran" value="{{ $pengeluaran->total_pengeluaran }}">
                     </div>
 
                     <div class="col-span-full mt-1">
                         <label for="deskripsi_pengeluaran" class="block font-medium leading-6 text-gray-700">Deskripsi Pengeluaran</label>
-                        <textarea id="deskripsi_pengeluaran" rows="4"  name="deskripsi_pengeluaran" class="block w-full py-1.5 pl-2 text-sm text-gray-600 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi detail pengeluaran" value="{{ $pengeluaran->deskripsi_pengeluaran }}">{{ $pengeluaran->deskripsi_pengeluaran }}</textarea>
+                        <textarea id="deskripsi_pengeluaran" rows="4"  name="deskripsi_pengeluaran" class="block w-full py-1.5 pl-2 text-sm text-gray-600 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi detail pengeluaran" value="{{ $pengeluaran->deskripsi_pengeluaran }}">{{ $pengeluaran->deskripsi_pengeluaran }}</textarea>
                     </div>
                 </div>
             </div>

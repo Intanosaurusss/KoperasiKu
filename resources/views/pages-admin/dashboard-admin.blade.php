@@ -2,6 +2,9 @@
 
 @section('title', 'Dashboard Admin')
 
+<!-- import CDN Chartjs untuk membuat grafik batang responsive (line 89) -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 @section('content')
     <div class="p-2">
         <h2 class="text-xl font-semibold text-gray-700 mb-6">Hai Admin, selamat datang!</h2>
@@ -80,7 +83,78 @@
                 <p class="text-3xl font-bold mt-2 text-gray-700">{{ $totalriwayat }}</p>
                 <p class="text-sm text-gray-500">Ini adalah riwayat pembelian</p>
             </div>
+        </div>
 
+        <div class="container mx-auto px-4 py-6">
+            <h1 class="text-xl font-semibold text-center mb-6 text-gray-700">Grafik Batang Pemasukan dan Pengeluaran Per Bulan </h1>
+            <div class="bg-white shadow-lg rounded-lg p-6">
+            <canvas id="barChart" class="w-full"></canvas>
         </div>
     </div>
+
+    <script>
+         async function fetchData() {
+            try {
+                const response = await fetch('/grafik-data');
+                const data = await response.json();
+
+                // Render chart setelah data diambil
+                renderChart(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        function renderChart(data) {
+            const ctx = document.getElementById('barChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.labels, // Label bulan
+                    datasets: [
+                        {
+                            label: 'Pemasukan',
+                            data: data.pemasukan, // Data pemasukan
+                            backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                        },
+                        {
+                            label: 'Pengeluaran',
+                            data: data.pengeluaran, // Data pengeluaran
+                            backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'Rp' + value.toLocaleString(); // Format angka
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                    }
+                }
+            });
+        }
+        // Ambil data dan render grafik
+        fetchData();
+    </script>
 @endsection
