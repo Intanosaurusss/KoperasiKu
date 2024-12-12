@@ -12,6 +12,7 @@ use App\Http\Controllers\User\KeranjangController;
 use App\Http\Controllers\RegisterMemberController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\RiwayatController;
+use App\Http\Controllers\SaranController;
 use App\Http\Controllers\Admin\TransaksiController;
 
 use App\Models\Produk;
@@ -76,6 +77,10 @@ Route::post('/payment/successbyadmin', [TransaksiController::class, 'paymentsucc
 Route::get('/search-id-member', [TransaksiController::class, 'searchidmember'])->name('search.member.id');
 Route::get('/search-produk', [TransaksiController::class, 'searchproduk'])->name('search.produk');
 
+//route untuk menampilkan menu saran admin 
+Route::get('/saran-admin', [SaranController::class, 'indexadmin'])->name('saran.indexadmin');
+Route::delete('/saran-admin/{id}', [SaranController::class, 'destroy'])->name('saran.destroy');
+
 // route untuk menampilkan menu profile admin dan user
 Route::get('/profile', function () { return view('pages.profile'); });
 Route::get('/profile/{id}', [ProfileController::class, 'showProfile'])->name('profile');
@@ -99,6 +104,10 @@ Route::get('/riwayat-user', [RiwayatController::class, 'index'])->name('riwayat.
 Route::get('/riwayat-user/{id}', [RiwayatController::class, 'show'])->name('riwayat.show');
 Route::get('/riwayat-user{id}/cetak', [RiwayatController::class, 'cetakriwayat'])->name('cetakriwayatbyid');
 Route::post('/riwayat-user/cetakbydate', [RiwayatController::class, 'cetakriwayatdate'])->name('cetakriwayatbydate');
+
+//route untuk menampilkan menu saran user
+Route::get('/saran-user', [SaranController::class, 'index'])->name('saran.index');
+Route::post('/saran-user', [SaranController::class, 'store'])->name('saran.store');
 
 //ROUTE UNTUK MENGHANDLE PEMBAYARAN/TRANSAKSI USER
 Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');

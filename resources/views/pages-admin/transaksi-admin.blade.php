@@ -131,6 +131,8 @@
             </button>
         </div>
     </div>
+    </div>
+    
 </div>
 
 <!-- modal pilih metode pembayaran -->

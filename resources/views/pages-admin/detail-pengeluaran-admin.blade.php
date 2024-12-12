@@ -15,7 +15,7 @@
         </div>
         <div>
             <p class="font-medium text-gray-700">Total Pengeluaran:</p>
-            <p class="text-red-400 text-sm">Rp {{ $pengeluaran->total_pengeluaran }}</p> 
+            <p class="text-red-400 text-sm">Rp {{ number_format($pengeluaran->total_pengeluaran, 0, ',', '.') }}</p> 
         </div>
     </div>
 
