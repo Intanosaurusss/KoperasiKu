@@ -52,7 +52,7 @@
             
             <div class="col-span-full mt-1">
                 <label for="saran" class="block font-medium leading-6 text-gray-700">Saran</label>
-                <textarea id="saran" name="saran" rows="4" class="block w-full py-1.5 pl-2 text-sm text-gray-600 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi deskripsi pengeluaran">{{ old('saran') }}</textarea>
+                <textarea id="saran" name="saran" rows="4" class="block w-full py-1.5 pl-2 text-sm text-gray-600 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi saran untuk admin">{{ old('saran') }}</textarea>
             </div>
             
             <button type="submit" class="flex items-center space-x-1 bg-purple-400 text-white rounded-md hover:bg-purple-500 focus:ring focus:ring-blue-300 mt-2 px-2 py-1.5">

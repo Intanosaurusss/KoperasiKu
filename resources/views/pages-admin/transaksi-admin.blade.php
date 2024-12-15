@@ -52,13 +52,13 @@
             </div>
             <div class="space-y-1">
                 <label for="nama_produk" class="block text-sm font-medium text-gray-700">Produk</label>
-                <input type="text" id="nama_produk" name="nama_produk" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Produknya apa hm?" onkeyup="searchProduk()">
+                <input type="text" id="nama_produk" name="nama_produk" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi produknya" onkeyup="searchProduk()">
                 <!-- Hasil pencarian -->
                 <ul id="produk_suggestions" class="mt-2 space-y-1"></ul>
                 </div>
             <div class="space-y-1">
                 <label for="qty" class="block text-sm font-medium text-gray-700">Qty</label>
-                <input type="number" id="qty" name="qty" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Isi qty nya plis">
+                <input type="number" id="qty" name="qty" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi qty nya">
             </div>
         </div>
             <div class="flex justify-end">
@@ -85,7 +85,7 @@
         </div>
         <div class="overflow-y-auto max-h-64">
             <table class="w-full text-sm text-left text-gray-500">
-                <thead class="bg-gray-100 text-gray-700 uppercase">
+                <thead class="bg-gray-200 text-gray-700 uppercase">
                     <tr>
                         <th class="px-6 py-3">Produk</th>
                         <th class="px-6 py-3">Qty</th>

@@ -66,7 +66,7 @@
                     <h3 class="text-lg font-medium text-gray-700">Produk</h3>
                 </div>
                 <p class="text-3xl font-bold mt-2 text-gray-700">{{ $totalproduk }}</p>
-                <p class="text-sm text-gray-500">Ini adalah jumlah produk yang tersedia</p>
+                <p class="text-sm text-gray-500">Ini adalah jumlah produk yang tersedia berdasarkan produknya</p>
             </div>
 
             <!-- Total Riwayat -->

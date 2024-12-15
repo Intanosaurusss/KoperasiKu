@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Saran;
+use Carbon\Carbon;
 
 class SaranController extends Controller
 {
@@ -12,6 +13,14 @@ class SaranController extends Controller
     {
         // Ambil semua data dari tabel saran
         $saran = Saran::all();
+
+        // Set locale ke Bahasa Indonesia, untuk penanggalan
+        Carbon::setLocale('id');
+
+         // Format tanggal sebelum mengirim ke view
+        $saran->each(function($item) {
+            $item->formatted_created_at = $item->created_at->translatedFormat('d F Y');
+        });
         
         // Kirim data ke view
         return view('pages-admin.saran-admin', compact('saran'));
