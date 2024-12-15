@@ -1,13 +1,13 @@
 @extends($layout)
 
-@section('title', 'Profile' .' '. $user->name)
+@section('title', 'Profile' .' '. $user->nama)
 
 @section('content')
 <div class="p-4 bg-white shadow-md rounded-md w-full max-w-screen-lg mx-auto mt-3">
     <div class="flex flex-col gap-8 md:flex-row items-center md:items-start">
         <!-- Foto Profil -->
         <img 
-            src="{{ asset($user->foto_profile ?? 'images/default-profile.png') }}"  
+            src="{{ asset(Auth::user()->foto_profile ?? 'images/default-profile.jpg') }}"  
             alt="Profile Image"
             class="bg-purple-400 w-24 h-24 md:w-32 md:h-32 rounded-full object-cover"
         />

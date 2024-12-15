@@ -1,6 +1,6 @@
 @extends('components.layout-user')
 
-@section('title', 'Saran User')
+@section('title', 'Saran')
 
 @section('content')
 <div class="p-2">
@@ -10,7 +10,7 @@
         </svg>
         <span class="sr-only">Info</span>
         <div>
-            <span class="font-medium">Info!</span> Ini adalah halaman untuk memberikan saran
+            <span class="font-medium">Info!</span> Ini adalah halaman untuk memberikan saran kepada admin
         </div>
     </div>
 

@@ -1,6 +1,6 @@
 @extends('components.layout-user')
 
-@section('title', 'Dashboard User')
+@section('title', 'Dashboard')
 
 @section('content')
 <div class="p-2">

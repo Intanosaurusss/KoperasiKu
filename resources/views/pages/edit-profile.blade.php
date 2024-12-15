@@ -25,27 +25,27 @@
 
                     <div class="col-span-full mt-1">
                         <label for="nama" class="block font-medium leading-6 text-gray-700">Username</label>
-                        <input type="text" id="nama" name="nama" value="{{ old('nama', $user->nama) }}" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi username">
+                        <input type="text" id="nama" name="nama" value="{{ old('nama', $user->nama) }}" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi username">
                     </div>
 
                     <div class="col-span-full mt-1">
                         <label for="kelas" class="block font-medium leading-6 text-gray-700">Kelas</label>
-                        <input type="text" id="kelas" name="kelas" value="{{ old('kelas', $user->kelas) }}" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi kelas">
+                        <input type="text" id="kelas" name="kelas" value="{{ old('kelas', $user->kelas) }}" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi kelas">
                     </div>
 
                     <div class="col-span-full mt-1">
                         <label for="no_telepon" class="block font-medium leading-6 text-gray-700">No telepon</label>
-                        <input type="text" id="no_telepon" name="no_telepon" value="{{ old('no_telepon', $user->no_telepon) }}" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi nomor telepon">
+                        <input type="text" id="no_telepon" name="no_telepon" value="{{ old('no_telepon', $user->no_telepon) }}" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi nomor telepon">
                     </div>
 
                     <div class="col-span-full mt-1">
                         <label for="email" class="block font-medium leading-6 text-gray-700">Email</label>
-                        <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi email">
+                        <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi email">
                     </div>
 
                     <div class="col-span-full mt-1">
                         <label for="id_member" class="block font-medium leading-6 text-gray-700">ID Member</label>
-                        <input type="number" id="id_member" name="id_member" value="{{ old('id_member', $user->id_member) }}" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi id member">
+                        <input type="number" id="id_member" name="id_member" value="{{ old('id_member', $user->id_member) }}" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi id member" readonly>
                     </div>
 
                     <div class="col-span-full mt-1">
@@ -62,7 +62,7 @@
                                     </label>
                                     <p class="pl-1">or drag and drop</p>
                                 </div>
-                                <p class="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 5MB</p>
+                                <p class="text-xs leading-5 text-gray-600">PNG, JPG, JPEG up to 2MB</p>
                             </div>
                         </div>
                     </div>

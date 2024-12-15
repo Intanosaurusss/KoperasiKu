@@ -22,7 +22,7 @@
     </div>
     @endif
 
-    <div class="grid gap-4 sm:grid-cols-1 lg:grid-cols-3">
+    <div class="grid gap-4 sm:grid-cols-1 lg:grid-cols-4">
     @foreach($saran as $item)
     <div class="bg-white pt-1 px-2 pb-2 rounded-md shadow-sm">
         <div class="flex items-center">

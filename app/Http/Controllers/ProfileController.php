@@ -57,7 +57,7 @@ class ProfileController extends Controller
             'no_telepon' => 'nullable|string|max:15',
             'email' => 'required|email|max:255|unique:users,email,' . $id,
             'id_member' => 'nullable|digits:10', // Validasi ID Member dengan 10 angka
-            'foto_profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240'
+            'foto_profile' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
         $user = User::findOrFail($id);

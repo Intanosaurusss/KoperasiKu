@@ -21,7 +21,7 @@ class LoginController extends Controller
          // Validasi input
          $request->validate([
              'email' => 'required|email',
-             'id_member' => 'required|integer',
+             'id_member' => 'required',
          ]);
  
          // Coba autentikasi pengguna berdasarkan email dan id_member
