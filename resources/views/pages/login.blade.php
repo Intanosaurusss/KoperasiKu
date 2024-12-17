@@ -37,11 +37,11 @@
             @csrf
                 <div class="mb-4">
                     <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                    <input type="email" name="email" id="email" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="email@example.com" required>
+                    <input type="email" name="email" id="email" class="mt-1 block w-full border border-gray-300  focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md p-2" placeholder="email@example.com" required>
                 </div>
                 <div class="mb-4">
                     <label for="id_member" class="block text-sm font-medium text-gray-700">ID Member</label>
-                    <input type="number" name="id_member" id="id_member" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Masukkan ID Member" required>
+                    <input type="number" name="id_member" id="id_member" class="mt-1 block w-full border border-gray-300  focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md p-2" placeholder="Masukkan ID Member" required>
                 </div>
                 <!-- <div class="flex justify-between items-center mb-4">
                     <a href="#" class="text-sm text-blue-500">Lupa Kata Sandi</a>

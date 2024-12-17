@@ -24,8 +24,8 @@ class DashboardAdminController extends Controller
         // Mengambil jumlah produk
         $totaluser = User::count();
 
-        // Mengambil total pemasukan dari subtotal di tabel transaksi
-        $totalpemasukan = Transaksi::sum('subtotal'); // Menjumlahkan semua nilai di kolom 'subtotal'
+        // Menghitung total pemasukan hanya untuk transaksi dengan status_pembayaran 'success'
+        $totalpemasukan = Transaksi::where('status_pembayaran', 'success')->sum('subtotal');
 
         // Mengambil total riwayat 
         $totalriwayat = Riwayat::count();
