@@ -18,6 +18,7 @@ class RiwayatController extends Controller
 
         // Ambil transaksi beserta riwayat dan produk terkait
         $transaksi = Transaksi::with(['riwayat.produk', 'user'])
+            ->where('status_pembayaran', 'success') // Filter hanya transaksi dengan status_pembayaran = 'success'
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->whereDate('created_at', 'like', '%' . $search . '%') // Pencarian berdasarkan tanggal
@@ -37,7 +38,7 @@ class RiwayatController extends Controller
         return view('pages-admin.riwayat-admin', compact('transaksi'));
     }
 
-    // function untuk menampilkan detail riwayat pembelian dalam bentuk popup di halaman riwayat user
+    // function untuk menampilkan detail riwayat pembelian dalam bentuk popup di halaman riwayat admin
     public function showadmin($id) 
     {
         $transaksi = Transaksi::with(['riwayat.produk']) // Memuat relasi produk
@@ -157,6 +158,7 @@ class RiwayatController extends Controller
     // Ambil transaksi beserta riwayat dan produk terkait sesuai dengan ID user
     $transaksi = Transaksi::with(['riwayat.produk'])
         ->where('user_id', $userId)
+        ->where('status_pembayaran', 'success') // Filter berdasarkan status_pembayaran success
         ->when($search, function ($query) use ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('created_at', 'like', '%' . $search . '%') // Pencarian berdasarkan tanggal
