@@ -9,6 +9,7 @@ use App\Models\Pengeluaran;
 use App\Models\User;
 use App\Models\Transaksi;
 use App\Models\Riwayat;
+use Carbon\Carbon;
 
 class DashboardAdminController extends Controller
 {
@@ -30,7 +31,35 @@ class DashboardAdminController extends Controller
         // Mengambil total riwayat 
         $totalriwayat = Riwayat::count();
 
-        return view('pages-admin.dashboard-admin', compact('totalproduk', 'totalpengeluaran', 'totaluser', 'totalpemasukan', 'totalriwayat')); // Sesuaikan dengan nama view yang Anda gunakan
+       // Set lokal ke Indonesia
+        Carbon::setLocale('id');
+
+        // Bulan untuk query (angka, seperti 01-12)
+        $bulanQuery = Carbon::now()->format('m');
+
+        // Nama bulan dalam bahasa Indonesia
+        $bulanini = Carbon::now()->translatedFormat('F'); // Contoh: "Desember"
+
+        // Query untuk mendapatkan produk terlaris
+        $produkterlaris = Riwayat::selectRaw('produk_id, SUM(qty) as total_qty')
+            ->whereMonth('created_at', $bulanQuery) // Gunakan angka bulan untuk query
+            ->groupBy('produk_id')
+            ->orderByDesc('total_qty')
+            ->with('produk') // Include relasi produk
+            ->take(5)
+            ->get();
+
+        // Mengambil 5 user dengan total belanja terbesar berdasarkan bulan, beserta id_member dari tabel users
+        $memberterroyal = Transaksi::selectRaw('transaksi.user_id, users.id_member, SUM(transaksi.subtotal) as total_belanja')
+        ->join('users', 'transaksi.user_id', '=', 'users.id') // Join dengan tabel users
+        ->where('transaksi.status_pembayaran', 'success') // Filter berdasarkan status_pembayaran "success"
+        ->whereMonth('transaksi.created_at', $bulanQuery) // Filter berdasarkan bulan yang diinginkan
+        ->groupBy('transaksi.user_id', 'users.id_member') // Group by user_id dan id_member
+        ->orderByDesc('total_belanja')
+        ->take(5)
+        ->get();
+
+        return view('pages-admin.dashboard-admin', compact('totalproduk', 'totalpengeluaran', 'totaluser', 'totalpemasukan', 'totalriwayat', 'produkterlaris', 'bulanini', 'memberterroyal')); // Sesuaikan dengan nama view yang Anda gunakan
     }
 
     public function getgrafikdata()

@@ -67,7 +67,7 @@
                     <!-- Tampilkan pesan jika tidak ada data setelah pencarian -->
                     <tr>
                         <td colspan="5" class="px-4 py-2 text-center text-gray-700">
-                            Belum ada riwayat nih, kamu belum jajan di KoperasiKu ya?
+                            Tidak ada data
                         </td>
                     </tr>
                     @else

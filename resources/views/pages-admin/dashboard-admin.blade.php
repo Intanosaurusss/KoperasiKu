@@ -52,7 +52,7 @@
                     <h3 class="text-lg font-medium text-gray-700">Pemasukan</h3>
                 </div>
                 <p class="text-3xl font-bold mt-2 text-gray-700">{{ number_format($totalpemasukan, 0, ',', '.') }}</p>
-                <p class="text-sm text-gray-500">Ini adalah jumlah pemasukan dari produk yang terjual</p>
+                <p class="text-sm text-gray-500">Ini adalah jumlah pemasukan keseluruhan penjualan</p>
             </div>
 
             <!-- Total Produk -->
@@ -82,6 +82,66 @@
                 </div>
                 <p class="text-3xl font-bold mt-2 text-gray-700">{{ $totalriwayat }}</p>
                 <p class="text-sm text-gray-500">Ini adalah riwayat pembelian</p>
+            </div>
+        </div>
+
+       <!-- Produk Terlaris dan Member Terroyal -->
+        <div class="mt-6">
+            <!-- Container Tabel -->
+            <div class="flex flex-col md:flex-row justify-between gap-4">
+                <!-- Tabel 1 : Produk Terlaris -->
+                <div class="w-full md:w-1/2 overflow-x-auto rounded-lg bg-white px-2 py-2 shadow-md">
+                    <h2 class="text-lg font-semibold text-center mb-2 text-gray-700">Produk Terlaris Bulan {{ $bulanini }}</h2>
+                    <table class="min-w-full text-sm border">
+                        <thead class="bg-gray-200">
+                            <tr>
+                                <th class="px-2 py-2 font-semibold text-gray-700 border">No</th>
+                                <th class="px-2 py-2 font-semibold text-gray-700 border">Produk</th>
+                                <th class="px-2 py-2 font-semibold text-gray-700 border">Total Terjual</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            @forelse ($produkterlaris as $index => $item)
+                                <tr class="hover:bg-gray-100">
+                                    <td class="px-2 py-2 text-center text-gray-700 border">{{ $index + 1 }}</td>
+                                    <td class="px-2 py-2 text-gray-700 border">{{ $item->produk->nama_produk ?? 'Tidak Diketahui' }}</td>
+                                    <td class="px-2 py-2 text-gray-700 border text-center">{{ $item->total_qty }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="3" class="px-2 py-2 text-center text-gray-700">Tidak ada data</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Tabel 2 : Member teroyall-->
+                <div class="w-full md:w-1/2 overflow-x-auto rounded-lg bg-white px-2 py-2 shadow-md">
+                    <h2 class="text-lg font-semibold text-center mb-2 text-gray-700">Member Terbanyak Belanja Bulan {{ $bulanini }}</h2>
+                    <table class="min-w-full text-sm border">
+                        <thead class="bg-gray-200">
+                            <tr>
+                                <th class="px-2 py-2 font-semibold text-gray-700 border">No</th>
+                                <th class="px-2 py-2 font-semibold text-gray-700 border">ID Member</th>
+                                <th class="px-2 py-2 font-semibold text-gray-700 border">Total Belanja</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                        @forelse ($memberterroyal as $index => $item)
+                                <tr class="hover:bg-gray-100">
+                                    <td class="px-2 py-2 text-center text-gray-700 border">{{ $index + 1 }}</td>
+                                    <td class="px-2 py-2 text-gray-700 border">{{ $item->id_member }}</td>
+                                    <td class="px-2 py-2 text-gray-700 border">Rp. {{ number_format($item->total_belanja, 0, ',', '.') }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="3" class="px-2 py-2 text-center text-gray-700">Tidak ada data</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 

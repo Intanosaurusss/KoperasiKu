@@ -19,6 +19,7 @@
                         <option value="minuman">Minuman</option>
                         <option value="alat tulis kantor">Alat Tulis Kantor</option>
                         <option value="peralatan">Peralatan/Lainnya</option>
+                        <option value="produk terlaris">Produk Terlaris</option>
                     </select>
                 </div>
 

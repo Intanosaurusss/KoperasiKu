@@ -67,39 +67,88 @@ class TransaksiController extends Controller
         return view('pages-admin.transaksi-admin', compact('keranjang', 'idMember', 'formattedSubtotal'));
     }
 
-    // Fungsi untuk menambah data ke keranjang
     public function addtransaksitokeranjang(Request $request)
     {
         // Validasi input
         $request->validate([
             'id_member' => 'required|string',
-            'nama_produk' => 'required|string',
-            'qty' => 'required|integer|min:1',
+            'nama_produk' => 'required|array',   // Array untuk menerima data produk dalam bentuk array
+            'nama_produk.*' => 'required|string', // Setiap elemen dalam array harus berupa string
+            'qty' => 'required|array',           // Array untuk menerima data qty dalam bentuk array
+            'qty.*' => 'required|integer|min:1', // Setiap elemen dalam array qty harus integer dan lebih besar dari 0
         ]);
 
         // Cari user berdasarkan id_member
-        $member = User::where('id_member', $request->id_member)->orWhere('nama', $request->nama)->first();
+        $member = User::where('id_member', $request->id_member)->first();
         if (!$member) {
-            // Menggunakan session untuk menyimpan pesan
             return redirect()->back()->with('error', 'Member tidak ditemukan');
         }
 
-        // Cari produk berdasarkan nama_produk
-        $produk = Produk::where('nama_produk', $request->nama_produk)->first();
-        if (!$produk) {
-            // Menggunakan session untuk menyimpan pesan
-            return redirect()->back()->with('error', 'Produk tidak ditemukan');
+        // Pesan untuk menampung informasi produk yang sudah ada di keranjang
+        $produkSudahAda = [];
+        $produkTidakDitemukan = []; // Menampung nama produk yang tidak ditemukan
+        $produkStokKosong = []; // Menampung produk dengan stok kosong
+
+        // Loop untuk menambah data ke keranjang berdasarkan produk dan qty yang dikirim
+        foreach ($request->nama_produk as $index => $namaProduk) {
+            // Cari produk berdasarkan nama_produk
+            $produk = Produk::where('nama_produk', $namaProduk)->first();
+
+            if (!$produk) {
+                // Jika produk tidak ditemukan, tambahkan ke daftar produk tidak ditemukan
+                $produkTidakDitemukan[] = $namaProduk;
+                continue; // Lanjutkan ke iterasi berikutnya
+            }
+
+            // Cek apakah stok produk cukup
+            if ($produk->stok_produk < $request->qty[$index]) {
+                // Jika stok tidak cukup, tambahkan ke daftar produk dengan stok kosong
+                $produkStokKosong[] = $namaProduk;
+                continue; // Lanjutkan ke iterasi berikutnya
+            }
+
+            // Cek apakah produk sudah ada di keranjang
+            $keranjang = Keranjang::where('user_id', $member->id)
+                ->where('produk_id', $produk->id)
+                ->first();
+
+            if ($keranjang) {
+                // Jika produk sudah ada di keranjang, tambahkan qty
+                $keranjang->qty += $request->qty[$index];
+                $keranjang->save();
+
+                // Tambahkan nama produk ke pesan informasi
+                $produkSudahAda[] = $namaProduk;
+            } else {
+                // Jika produk belum ada di keranjang, tambahkan produk baru
+                Keranjang::create([
+                    'user_id' => $member->id,
+                    'produk_id' => $produk->id,
+                    'qty' => $request->qty[$index],
+                ]);
+            }
         }
 
-        // Menambah data ke keranjang
-        Keranjang::create([
-            'user_id' => $member->id,
-            'produk_id' => $produk->id,
-            'qty' => $request->qty,
-        ]);
+        // Jika ada produk yang tidak ditemukan
+        if (!empty($produkTidakDitemukan)) {
+            $produkList = implode(', ', $produkTidakDitemukan);
+            return redirect()->back()->with('error', 'Produk (' . $produkList . ') tidak ditemukan, gagal ditambahkan ke keranjang.');
+        }
 
-        // Menyimpan pesan sukses di session
-        return redirect()->back()->with('success', 'berhasil ditambahkan!');
+        // Jika ada produk dengan stok kosong
+        if (!empty($produkStokKosong)) {
+            $produkList = implode(', ', $produkStokKosong);
+            return redirect()->back()->with('error', 'Stok produk (' . $produkList . ') tidak cukup untuk memenuhi permintaan.');
+        }
+
+        // Jika ada produk yang sudah ada di keranjang
+        if (!empty($produkSudahAda)) {
+            $produkList = implode(', ', $produkSudahAda);
+            return redirect()->back()->with('success', 'Produk (' . $produkList . ') sudah ada di keranjang, kuantitasnya ditambahkan!');
+        }
+
+        // Pesan sukses jika semua produk ditambahkan tanpa masalah
+        return redirect()->back()->with('success', 'Berhasil ditambahkan ke keranjang!');
     }
 
     public function hapuskeranjangbyadmin(Request $request)

@@ -4,7 +4,7 @@
 
 @section('content')
 
-<!-- IMPORT JAVASCRIPT DARI MIDTRANS -->
+<!-- IMPORT JAVASCRIPT DARI MIDTRANS (SNAP) -->
 <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ ('services.midtrans.client_key') }}"></script>
 
 <div class="p-2">
@@ -35,13 +35,11 @@
     <!-- form input transaksi ke tabel keranjang sblm di checkout  -->
     <div class="flex flex-col lg:flex-row gap-6">
     <!-- Form Transaksi Pembelian -->
-    <div class="bg-white p-6 rounded-lg shadow lg:w-1/3 max-h-96">
-        
-        <h2 class="text-lg font-semibold text-gray-800 mb-2">Form Transaksi Pembelian</h2>
-        <!-- Menampilkan pesan sukses -->
-        <form id="transaksiForm"  action="{{ route('transaksi.addtokeranjang') }}" method="POST" class="space-y-4">
+    <div class="bg-white p-6 rounded-lg shadow lg:w-1/3 max-h-96 overflow-y-auto">
+    <h2 class="text-lg font-semibold text-gray-800 mb-2">Form Transaksi Pembelian</h2>
+    <form id="transaksiForm" action="{{ route('transaksi.addtokeranjang') }}" method="POST" class="space-y-4">
         @csrf
-        <div class="grid grid-cols-1 gap-4">
+        <div class="grid grid-cols-1 gap-1">
             <div class="space-y-1">
                 <label for="id_member" class="block text-sm font-medium text-gray-700">ID Member</label>
                 <input type="text" id="id_member_1" data-id="1" name="id_member" 
@@ -50,22 +48,28 @@
                 <!-- Hasil pencarian -->
                 <ul id="member_suggestions_1" data-id="1" class="mt-2 space-y-1"></ul>
             </div>
-            <div class="space-y-1">
-                <label for="nama_produk" class="block text-sm font-medium text-gray-700">Produk</label>
-                <input type="text" id="nama_produk" name="nama_produk" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi produknya" onkeyup="searchProduk()">
-                <!-- Hasil pencarian -->
-                <ul id="produk_suggestions" class="mt-2 space-y-1"></ul>
+            <div id="produk-wrapper" class="space-y-1">
+                <div class="flex items-center gap-2 produk-row">
+                    <div class="w-4/5">
+                        <label for="nama_produk" class="block text-sm font-medium text-gray-700">Produk</label>
+                        <input type="text" name="nama_produk[]" class="nama-produk block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi produknya">
+                        <ul class="produk-suggestions mt-2 space-y-1"></ul>
+                    </div>
+                    <div class="w-1/5">
+                        <label for="qty" class="block text-sm font-medium text-gray-700">Qty</label>
+                        <input type="number" name="qty[]" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Qty">
+                    </div>
+                    <button type="button" class="px-1.5 py-0.5 bg-green-500 text-white rounded hover:bg-green-600 add-row">+</button>
+                    <button type="button" class="px-1.5 py-0.5 bg-red-500 text-white rounded hover:bg-red-600 remove-row hidden">-</button>
                 </div>
-            <div class="space-y-1">
-                <label for="qty" class="block text-sm font-medium text-gray-700">Qty</label>
-                <input type="number" id="qty" name="qty" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi qty nya">
             </div>
         </div>
-            <div class="flex justify-end">
-                <button type="submit" class="px-2 py-1.5 bg-purple-600 text-white rounded hover:bg-purple-700">Tambah</button>
-            </div>
-        </form>
+        <div class="flex justify-end">
+            <button type="submit" class="px-2 py-1.5 bg-purple-600 text-white rounded hover:bg-purple-700">Tambah</button>
+        </div>
+    </form>
     </div>
+
 
     <!-- Data Transaksi -->
     <div class="bg-white p-6 rounded-lg shadow flex-1">
@@ -179,6 +183,7 @@
         });
     }
 
+    // select member
     function selectMember(member, id) {
         const inputElement = document.querySelector(`#id_member_${id}`);
         const suggestionsList = document.querySelector(`#member_suggestions_${id}`);
@@ -198,17 +203,73 @@
         });
     });
 
-    //ini untuk suggestion search produk
-    function searchProduk() {
-        const input = document.getElementById('nama_produk').value;
-        const suggestionsList = document.getElementById('produk_suggestions');
+    // untuk menambah dan menghapus baris produk dan qty dari baris 207 - 243
+    document.addEventListener('DOMContentLoaded', function () {
+    const produkWrapper = document.getElementById('produk-wrapper');
 
-        if (input.length < 1) {
+    // Event listener untuk menambah baris
+    produkWrapper.addEventListener('click', function (e) {
+        if (e.target.classList.contains('add-row')) {
+            const lastRow = produkWrapper.querySelector('.produk-row:last-child');
+            const newRow = lastRow.cloneNode(true);
+
+            // Reset nilai input pada baris baru
+            newRow.querySelectorAll('input').forEach(input => input.value = '');
+            newRow.querySelectorAll('ul').forEach(ul => ul.innerHTML = '');
+
+            // Tampilkan tombol remove di row baru
+            newRow.querySelector('.remove-row').classList.remove('hidden');
+
+            produkWrapper.appendChild(newRow);
+        }
+    });
+
+    // Event listener untuk menghapus baris
+    produkWrapper.addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-row')) {
+            const row = e.target.closest('.produk-row');
+            if (produkWrapper.querySelectorAll('.produk-row').length > 1) {
+                row.remove();
+            }
+        }
+    });
+
+    // Event listener untuk search produk
+    produkWrapper.addEventListener('keyup', function (e) {
+        if (e.target.classList.contains('nama-produk')) {
+            searchProduk(e.target);
+        }
+    });
+    
+    // Event listener untuk menyembunyikan suggestion produk saat input kehilangan fokus
+    produkWrapper.addEventListener('blur', function (e) {
+        if (!e.target.classList.contains('nama-produk') && !e.target.closest('.produk-suggestions')) {
+            const suggestions = produkWrapper.querySelectorAll('.produk-suggestions');
+            suggestions.forEach(suggestion => suggestion.innerHTML = ''); // Menyembunyikan daftar suggestion
+        }
+    }, true); // Event bubbling
+
+    // Menambahkan event click pada document untuk menyembunyikan suggestion produk saat klik di luar
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('.produk-row')) {
+            const suggestions = produkWrapper.querySelectorAll('.produk-suggestions');
+            suggestions.forEach(suggestion => suggestion.innerHTML = ''); // Menyembunyikan daftar suggestion
+        }
+    });
+    });
+
+    // Suggestion untuk search produk
+    function searchProduk(input) {
+        const row = input.closest('.produk-row');
+        const inputValue = input.value;
+        const suggestionsList = row.querySelector('.produk-suggestions');
+
+        if (inputValue.length < 1) {
             suggestionsList.innerHTML = '';
             return;
         }
 
-        fetch(`/search-produk?nama_produk=${input}`)
+        fetch(`/search-produk?nama_produk=${inputValue}`) // fetch data produk dari backend 
             .then(response => response.json())
             .then(data => {
                 suggestionsList.innerHTML = '';
@@ -216,16 +277,19 @@
                 data.forEach(produk => {
                     const li = document.createElement('li');
                     li.textContent = produk.nama_produk;
-                    li.classList.add('p-2', 'border', 'border-gray-300',  'text-gray-600', 'text-sm', 'font-poppins', 'rounded-md', 'cursor-pointer');
-                    li.onclick = () => selectProduk(produk);
+                    li.classList.add('p-2', 'border', 'border-gray-300', 'text-gray-600', 'text-sm', 'font-poppins', 'rounded-md', 'cursor-pointer');
+                    li.onclick = () => selectProduk(produk, row);
                     suggestionsList.appendChild(li);
                 });
             });
     }
 
-    function selectProduk(produk) {
-        document.getElementById('nama_produk').value = produk.nama_produk;
-        document.getElementById('produk_suggestions').innerHTML = '';
+    // Function untuk select produk
+    function selectProduk(produk, row) {
+        const inputProduk = row.querySelector('.nama-produk');
+        const suggestionsList = row.querySelector('.produk-suggestions');
+        inputProduk.value = produk.nama_produk;
+        suggestionsList.innerHTML = '';
     }
 
     // Menghilangkan pesan popup setelah 3 detik, lihat di kode baris 28-38
