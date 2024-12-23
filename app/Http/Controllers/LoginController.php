@@ -31,12 +31,21 @@ class LoginController extends Controller
  
          if ($user) {
              // Login pengguna
-             Auth::login($user);
- 
+             
              // Cek role pengguna dan redirect ke halaman sesuai
              if ($user->role === 'admin') {
+                //ditambahin sama mas Roy, buat middleware nya sampai baris 40 
+                 Auth::guard('admin')->login($user);
+                 
+                 $request->session()->regenerate();
+                 
                  return redirect()->route('pages-admin.dashboard-admin'); // Rute dashboard admin
              } elseif ($user->role === 'user') {
+                //ditambahin sama mas Roy, buat middleware sampai baris 48
+                Auth::login($user);
+                 
+                 $request->session()->regenerate();
+                 
                  return redirect()->route('pages-user.dashboard-user'); // Rute dashboard user
              }
          }
@@ -47,10 +56,27 @@ class LoginController extends Controller
          ])->withInput();
      }
 
+    // controller logout dipisah antara admin dan user untuk middleware, ditambahin sama mas Roy
     // Proses logout
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
+        $request->session()->invalidate();
+ 
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
+    }
+
+    // Proses logout
+    public function logoutadmin(Request $request)
+    {
+        Auth::guard('admin')->logout();
+        $request->session()->invalidate();
+        
+ 
+        $request->session()->regenerateToken();
+
         return redirect()->route('login');
     }
 }

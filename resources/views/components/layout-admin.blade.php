@@ -24,19 +24,19 @@
             class="fixed inset-y-0 left-0 w-64 bg-white shadow-lg transition-transform transform lg:translate-x-0 lg:static z-50">
             <div class="flex items-center justify-between p-4">
             <div class="flex items-center">
-            <!-- foto profile -->
-            <a href="{{ route('profile', ['id' => Auth::id()]) }}" class="inline-block ml-4">
+            <!-- foto profile, ditambahin Auth::guard('admin') -> (ditambahin sama mas Roy) karena role nya admin (menggunakan middleware) -->
+            <a href="{{ route('profile', ['id' => Auth::guard('admin')->id()]) }}" class="inline-block ml-4">
                 <img 
-                    src="{{ asset(Auth::user()->foto_profile ?? 'images/default-profile.jpg') }}" 
+                    src="{{ asset(Auth::guard('admin')->user()->foto_profile ?? 'images/default-profile.jpg') }}" 
                     alt="Profile Admin" 
                     class="w-12 h-12 rounded-full object-cover"
                 />
             </a>
 
-                <!-- Kontainer teks user dan user2, disusun vertikal -->
+                <!-- Kontainer teks user dan user2, disusun vertikal. ditambahin Auth::guard('admin') -> (ditambahin sama mas Roy) karena role nya admin (menggunakan middleware)-->
                 <div class="ml-2 flex flex-col">
-                    <p class="font-medium">{{ Auth::user()->nama }}</p>
-                    <p class="text-sm text-gray-600">{{ Auth::user()->kelas }}</p>
+                    <p class="font-medium">{{ Auth::guard('admin')->user()->nama }}</p>
+                    <p class="text-sm text-gray-600">{{ Auth::guard('admin')->user()->kelas }}</p>
                 </div>
             </div>
 
@@ -120,12 +120,13 @@
                     </li>
                 </a>
 
-                <li id="logout" class="flex items-center px-4 py-2 hover:bg-red-200 rounded-xl space-x-4 text-red-600">
+                <a href="{{ route ('logout.admin') }}" class="block"class="block">
+                <li id="#" class="flex items-center px-4 py-2 hover:bg-red-200 rounded-xl space-x-4 text-red-600">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
                     </svg>
                     <span>Logout</span>
-                </li>
+                </li></a>
 
                 </ul>
             </nav>

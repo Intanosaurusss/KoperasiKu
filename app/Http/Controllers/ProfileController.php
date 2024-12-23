@@ -20,13 +20,13 @@ class ProfileController extends Controller
         $user = User::findOrFail($id);
 
         // Pastikan hanya pengguna yang sedang login yang bisa mengakses profil mereka
-        if (Auth::id() !== $user->id) {
-            return abort(403, 'Unauthorized');
-        }
+        // if (dd(Auth::id()) !== $user->id) {
+        //     return abort(403, 'Unauthorized');
+        // }
 
         // Tentukan layout berdasarkan role pengguna
         $layout = $user->role === 'admin' ? 'components.layout-admin' : 'components.layout-user';
-
+        
         // Tampilkan halaman profil dengan layout yang sesuai
         return view('pages.profile', compact('user', 'layout'));
     }
