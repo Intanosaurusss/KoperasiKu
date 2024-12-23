@@ -24,6 +24,7 @@ Route::get('/', function () {
 });
 
 // route untuk menampilkan halaman login
+Route::get('/login', function () { return view('pages.login'); });
 Route::post('/login', [LoginController::class, 'login'])->name('login'); 
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout'); 
 Route::get('/logoutadmin', [LoginController::class, 'logoutadmin'])->name('logout.admin'); 

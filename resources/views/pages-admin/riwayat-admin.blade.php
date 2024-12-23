@@ -186,7 +186,7 @@
         button.addEventListener('click', async () => {
             const transaksiId = button.getAttribute('data-id');
             try {
-                const response = await fetch(`/riwayat-user/${transaksiId}`);
+                const response = await fetch(`/riwayat-admin/${transaksiId}`);
                 if (!response.ok) throw new Error('Gagal memuat data.');
 
                 const data = await response.json();
