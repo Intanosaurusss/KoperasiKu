@@ -3,7 +3,7 @@
 @section('title', 'Detail Member')
 
 @section('content')
-<div class="bg-white pt-1 px-2 pb-2 rounded-md shadow-sm">
+<div class="bg-white pt-1 px-2 pb-2 rounded-md shadow-md">
     <p class="text-center font-semibold text-gray-700 my-3">Detail Member</p>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
         <div>

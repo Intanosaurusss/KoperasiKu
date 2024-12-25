@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Produk; // Pastikan namespace model ini benar
+use Illuminate\Support\Facades\Storage;
 
 class ProdukController extends Controller
 {
@@ -58,12 +59,8 @@ class ProdukController extends Controller
 
         // Menangani upload foto produk
         if ($request->hasFile('foto_produk')) {
-            // Menyimpan foto produk baru ke folder publik
-            $fileName = time() . '.' . $request->foto_produk->extension();
-            $request->foto_produk->move(public_path('images/produk'), $fileName);
-            
-            // Menyimpan path foto produk ke database
-            $produk->foto_produk = 'images/produk/' . $fileName;
+            $path = $request->file('foto_produk')->store('images/produk', 'public');
+            $produk->foto_produk = $path; // Simpan path gambar ke database
         }
 
         $produk->save();
@@ -89,33 +86,34 @@ class ProdukController extends Controller
             'stok_produk' => 'required|integer',
             'foto_produk' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
+    
+        // Cari produk berdasarkan ID
         $produk = Produk::findOrFail($id);
+    
+        // Update data produk dari input
         $produk->nama_produk = $request->nama_produk;
         $produk->kategori_produk = $request->kategori_produk;
         $produk->harga_produk = $request->harga_produk;
         $produk->stok_produk = $request->stok_produk;
 
-        // Menangani foto produk jika ada yang diupload
-        if ($request->hasFile('foto_produk')) {
-            // Hapus foto produk lama jika ada
-            if ($produk->foto_produk && file_exists(public_path($produk->foto_produk))) {
-                unlink(public_path($produk->foto_produk));
+       // Periksa apakah ada gambar yang diunggah
+       if ($request->hasFile('foto_produk')) {
+            // Hapus gambar lama jika ada
+            if ($produk->foto_produk) {
+                Storage::disk('public')->delete($produk->foto_produk);
             }
 
-            // Upload foto produk baru
-            $fileName = time() . '.' . $request->foto_produk->extension();
-            $request->foto_produk->move(public_path('images/produk'), $fileName);
-            
-            // Update path foto produk di database
-            $produk->foto_produk = 'images/produk/' . $fileName;
+            // Simpan gambar baru
+            $produk->foto_produk = $request->file('foto_produk')->store('images/produk', 'public');
         }
-
+    
+        // Simpan perubahan ke database
         $produk->save();
-
+    
+        // Redirect kembali ke halaman produk admin dengan pesan sukses
         return redirect()->route('pages-admin.produk-admin')->with('success', 'Produk berhasil diupdate');
     }
-
+    
     // Menghapus produk dari database
     public function destroy($id)
     {

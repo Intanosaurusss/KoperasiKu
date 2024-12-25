@@ -152,7 +152,7 @@
             clearTimeout(timeout);
             timeout = setTimeout(() => {
                 form.submit(); //kirim form otomatis jika sudah berenti mengetik
-            }, 500); // Delay setengah detik
+            }, 3000); // Delay 3 detik
         });
     });
 </script>

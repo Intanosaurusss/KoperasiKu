@@ -65,7 +65,7 @@
                     <td class="px-4 py-2 text-sm text-gray-700">
                     <div class="flex flex-col items-center md:flex-row md:space-x-2">
                         <img 
-                            src="{{ asset($item->foto_produk) }}" 
+                            src="{{ asset('storage/' . $item->foto_produk) }}" 
                             alt="{{ $item->nama_produk }}" 
                             class="w-16 h-16 cursor-pointer rounded"
                             onclick="openModal()" 
@@ -142,7 +142,7 @@
             clearTimeout(timeout);
             timeout = setTimeout(() => {
                 form.submit(); // Submit form automatically after 3 seconds of no typing
-            }, 500); // Delay for 3 seconds
+            }, 3000); // Delay for 3 seconds
         });
     });
 </script>

@@ -6,7 +6,7 @@
 <div class="pl-2">
     <div class="bg-white rounded-md shadow-md">
     @if ($errors->any())
-    <div class="alert alert-danger">
+    <div class="alert alert-danger text-red-400">
         <ul>
             @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>
@@ -56,7 +56,7 @@
                                     <path fill-rule="evenodd" d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z" clip-rule="evenodd" />
                                 </svg>
                                 <div class="mt-4 flex leading-6 text-gray-600">
-                                    <label for="foto_profile" class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                                    <label for="foto_profile" class="cursor-pointer rounded-md bg-white font-semibold text-purple-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-purple-600 focus-within:ring-offset-2 hover:text-purple-600">
                                         <span>Upload a file</span>
                                         <input id="foto_profile" name="foto_profile" type="file" class="sr-only" accept="image/png, image/jpeg, image/gif">
                                     </label>
@@ -72,9 +72,9 @@
 
             <div class="mt-6 mb-10 flex justify-end gap-x-6">
                 <a href="{{ route('profile', ['id' => Auth::id()]) }}">
-                    <button id="cancelbutton" type="button" class="px-2 py-1.5 bg-red-500 text-white rounded-md hover:bg-red-400 focus:ring focus:ring-red-300 mb-6">Batal</button>
+                    <button id="cancelbutton" type="button" class="px-2 py-1.5 bg-red-400 text-white rounded-md hover:bg-red-500 mb-6 transition ease-in-out duration-300">Batal</button>
                 </a>
-                <button id="submitbutton" type="submit" class="px-2 py-1.5 bg-indigo-600 text-white rounded-md hover:bg-indigo-500 focus:ring focus:ring-blue-300 mb-6">Edit</button>
+                <button id="submitbutton" type="submit" class="px-2 py-1.5 bg-purple-500 text-white rounded-md hover:bg-purple-600 mb-6 transition ease-in-out duration-300">Edit</button>
             </div>
         </div>
     </form>

@@ -34,7 +34,7 @@
     <div class="flex items-center gap-4 p-4 border rounded-lg shadow-md w-full max-w-6xl mt-4 bg-white">
     <!-- Image Produk -->
     <img 
-        src="{{ $produk->produk->foto_produk }}" 
+        src="{{ 'storage/' . $produk->produk->foto_produk }}" 
         alt="{{ $produk->produk->nama_poduk }}" 
         class="w-24 h-24 object-cover rounded-md"
     />

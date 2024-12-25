@@ -14,7 +14,7 @@
     </style>
 </head>
 <body>
-<section id="tentang" class="bg-white" data-aos="zoom-in">
+<section id="tentang" class="bg-white" data-aos="fade-up">
 <div class="text-center pt-10 space-y-3">
         <h2 class="text-2xl md:text-4xl tracking-tight font-bold text-purple-400 inline-block relative">
             Tentang Kami
@@ -60,7 +60,7 @@
                     <p class="mb-6">Dengan fasilitas dan kemudahan layanan yang kami berikan, tidak perlu lagi deh antri panjang saat berbelanja di koperasi sekolah!</p>
                 </div>
                 <div>
-                    <a href="login" type="button" class="py-2 px-5 text-sm font-medium text-purple-400 hover:text-white focus:outline-none bg-white rounded-lg border-2 border-purple-400 focus:z-10 hover:bg-purple-400">
+                    <a href="login" type="button" class="py-2 px-5 text-sm font-medium text-purple-400 hover:text-white focus:outline-none bg-white rounded-lg border-2 border-purple-400 focus:z-10 hover:bg-purple-400 transition ease-in-out duration-300">
                         Mulai sekarang
                     </a>
                 </div>

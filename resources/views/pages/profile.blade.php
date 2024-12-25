@@ -8,7 +8,7 @@
         <!-- Foto Profil -->
         
         <img 
-            src="{{ asset($user->foto_profile ?? 'images/default-profile.jpg') }}"  
+            src="{{ asset($user->foto_profile ? 'storage/' . $user->foto_profile : 'assets/default-profile.jpg') }}"
             alt="Profile Image"
             class="bg-purple-400 w-24 h-24 md:w-32 md:h-32 rounded-full object-cover"
         />
@@ -51,7 +51,7 @@
 
     <a href="{{ route('pages.edit-profile', ['id' => $user->id]) }}">
         <div class="flex justify-end mt-4">
-            <button class="px-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+            <button class="px-2 py-2 bg-purple-400 text-white rounded-md hover:bg-purple-500 transition ease-in-out duration-300">
                 Edit Profil
             </button>
         </div>

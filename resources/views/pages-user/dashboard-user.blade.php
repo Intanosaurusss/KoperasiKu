@@ -71,7 +71,7 @@
     @foreach ($produk as $produk)
     <div class="group shadow-sm rounded-lg bg-white">
     <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75 lg:h-60 flex justify-center items-center">
-        <img src="{{ asset($produk->foto_produk) }}" alt="Front of men&#039;s Basic Tee in black." class="max-w-[80%] max-h-[80%] object-cover object-center mt-2">
+        <img src="{{ asset('storage/' . $produk->foto_produk) }}" alt="foto produk" class="max-w-[80%] max-h-[80%] object-cover object-center mt-2">
     </div>
     <div class="ml-2">
         <div>
@@ -129,7 +129,7 @@
             clearTimeout(timeout);
             timeout = setTimeout(() => {
                 form.submit();
-            }, 500); // Delay for 500ms
+            }, 2000); // Delay 2 detik
         });
     });
 

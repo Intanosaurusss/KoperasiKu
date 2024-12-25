@@ -141,7 +141,7 @@
             clearTimeout(timeout);
             timeout = setTimeout(() => {
                 form.submit(); // Submit form automatically after 3 seconds of no typing
-            }, 500); // Delay for 3 seconds
+            }, 3000); // Delay 3 detik
         });
     });
 </script>

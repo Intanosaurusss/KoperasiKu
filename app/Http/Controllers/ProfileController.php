@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -69,21 +70,16 @@ class ProfileController extends Controller
         $user->email = $request->email;
         $user->id_member = $request->id_member;
 
-        // Handle image upload
-        if ($request->hasFile('foto_profile')) {
-            // Cek apakah pengguna sudah memiliki foto profil lama
-            if ($user->foto_profile && file_exists(public_path($user->foto_profile))) {
-                // Hapus foto profil lama
-                unlink(public_path($user->foto_profile));
+       // Periksa apakah ada gambar yang diunggah
+       if ($request->hasFile('foto_profile')) {
+            // Hapus gambar lama jika ada
+            if ($user->foto_profile) {
+                Storage::disk('public')->delete($user->foto_profile);
             }
 
-            // Upload foto baru
-            $fileName = time() . '.' . $request->foto_profile->extension();
-            $request->foto_profile->move(public_path('images/profile'), $fileName);
-            
-            // Update path foto profil baru di database
-            $user->foto_profile = 'images/profile/' . $fileName;
-        } 
+            // Simpan gambar baru
+            $user->foto_profile = $request->file('foto_profile')->store('images/profile', 'public');
+        }
 
         $user->save();
 

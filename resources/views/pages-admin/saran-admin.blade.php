@@ -24,12 +24,12 @@
 
     <div class="grid gap-4 sm:grid-cols-1 lg:grid-cols-4">
     @foreach($saran as $item)
-    <div class="bg-white pt-1 px-2 pb-2 rounded-md shadow-sm">
+    <div class="bg-white pt-1 px-2 pb-2 rounded-md shadow-md">
         <div class="flex items-center mt-1">
             <!-- Foto profil -->
             <a href="{{ route('profile', ['id' => $item->user_id]) }}" class="inline-block ml-4">
                 <img 
-                    src="{{ asset($item->user->foto_profile ?? 'images/default-profile.jpg') }}" 
+                    src="{{ asset($item->user->foto_profile ? 'storage/' . $item->user->foto_profile : 'assets/default-profile.jpg') }}" 
                     alt="Profile Admin" 
                     class="w-12 h-12 rounded-full object-cover"
                 />

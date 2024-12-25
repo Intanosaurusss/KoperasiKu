@@ -27,7 +27,7 @@
             <!-- foto profile, ditambahin Auth::guard('admin') -> (ditambahin sama mas Roy) karena role nya admin (menggunakan middleware) -->
             <a href="{{ route('profile', ['id' => Auth::guard('admin')->id()]) }}" class="inline-block ml-4">
                 <img 
-                    src="{{ asset(Auth::guard('admin')->user()->foto_profile ?? 'images/default-profile.jpg') }}" 
+                    src="{{ asset('storage/' . Auth::guard('admin')->user()->foto_profile ?? 'images/default-profile.jpg') }}" 
                     alt="Profile Admin" 
                     class="w-12 h-12 rounded-full object-cover"
                 />
@@ -132,17 +132,6 @@
             </nav>
         </div>
 
-        <!-- Popup Logout Confirmation -->
-        <div id="confirmationLogout" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-800 bg-opacity-50 text-sm md:text-lg">
-            <div class="bg-white py-6 px-12 rounded-lg shadow-lg">
-                <p class="text-center text-gray-700">Yakin mau logout?</p>
-                <div class="mt-4 flex justify-center gap-6">
-                    <button id="cancelLogout" class="bg-white text-green-500 border border-green-500 py-2 px-4 rounded-xl hover:bg-green-500 hover:text-white">Tidak</button>
-                    <button id="confirmLogout" class="bg-white border border-red-500 text-red-500 py-2 px-4 rounded-xl hover:bg-red-500 hover:text-white">Ya</button>
-                </div>
-            </div>
-        </div>
-
         <!-- Overlay (untuk layar kecil) -->
         <div 
             x-show="sidebarOpen" 
@@ -171,25 +160,5 @@
         </div>
     </div>
 
-
-<!-- Script for Popup Logic -->
-<script>
-    // Menampilkan popup saat tombol logout diklik
-    document.getElementById('logout').addEventListener('click', function(event) {
-        event.preventDefault();
-        document.getElementById('confirmationLogout').classList.remove('hidden');
-    });
-
-    // Mengonfirmasi logout dan redirect ke halaman lain
-    document.getElementById('confirmLogout').addEventListener('click', function() {
-        document.getElementById('confirmationLogout').classList.add('hidden');
-        window.location.href = '/'; // Ganti '/' dengan URL halaman tujuan setelah logout
-    });
-
-    // Membatalkan logout dan menutup popup
-    document.getElementById('cancelLogout').addEventListener('click', function() {
-        document.getElementById('confirmationLogout').classList.add('hidden');
-    });
-</script>
 </body>
 </html>
