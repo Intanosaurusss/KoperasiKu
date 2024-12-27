@@ -31,11 +31,11 @@
 
     <!-- container produk yang dimasukkan ke keranjang -->
     @foreach ($keranjang as $produk)
-    <div class="flex items-center gap-4 p-4 border rounded-lg shadow-md w-full max-w-6xl mt-4 bg-white">
+    <div class="flex items-center gap-3 p-4 border rounded-lg shadow-md w-full max-w-6xl mt-4 bg-white">
     <!-- Image Produk -->
     <img 
         src="{{ 'storage/' . $produk->produk->foto_produk }}" 
-        alt="{{ $produk->produk->nama_poduk }}" 
+        alt="{{ $produk->produk->nama_produk }}" 
         class="w-24 h-24 object-cover rounded-md"
     />
 
@@ -53,17 +53,17 @@
     <form action="{{ route('kurang-qty', $produk->id) }}" method="POST" class="inline">
         @csrf
         @method('PATCH')
-        <button type="submit" class="decrease bg-red-400 text-white px-2 py-1 rounded-lg hover:bg-red-500 transition">-</button>
+        <button type="submit" class="decrease bg-red-400 text-white px-1.5 py-1 rounded-lg hover:bg-red-500 transition">-</button>
     </form>
 
     <!-- Tampilan Jumlah -->
-    <span class="quantity w-8 text-center">{{ $produk->qty }}</span>
+    <span class="quantity w-2 text-center">{{ $produk->qty }}</span>
 
     <!-- Tombol increase/tambahi jumlah -->
     <form action="{{ route('tambah-qty', $produk->id) }}" method="POST" class="inline">
         @csrf
         @method('PATCH')
-        <button type="submit" class="increase bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-600 transition disabled:bg-gray-400 disabled:cursor-not-allowed" @if($produk->qty >= $produk->produk->stok_produk) disabled @endif>+</button>
+        <button type="submit" class="increase bg-blue-500 text-white px-1.5 py-1 rounded-lg hover:bg-blue-600 transition disabled:bg-gray-400 disabled:cursor-not-allowed" @if($produk->qty >= $produk->produk->stok_produk) disabled @endif>+</button>
     </form>
 
     <!-- button hapus produk dari keranjang -->
@@ -96,8 +96,8 @@
     <!-- akhir dari logika pengechekan stok produk -->
 
     <div class="flex justify-end mt-5 space-x-2">
-        <p class=" flex items-center text-gray-700">Subtotal pembelian : <span class="font-semibold text-red-500">Rp. {{ $formattedSubtotal}}</span></p>
-        <button onclick="openModal()" class="flex items-center space-x-2 bg-purple-400 hover:bg-purple-600 p-2 rounded-md text-white disabled:bg-gray-400 disabled:cursor-not-allowed"  {{ $formattedSubtotal == 0 || $jikastokprodukkosong ? 'disabled' : '' }}>
+        <p class=" flex items-center text-gray-700">Subtotal : <span class="font-semibold text-red-500">Rp. {{ $formattedSubtotal}}</span></p>
+        <button onclick="openModal()" class="flex items-center space-x-2 bg-purple-400 hover:bg-purple-600 p-1.5 rounded-md text-white disabled:bg-gray-400 disabled:cursor-not-allowed"  {{ $formattedSubtotal == 0 || $jikastokprodukkosong ? 'disabled' : '' }}>
             <span class="text-sm">checkout</span>
         </button>
     </div>

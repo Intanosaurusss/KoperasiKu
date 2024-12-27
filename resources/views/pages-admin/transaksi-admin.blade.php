@@ -36,7 +36,7 @@
     <div class="flex flex-col lg:flex-row gap-6">
     <!-- Form Transaksi Pembelian -->
     <div class="bg-white p-6 rounded-lg shadow lg:w-1/3 max-h-96 overflow-y-auto">
-    <h2 class="text-lg font-semibold text-gray-800 mb-2">Form Transaksi Pembelian</h2>
+    <h2 class="text-lg font-semibold text-gray-800 mb-2">Form Tambah ke Keranjang</h2>
     <form id="transaksiForm" action="{{ route('transaksi.addtokeranjang') }}" method="POST" class="space-y-4">
         @csrf
         <div class="grid grid-cols-1 gap-1">
@@ -73,7 +73,7 @@
 
     <!-- Data Transaksi -->
     <div class="bg-white p-6 rounded-lg shadow flex-1">
-            <h2 class="text-lg font-semibold text-gray-800 mb-2">Data Transaksi</h2>
+            <h2 class="text-lg font-semibold text-gray-800 mb-2">Data Keranjang</h2>
         <!-- input search data member untuk ditampilkan datanya -->
         <div class="space-y-1 mb-2">
             <form method="GET" action="{{ route('transaksi.index') }}">

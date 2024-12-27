@@ -16,50 +16,31 @@
     
 <div class="bg-white pt-1 px-2 pb-2 rounded-md shadow-sm">
     <!-- searchbar, dropddown dan button tambah member -->
-<div class="flex flex-wrap items-center mt-4 w-full gap-4">
-    <!-- Dropdown Kategori -->
-    <!-- <div class="sm:order-1 order-2 sm:w-1/4 w-full max-w-xs">
-        <select name="kategori_produk" id="kategori-dropdown" class="block w-full p-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:outline-none">
-            <option value="">filter berdasarkan</option>
-            <option value="pembelian tersering">pembelian tersering</option>
-            <option value="total pembelian">total pembelian</option>
-        </select>
-    </div> -->
+    <div class="flex items-center mt-4 w-full">
+        <!-- Search Bar -->
+        <form id="search-form" action="{{ route('pages-admin.member') }}" method="GET" class="">
+        <div class="flex items-center border border-gray-300 rounded-lg bg-white">
+            <svg class="w-4 h-4 text-gray-500 ml-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+            </svg>
+            <input type="search" name="search" id="default-search" 
+                class="block w-full p-2 pl-2 text-sm text-gray-900 border-0 rounded-lg focus:ring-blue-500 focus:outline-none" 
+                placeholder="Cari member..." value="{{ request('search') }}" />
+        </div>
+        </form>
 
-    <!-- Search Bar -->
-    <form id="search-form" action="{{ route('pages-admin.member') }}" method="GET" class="flex sm:order-2 order-1 items-center gap-4">
-    <div class="flex items-center border border-gray-300 rounded-lg bg-white">
-        <svg class="w-4 h-4 text-gray-500 ml-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-        </svg>
-        <input type="search" name="search" id="default-search" 
-            class="block w-full p-2 pl-2 text-sm text-gray-900 border-0 rounded-lg focus:ring-blue-500 focus:outline-none" 
-            placeholder="Cari member..." value="{{ request('search') }}" />
+        <!-- Button Tambah Data Member -->
+        <div class="flex ml-2">
+            <a href="{{ route('tambah-member.create') }}" method="GET">
+                <button type="button" class="flex items-center bg-green-400 text-white hover:bg-green-500 focus:outline-none font-medium rounded-lg text-sm px-4 py-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2">
+                        <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                    </svg>
+                    Tambah
+                </button>
+            </a>
+        </div>
     </div>
-    </form>
-
-    <!-- Button Tambah Data Member -->
-    <div class="flex gap-2 sm:order-3 order-3">
-        <a href="{{ route('tambah-member.create') }}" method="GET">
-            <button type="button" class="flex items-center bg-green-400 text-white hover:bg-green-500 focus:outline-none font-medium rounded-lg text-sm px-4 py-2">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2">
-                    <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
-                </svg>
-                Tambah
-            </button>
-        </a>
-
-        <!-- button import data member menggunakan excel -->
-        <!-- <a href="">
-            <button type="button" class="flex items-center bg-green-400 text-white hover:bg-green-500 focus:outline-none font-medium rounded-lg text-sm px-4 py-2">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2">
-                    <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
-                </svg>
-                Excel
-            </button>
-        </a> -->
-    </div>
-</div>
 
     <!-- Tabel Responsif -->
     <div class="overflow-x-auto mt-4">
@@ -74,6 +55,14 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
+            @if($members->isEmpty())
+            <!-- Tampilkan pesan jika tidak ada data setelah pencarian -->
+            <tr>
+                <td colspan="5" class="px-4 py-2 text-center text-gray-700">
+                    Data tidak ditemukan
+                </td>
+            </tr>
+            @else
             @foreach($members as $index => $member)
                 <tr class="hover:bg-gray-100">
                     <td class="px-4 py-2 text-sm text-center text-gray-700">{{ ($members->currentPage() - 1) * $members->perPage() + $index + 1 }}</td>
@@ -86,6 +75,7 @@
                     </td>
                 </tr>
             @endforeach
+            @endif
             </tbody>
         </table>
     </div>
@@ -147,5 +137,4 @@
         });
     });
 </script>
-
 @endsection

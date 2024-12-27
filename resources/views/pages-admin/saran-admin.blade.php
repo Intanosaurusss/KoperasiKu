@@ -1,6 +1,6 @@
 @extends('components.layout-admin')
 
-@section('title', 'Saran Untuk Admin')
+@section('title', 'Saran')
 
 @section('content')
 <div class="p-2">
@@ -72,7 +72,7 @@
     
         <div class="col-span-full mt-2">
             <label for="saran" class="block font-medium leading-6 text-gray-700">Saran</label>
-            <textarea id="saran" name="saran" rows="4" class="block w-full py-1.5 pl-2 text-sm text-gray-600 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi deskripsi pengeluaran" readonly>{{ $item->saran }}</textarea>
+            <textarea id="saran" name="saran" rows="3" class="block w-full py-1.5 pl-2 text-sm text-gray-600 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi deskripsi pengeluaran" readonly>{{ $item->saran }}</textarea>
         </div>
 
         <p class="text-right mt-1 text-xs text-gray-500">{{ $item->formatted_created_at }}</p>

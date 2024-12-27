@@ -66,7 +66,7 @@ class SaranController extends Controller
             ]);
 
             // Redirect dengan pesan sukses
-            return redirect()->back()->with('success', 'Saran berhasil disimpan!');
+            return redirect()->back()->with('success', 'Saran berhasil dikirim!');
         } catch (\Exception $e) {
             // Jika terjadi error, kirimkan pesan error
             return redirect()->back()->withErrors(['error' => 'Saran gagal dikirim. Silakan coba lagi.']);

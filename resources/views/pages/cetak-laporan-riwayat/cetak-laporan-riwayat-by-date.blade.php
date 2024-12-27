@@ -51,7 +51,7 @@
     @endphp
 
     <h1 class="header">KoperasiKu</h1>
-    <p class="info"><strong>Email:</strong> {{ $data->first()['email'] ?? 'nama kamu siapa?' }}</p>
+    <p class="info"><strong>Email:</strong> {{ Auth::user()->email }}</p>
     <p class="info"><strong>Tanggal:</strong> 
         {{ Carbon::parse(request('date_start'))->translatedFormat('d F Y') }} 
         s.d. 
