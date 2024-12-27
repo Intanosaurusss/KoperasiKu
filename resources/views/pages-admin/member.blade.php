@@ -63,6 +63,7 @@
 
     <!-- Tabel Responsif -->
     <div class="overflow-x-auto mt-4">
+    <div class="min-w-full w-64">
         <table class="min-w-full">
             <thead class="bg-gray-200">
                 <tr>
@@ -87,6 +88,7 @@
             @endforeach
             </tbody>
         </table>
+    </div>
     </div>
 
 </div>

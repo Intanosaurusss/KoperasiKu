@@ -8,4 +8,9 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    //ditambah ini untuk build (nyobain hosting)
+    build: {
+        outDir: '../public_html/build', // Output langsung ke public_html/build
+        emptyOutDir: true, // Membersihkan folder sebelum build baru
+    },
 });

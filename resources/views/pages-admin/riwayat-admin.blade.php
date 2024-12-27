@@ -53,12 +53,14 @@
 
     <!-- Tabel Responsif -->
     <div class="overflow-x-auto mt-4">
-        <table class="min-w-full">
+    <div class="min-w-full w-64">
+         <table class="min-w-full">
             <thead class="bg-gray-200">
                 <tr>
                     <th class="px-2 py-2 font-semibold text-gray-700">No</th>
                     <th class="px-2 py-2 font-semibold text-gray-700">Email</th>
                     <th class="px-2 py-2 font-semibold text-gray-700">Tanggal</th>
+                    <th class="px-2 py-2 font-semibold text-gray-700">Total</th>
                     <th class="px-2 py-2 font-semibold text-gray-700">Aksi</th>
                 </tr>
             </thead>
@@ -76,6 +78,7 @@
                     <td class="px-4 py-2 text-sm text-center text-gray-700"> {{ ($transaksi->currentPage() - 1) * $transaksi->perPage() + $loop->iteration }}</td>
                     <td class="px-4 py-2 text-sm text-gray-700">{{ $item->user->email ?? '-' }}</td>
                     <td class="px-4 py-2 text-sm text-gray-700">{{ $item->created_at->format('d-m-Y') }}</td>
+                    <td class="px-4 py-2 text-sm text-gray-700">Rp.{{ number_format($item->subtotal, 0, ',', '.') }}</td>
                     <td class="flex px-6 py-2 whitespace-nowrap text-sm text-gray-900 space-x-2 md:space-x-6 justify-center">
                         @include('components.crud-riwayat-admin', ['item' => $item])
                     </td>
@@ -84,6 +87,7 @@
             @endif
             </tbody>
         </table>
+    </div>
     </div>
 </div>
 </div>
