@@ -129,7 +129,7 @@
                 Next
             </span>
         @endif
-    </div>
+</div>
 
 </div>
 

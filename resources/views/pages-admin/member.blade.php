@@ -15,7 +15,7 @@
     </div>
     
 <div class="bg-white pt-1 px-2 pb-2 rounded-md shadow-sm">
-    <!-- searchbar, dropddown dan button tambah member -->
+    <!-- searchbar dan button tambah member -->
     <div class="flex items-center mt-4 w-full">
         <!-- Search Bar -->
         <form id="search-form" action="{{ route('pages-admin.member') }}" method="GET" class="">
@@ -82,7 +82,6 @@
     </div>
 
 </div>
-</div>
 
 <!-- Pagination -->
 <div class="mt-4 flex justify-end space-x-2">
@@ -120,6 +119,8 @@
                 Next
             </span>
         @endif
+</div>
+
 </div>
 
 <script>

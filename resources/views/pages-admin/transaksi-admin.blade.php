@@ -35,7 +35,7 @@
     <!-- form input transaksi ke tabel keranjang sblm di checkout  -->
     <div class="flex flex-col lg:flex-row gap-6">
     <!-- Form Transaksi Pembelian -->
-    <div class="bg-white p-6 rounded-lg shadow lg:w-1/3 max-h-96 overflow-y-auto">
+    <div class="bg-white p-3 rounded-lg shadow lg:w-1/3 max-h-96 overflow-y-auto">
     <h2 class="text-lg font-semibold text-gray-800 mb-2">Form Tambah ke Keranjang</h2>
     <form id="transaksiForm" action="{{ route('transaksi.addtokeranjang') }}" method="POST" class="space-y-4">
         @csrf
@@ -70,9 +70,8 @@
     </form>
     </div>
 
-
     <!-- Data Transaksi -->
-    <div class="bg-white p-6 rounded-lg shadow flex-1">
+    <div class="bg-white p-3 rounded-lg shadow flex-1">
             <h2 class="text-lg font-semibold text-gray-800 mb-2">Data Keranjang</h2>
         <!-- input search data member untuk ditampilkan datanya -->
         <div class="space-y-1 mb-2">
@@ -88,7 +87,8 @@
             </form>
         </div>
         <div class="overflow-y-auto max-h-64">
-            <table class="w-full text-sm text-left text-gray-500">
+        <div class="min-w-full w-64">
+             <table class="w-full text-sm text-left text-gray-500">
                 <thead class="bg-gray-200 text-gray-700 uppercase">
                     <tr>
                         <th class="px-6 py-3">Produk</th>
@@ -124,6 +124,7 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
         </div>
         <div class="flex justify-end mt-1 space-x-2 items-center">
             <p>Subtotal : <span class="text-red-400 font-semibold">Rp {{ $formattedSubtotal }}</span></p>
