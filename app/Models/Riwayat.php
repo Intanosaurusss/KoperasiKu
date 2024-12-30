@@ -22,6 +22,6 @@ class Riwayat extends Model
 
     public function produk()
     {
-        return $this->belongsTo(Produk::class, 'produk_id', 'id');
+        return $this->belongsTo(Produk::class, 'produk_id', 'id')->withTrashed(); //tetap menampilkan relasi ke produk (menggunakan withTrashed), walau produk sudah dihapus (sttt! tapi di database masih ada lho, soalnya menggunakan softdelete)
     }
 }

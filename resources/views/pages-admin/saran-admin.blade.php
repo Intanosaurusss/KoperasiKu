@@ -23,6 +23,12 @@
     @endif
 
     <div class="grid gap-4 sm:grid-cols-1 lg:grid-cols-4">
+    @if($saran->isEmpty())
+        <!-- Tampilkan pesan jika tidak ada saran -->
+        <div class="text-purple-500 text-sm">
+                Belum ada saran...
+        </div>
+    @else
     @foreach($saran as $item)
     <div class="bg-white pt-1 px-2 pb-2 rounded-md shadow-md">
         <div class="flex items-center mt-1">
@@ -78,6 +84,7 @@
         <p class="text-right mt-1 text-xs text-gray-500">{{ $item->formatted_created_at }}</p>
     </div>
     @endforeach
+    @endif
     </div>
 </div>
 
