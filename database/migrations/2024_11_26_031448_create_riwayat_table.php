@@ -17,8 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('produk_id');
             $table->integer('qty');
             $table->timestamps();
-        
-            $table->foreign('transaksi_id')->references('id')->on('transaksi');
+            $table->foreign('transaksi_id')->references('id')->on('transaksi')->onDelete('cascade');
             $table->foreign('produk_id')->references('id')->on('produk');
         });        
     }

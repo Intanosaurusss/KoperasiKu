@@ -14,10 +14,24 @@
         </div>
     </div>
 
+    <!-- popup pesan sukses/gagal respon dari backend -->
+    @if(session('success'))
+        <div id="flash-message" class="alert bg-green-100 text-green-700 text-sm border border-green-400 rounded p-2 mb-2">
+        <strong class="font-bold">Sukses!</strong>
+        {{ session('success') }}
+        </div>
+        @endif
+    @if(session('error'))
+        <div id="flash-message" class="alert bg-red-100 text-red-700 text-sm border border-red-400 rounded p-2 mb-2">
+        <strong class="font-bold">Gagal!</strong>
+        {{ session('error') }}
+        </div>
+    @endif
+
 <div class="bg-white pt-1 px-2 pb-2 rounded-md shadow-sm">
     <!-- searchbar -->
     <div class="flex flex-col md:flex-row items-center mt-4 w-full space-y-3 max-w-full">
-        <div class="flex items-center mt-4 w-full">
+        <div class="flex items-center w-full">
             <form method="GET" action="{{ route('pages-admin.pengeluaran-admin') }}" class="w-full mr-2 md:w-auto space-x-4" id="search-form">
                     <div class="flex items-center border border-gray-300 rounded-lg bg-white">
                         <svg class="w-4 h-4 text-gray-500 ml-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -47,15 +61,6 @@
             <span class="mx-1 text-xs">s.d.</span>
             <input type="date" name="date_end" class="border border-gray-300 rounded-lg p-1.5 text-xs" placeholder="Tanggal Akhir" required />
         </div>
-       
-        @if(session('error'))
-            <script>
-                // Tampilkan pesan error dalam popup
-                window.onload = function() {
-                    alert("{{ session('error') }}");
-                };
-            </script>
-        @endif
         
         <button type="submit" class="bg-blue-400 hover:bg-blue-500 p-1.5 rounded-md flex items-center text-white justify-center w-full md:w-auto mt-2 md:mt-0">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
@@ -148,6 +153,14 @@
 </div>
 
 <script>
+    // Menghilangkan popup pesan flash selama 3 detik saat produk dimasukkan ke keranjang
+    setTimeout(() => {
+        const flashMessage = document.getElementById('flash-message');
+        if (flashMessage) {
+            flashMessage.remove();
+        }
+    }, 3000); // 3000 ms = 3 detik
+    
     //js untuk fitur search otomatis tanpa enter
     document.addEventListener('DOMContentLoaded', function () {
         const form = document.getElementById('search-form');

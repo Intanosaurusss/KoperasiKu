@@ -78,19 +78,8 @@ class RegisterMemberController extends Controller
         ]);
 
         // Redirect ke halaman member setelah registrasi berhasil
-        return redirect()->route('pages-admin.member')->with('message', 'Member berhasil ditambahkan.');
+        return redirect()->route('pages-admin.member')->with('success', 'Member berhasil ditambahkan.');
     }
-
-    // public function import(Request $request)  //register member import via excel
-    // {
-    //     $request->validate([
-    //         'file' => 'required|mimes:xlsx,csv',
-    //     ]);
-
-    //     Excel::import(new MembersImport, $request->file('file'));
-
-    //     return back()->with('success', 'Data berhasil diimport.');
-    // }
 
     // Menghapus member berdasarkan ID
     public function destroy($id)
@@ -101,37 +90,6 @@ class RegisterMemberController extends Controller
         $member->delete();
 
         // Redirect ke halaman member dengan pesan sukses
-        return redirect()->route('pages-admin.member')->with('message', 'Member berhasil dihapus.');
+        return redirect()->route('pages-admin.member')->with('success', 'Member berhasil dihapus.');
     }
-
-
-    // public function registermember(Request $request)
-    // {
-    //     // Validasi input
-    //     $validator = Validator::make($request->all(), [
-    //         'nama' => 'required|string|max:255',
-    //         'kelas' => 'required|string|max:255',
-    //         'email' => 'required|string|email|max:255|unique:users',
-    //         'id_member' => 'required|integer|min:10|unique:users,id_member',
-    //         'no_telepon' => 'required|string|max:15|unique:users',
-    //     ]);
-
-    //     // Jika validasi gagal
-    //     if ($validator->fails()) {
-    //         return response()->json(['errors' => $validator->errors()], 422);
-    //     }
-
-    //     // Membuat pengguna baru tanpa password (asumsi tidak menggunakan password pada registrasi member)
-    //     User::create([
-    //         'nama' => $request->nama,
-    //         'kelas' => $request->kelas,
-    //         'email' => $request->email,
-    //         'no_telepon' => $request->no_telepon,
-    //         'id_member' => $request->id_member,
-    //         'role' => 'user',  // Default role untuk member adalah 'user'
-    //     ]);
-
-    //     // Redirect ke halaman login setelah registrasi berhasil
-    //     return redirect()->route('login')->with('message', 'Registrasi berhasil. Silakan masuk.');
-    // }
 }

@@ -14,6 +14,20 @@
         </div>
     </div>
 
+    <!-- popup pesan sukses/gagal respon dari backend -->
+    @if(session('success'))
+        <div id="flash-message" class="alert bg-green-100 text-green-700 text-sm border border-green-400 rounded p-2 mb-2">
+        <strong class="font-bold">Sukses!</strong>
+        {{ session('success') }}
+        </div>
+        @endif
+    @if(session('error'))
+        <div id="flash-message" class="alert bg-red-100 text-red-700 text-sm border border-red-400 rounded p-2 mb-2">
+        <strong class="font-bold">Gagal!</strong>
+        {{ session('error') }}
+        </div>
+    @endif
+
     <div class="bg-white pt-1 px-2 pb-2 rounded-md shadow-sm">
     <!-- searchbar -->
     <div class="flex items-center mt-4 w-full">
@@ -134,6 +148,14 @@
 </div>
 
 <script>
+    // Menghilangkan popup pesan flash selama 3 detik saat produk dimasukkan ke keranjang
+    setTimeout(() => {
+        const flashMessage = document.getElementById('flash-message');
+        if (flashMessage) {
+            flashMessage.remove();
+        }
+    }, 3000); // 3000 ms = 3 detik
+    
     document.addEventListener('DOMContentLoaded', function () {
         const form = document.getElementById('search-form');
         const searchInput = document.getElementById('default-search');

@@ -111,7 +111,7 @@ class ProdukController extends Controller
         $produk->save();
     
         // Redirect kembali ke halaman produk admin dengan pesan sukses
-        return redirect()->route('pages-admin.produk-admin')->with('success', 'Produk berhasil diupdate');
+        return redirect()->route('pages-admin.produk-admin')->with('success', 'Produk berhasil diedit');
     }
     
     // Menghapus produk dari database

@@ -93,7 +93,7 @@ class PengeluaranController extends Controller
         $pengeluaran->deskripsi_pengeluaran = $request->deskripsi_pengeluaran;
         $pengeluaran->save(); // Menyimpan perubahan
 
-        return redirect()->route('pages-admin.pengeluaran-admin')->with('success', 'Pengeluaran berhasil diupdate!');
+        return redirect()->route('pages-admin.pengeluaran-admin')->with('success', 'Pengeluaran berhasil diedit!');
     }
 
     // Fungsi untuk menghapus pengeluaran

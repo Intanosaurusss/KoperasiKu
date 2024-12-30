@@ -27,7 +27,7 @@
             <!-- foto profile, ditambahin Auth::guard('admin') -> (ditambahin sama mas Roy) karena role nya admin (menggunakan middleware) -->
             <a href="{{ route('profile', ['id' => Auth::guard('admin')->id()]) }}" class="inline-block ml-4">
                 <img 
-                    src="{{ asset('storage/' . Auth::guard('admin')->user()->foto_profile ?? 'images/default-profile.jpg') }}" 
+                    src="{{ Auth::guard('admin')->user()->foto_profile ? asset('storage/' . Auth::guard('admin')->user()->foto_profile) : asset('assets/default-profile.jpg') }}"
                     alt="Profile Admin" 
                     class="w-12 h-12 rounded-full object-cover"
                 />
