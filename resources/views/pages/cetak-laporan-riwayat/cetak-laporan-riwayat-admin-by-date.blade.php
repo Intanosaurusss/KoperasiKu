@@ -18,13 +18,14 @@
         }
         th, td {
             border: 1px solid #000;
-            padding: 8px;
+            padding: 4px;
             text-align: center;
         }
         th {
             background-color: #f2f2f2;
         }
         .total {
+            margin-top: 5px;
             font-weight: bold;
             text-align: right;
         }
@@ -35,73 +36,82 @@
         }
         .info {
             margin-top: 10px;
-            font-size: 14px;
+            font-size: 12px;
         }
         .footer {
             text-align: center;
             margin-top: 20px;
         }
+        .detail-pembelian {
+            text-align: left;
+        }
     </style>
 </head>
 <body>
 
-    @php
-        use Carbon\Carbon;
-        Carbon::setLocale('id'); // Set locale ke Indonesia
-    @endphp
+@php
+    use Carbon\Carbon;
+    Carbon::setLocale('id'); // Set locale ke Indonesia
+@endphp
 
-    <h1 class="header">KoperasiKu</h1>
-    <p class="info"><strong>Tanggal:</strong> 
-        {{ Carbon::parse(request('date_start'))->translatedFormat('d F Y') }} 
-        s.d. 
-        {{ Carbon::parse(request('date_end'))->translatedFormat('d F Y') }}
-    </p>
+<h1 class="header">KoperasiKu</h1>
+<p class="info"><strong>Tanggal Pembelian :</strong> 
+    {{ Carbon::parse(request('date_start'))->translatedFormat('d F Y') }} 
+    s.d. 
+    {{ Carbon::parse(request('date_end'))->translatedFormat('d F Y') }}
+</p>
 
-    <table>
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Tanggal Pembelian</th>
-                <th>Email</th>
-                <th>Nama Produk</th>
-                <th>Qty</th>
-                <th>Harga</th>
-                <th>Subtotal</th>
-            </tr>
-        </thead>
-        <tbody>
+<table>
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>Tanggal</th>
+            <th>Email</th>
+            <th>Detail</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @php
+            $grandTotal = 0;
+            $no = 1;
+        @endphp
+        @foreach ($data as $transaksi)
             @php
-                $grandTotal = 0;
-                $no = 1;
+                $grandTotal += $transaksi['total'];
             @endphp
-            @foreach ($data as $transaksi)
-                @foreach ($transaksi['riwayat'] as $riwayat)
-                    @php
-                        $grandTotal += $riwayat['subtotal'];
-                    @endphp
-                    <tr>
-                        <td>{{ $no++ }}</td>
-                        <td>{{ Carbon::parse($transaksi['tanggal'])->translatedFormat('d F Y') }}</td>
-                        <td>{{ $transaksi['email'] }}</td>
-                        <td>{{ $riwayat['produk'] }}</td>
-                        <td>{{ $riwayat['qty'] }}</td>
-                        <td>Rp {{ number_format($riwayat['harga'], 0, ',', '.') }}</td>
-                        <td>Rp {{ number_format($riwayat['subtotal'], 0, ',', '.') }}</td>
-                    </tr>
-                @endforeach
-            @endforeach
-        </tbody>  
-    </table>
+            <tr>
+                <td>{{ $no++ }}</td>
+                <td>{{ Carbon::parse($transaksi['tanggal'])->translatedFormat('d F Y') }}</td>
+                <td>{{ $transaksi['email'] }}</td>
+                <td class="detail-pembelian">
+                    <ul>
+                        @foreach ($transaksi['riwayat'] as $riwayat)
+                            <li>
+                                <strong>Produk:</strong> {{ $riwayat['produk'] }}
+                                <strong>Qty:</strong> {{ $riwayat['qty'] }}
+                                <strong>Harga:</strong> Rp. {{ number_format($riwayat['harga'], 0, ',', '.') }}
+                                <strong>Subtotal:</strong> Rp. {{ number_format($riwayat['subtotal'], 0, ',', '.') }}
+                            </li>
+                        @endforeach
+                    </ul>
+                </td>
+                <td>Rp. {{ number_format($transaksi['total'], 0, ',', '.') }}</td>
+            </tr>
+        @endforeach
+    </tbody>  
+</table>
 
-    <div style="text-align: right;">
-        <strong>Total Belanja: Rp {{ number_format($grandTotal, 0, ',', '.') }}</strong>
-    </div>
+<div class="total">
+    <strong>Total Pembelian : Rp. {{ number_format($grandTotal, 0, ',', '.') }}</strong>
+</div>
 
-    <!-- Footer Section -->
-    <div class="footer">
-        <p>Terima Kasih</p>
-        <p>Selamat Berbelanja Kembali</p>
-    </div>
+<!-- Footer Section -->
+<div class="footer">
+    <p>Terima Kasih</p>
+    <p>Selamat Berbelanja Kembali</p>
+</div>
+
 
 </body>
 </html>

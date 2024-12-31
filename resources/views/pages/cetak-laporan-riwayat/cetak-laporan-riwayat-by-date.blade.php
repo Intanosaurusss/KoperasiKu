@@ -41,6 +41,9 @@
             text-align: center;
             margin-top: 20px;
         }
+        .detail-pembelian {
+            text-align: left;
+        }
     </style>
 </head>
 <body>
@@ -59,38 +62,44 @@
     </p>
 
     <table>
-        <thead>
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>Tanggal Pembelian</th>
+            <th>Detail</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        @php
+            $grandTotal = 0;
+            $no = 1;
+        @endphp
+        @foreach ($data as $transaksi)
             <tr>
-                <th>No</th>
-                <th>Tanggal Pembelian</th>
-                <th>Nama Produk</th>
-                <th>Qty</th>
-                <th>Harga</th>
-                <th>Subtotal</th>
+                <td>{{ $no++ }}</td>
+                <td>{{ Carbon::parse($transaksi['tanggal'])->translatedFormat('d F Y') }}</td>
+                <td class="detail-pembelian">
+                    <ul>
+                        @foreach ($transaksi['riwayat'] as $riwayat)
+                            <li>
+                                <strong>Produk:</strong>{{ $riwayat['produk'] }} 
+                                <strong>Qty:</strong>{{ $riwayat['qty'] }} 
+                                <strong>Harga:</strong> Rp. {{ number_format($riwayat['harga'], 0, ',', '.') }}
+                                <strong>Subtotal:</strong> Rp. {{ number_format($riwayat['subtotal'], 0, ',', '.') }}
+                            </li>
+                        @endforeach
+                    </ul>
+                </td>
+                <td>Rp {{ number_format($transaksi['total'], 0, ',', '.') }}</td>
             </tr>
-        </thead>
-        <tbody>
             @php
-                $grandTotal = 0;
-                $no = 1;
+                $grandTotal += $transaksi['total'];
             @endphp
-            @foreach ($data as $transaksi)
-                @foreach ($transaksi['riwayat'] as $riwayat)
-                    @php
-                        $grandTotal += $riwayat['subtotal'];
-                    @endphp
-                    <tr>
-                        <td>{{ $no++ }}</td>
-                        <td>{{ Carbon::parse($transaksi['tanggal'])->translatedFormat('d F Y') }}</td>
-                        <td>{{ $riwayat['produk'] }}</td>
-                        <td>{{ $riwayat['qty'] }}</td>
-                        <td>Rp {{ number_format($riwayat['harga'], 0, ',', '.') }}</td>
-                        <td>Rp {{ number_format($riwayat['subtotal'], 0, ',', '.') }}</td>
-                    </tr>
-                @endforeach
-            @endforeach
-        </tbody>  
-    </table>
+        @endforeach
+    </tbody>  
+</table>
+
 
         <div style="text-align: right;">
             <strong>Total Belanja: Rp {{ number_format($grandTotal, 0, ',', '.') }}</strong>
