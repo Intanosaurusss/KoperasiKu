@@ -120,10 +120,11 @@ class ProdukController extends Controller
         $produk = Produk::findOrFail($id);
 
         // Hapus foto produk jika ada
-        if ($produk->foto_produk && file_exists(public_path($produk->foto_produk))) {
-            unlink(public_path($produk->foto_produk));
+        if ($produk->foto_produk) {
+            Storage::disk('public')->delete($produk->foto_produk); // Hapus file sesuai path di database
         }
 
+        // Hapus data produk dari database
         $produk->delete();
 
         return redirect()->route('pages-admin.produk-admin')->with('success', 'Produk berhasil dihapus');

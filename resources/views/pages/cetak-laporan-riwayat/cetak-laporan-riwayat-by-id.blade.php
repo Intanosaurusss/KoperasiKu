@@ -10,19 +10,18 @@
             font-size: 12px;
             line-height: 1.5;
             margin: 0;
-            padding: 20px;
         }
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
         .header h1 {
             margin: 0;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
         }
         .info {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
         .info p {
             margin: 5px 0;
@@ -30,7 +29,7 @@
         .table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
         .table th, .table td {
             border: 1px solid #000;
@@ -106,7 +105,7 @@
     <!-- Footer Section -->
     <div class="footer">
         <p>Terima Kasih</p>
-        <p>Selamat Belanja Kembali</p>
+        <p>Selamat Berbelanja Kembali</p>
     </div>
 </body>
 </html>

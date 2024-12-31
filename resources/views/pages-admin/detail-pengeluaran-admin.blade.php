@@ -7,7 +7,15 @@
     <div class="p-4 bg-white rounded-lg shadow-md">
         <div class="mb-4">
             <p class="font-medium text-gray-700">Tanggal Pengeluaran:</p>
-            <p class="text-gray-700 text-sm">{{ $pengeluaran->tanggal_pengeluaran }}</p> 
+            <p class="text-gray-700 text-sm">
+                @php
+                    use Carbon\Carbon;
+                    Carbon::setLocale('id'); // Set locale ke Indonesia
+                    // Memastikan format tanggal mengikuti waktu Indonesia
+                    $tanggal = Carbon::parse($pengeluaran->tanggal_pengeluaran)->translatedFormat('d F Y');
+                @endphp
+                {{ $tanggal }}
+            </p> 
         </div>
         <div class="mb-4">
             <p class="font-medium text-gray-700">Deskripsi:</p>

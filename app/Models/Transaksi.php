@@ -35,7 +35,7 @@ class Transaksi extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed(); //tetap menampilkan relasi ke user (menggunakan withTrashed), walau user sudah dihapus (sttt! tapi di database masih ada lho, soalnya menggunakan softdelete)
     }
 
     public function produk()

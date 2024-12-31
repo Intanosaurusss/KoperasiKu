@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('metode_pembayaran');
             $table->enum('status_pembayaran', ['pending', 'success', 'failed']);
             $table->string('subtotal');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

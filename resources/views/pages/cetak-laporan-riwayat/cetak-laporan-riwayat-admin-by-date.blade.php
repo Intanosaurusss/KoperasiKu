@@ -10,7 +10,6 @@
             font-size: 12px;
             line-height: 1.5;
             margin: 0;
-            padding: 20px;
         }
         table {
             width: 100%;
@@ -31,6 +30,7 @@
         }
         .header {
             text-align: center;
+            font-size: 20px;
             margin-bottom: 20px;
         }
         .info {
@@ -100,7 +100,7 @@
     <!-- Footer Section -->
     <div class="footer">
         <p>Terima Kasih</p>
-        <p>Selamat Belanja Kembali</p>
+        <p>Selamat Berbelanja Kembali</p>
     </div>
 
 </body>
