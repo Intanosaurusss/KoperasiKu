@@ -32,5 +32,4 @@ class Produk extends Model
     {
         return $this->hasMany(Riwayat::class, 'produk_id');
     }
-
 }

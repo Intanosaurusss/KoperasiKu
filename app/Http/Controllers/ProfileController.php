@@ -57,7 +57,7 @@ class ProfileController extends Controller
             'kelas' => 'nullable|string|max:255',
             'no_telepon' => 'nullable|string|max:15',
             'email' => 'required|email|max:255|unique:users,email,' . $id,
-            'id_member' => 'nullable|digits:10', // Validasi ID Member dengan 10 angka
+            'id_member' => 'nullable|digits:10', 
             'foto_profile' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
@@ -81,8 +81,14 @@ class ProfileController extends Controller
             $user->foto_profile = $request->file('foto_profile')->store('images/profile', 'public');
         }
 
-        $user->save();
+         // Bandingkan data yang diperbarui dengan data asli
+        if ($user->isDirty() || $request->hasFile('foto_profile')) {
+            // Simpan jika ada perubahan
+            $user->save();
+            return redirect()->route('profile', $id)->with('success', 'Profile berhasil diedit!');
+        }
 
-        return redirect()->route('profile', $id)->with('success', 'Profile updated successfully.');
+        // Tidak ada perubahan, kembalikan tanpa pesan
+        return redirect()->route('profile', $id);
     }
 }
