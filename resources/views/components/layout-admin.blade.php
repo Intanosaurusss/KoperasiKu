@@ -36,8 +36,8 @@
 
                 <!-- Kontainer teks user dan user2, disusun vertikal. ditambahin Auth::guard('admin') -> (ditambahin sama mas Roy) karena role nya admin (menggunakan middleware)-->
                 <div class="ml-2 flex flex-col">
-                    <p class="font-medium">{{ Auth::guard('admin')->user()->nama }}</p>
-                    <p class="text-sm text-gray-600">{{ Auth::guard('admin')->user()->kelas }}</p>
+                    <p class="font-medium">{{ Str::limit(Auth::guard('admin')->user()->nama, 10, '...') }}</p>
+                    <p class="text-sm text-gray-600">{{ Str::limit(Auth::guard('admin')->user()->kelas, 10, '...') }}</p>
                 </div>
             </div>
 

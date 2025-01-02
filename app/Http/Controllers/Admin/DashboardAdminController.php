@@ -28,8 +28,10 @@ class DashboardAdminController extends Controller
         // Menghitung total pemasukan hanya untuk transaksi dengan status_pembayaran 'success'
         $totalpemasukan = Transaksi::where('status_pembayaran', 'success')->sum('subtotal');
 
-        // Mengambil total riwayat 
-        $totalriwayat = Riwayat::count();
+        // Menghitung total riwayat unik berdasarkan id_transaksi dari relasi
+        $totalriwayat = Riwayat::join('transaksi', 'riwayat.transaksi_id', '=', 'transaksi.id')
+            ->distinct('transaksi.id') // Menggunakan kolom unik dari tabel transaksi
+            ->count('transaksi.id');
 
        // Set lokal ke Indonesia
         Carbon::setLocale('id');
@@ -45,19 +47,19 @@ class DashboardAdminController extends Controller
             ->whereMonth('created_at', $bulanQuery) // Gunakan angka bulan untuk query
             ->groupBy('produk_id')
             ->orderByDesc('total_qty')
-            ->with('produk') // Include relasi produk
+            ->with('produk') // sertakan relasi produk
             ->take(5)
             ->get();
 
         // Mengambil 5 user dengan total belanja terbesar berdasarkan bulan, beserta id_member dari tabel users
         $memberterroyal = Transaksi::selectRaw('transaksi.user_id, users.id_member, SUM(transaksi.subtotal) as total_belanja')
-        ->join('users', 'transaksi.user_id', '=', 'users.id') // Join dengan tabel users
-        ->where('transaksi.status_pembayaran', 'success') // Filter berdasarkan status_pembayaran "success"
-        ->whereMonth('transaksi.created_at', $bulanQuery) // Filter berdasarkan bulan yang diinginkan
-        ->groupBy('transaksi.user_id', 'users.id_member') // Group by user_id dan id_member
-        ->orderByDesc('total_belanja')
-        ->take(5)
-        ->get();
+            ->join('users', 'transaksi.user_id', '=', 'users.id') // Join dengan tabel users
+            ->where('transaksi.status_pembayaran', 'success') // Filter berdasarkan status_pembayaran "success"
+            ->whereMonth('transaksi.created_at', $bulanQuery) // Filter berdasarkan bulan yang diinginkan
+            ->groupBy('transaksi.user_id', 'users.id_member') // Group by user_id dan id_member
+            ->orderByDesc('total_belanja')
+            ->take(5)
+            ->get();
 
         return view('pages-admin.dashboard-admin', compact('totalproduk', 'totalpengeluaran', 'totaluser', 'totalpemasukan', 'totalriwayat', 'produkterlaris', 'bulanini', 'memberterroyal')); // Sesuaikan dengan nama view yang Anda gunakan
     }
