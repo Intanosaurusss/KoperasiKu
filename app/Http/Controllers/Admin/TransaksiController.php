@@ -209,7 +209,7 @@ class TransaksiController extends Controller
         }
 
         $keranjang = $user->keranjang; // Sesuaikan dengan relasi user ke keranjang
-        $subtotal = $keranjang->sum(function ($item) {
+        $subtotal = $keranjang->sum(function ($item) { // variabel subtotal ini menghitung data yg dikeranjang unuk kemudian menjadi subtotal yang akan disimpan di tabel transaksi (kolom subtotal)
             return $item->produk->harga_produk * $item->qty;
         });
 
@@ -221,15 +221,19 @@ class TransaksiController extends Controller
                 'user_id' => $user->id,
                 'metode_pembayaran' => 'cash',
                 'status_pembayaran' => 'success',
-                'subtotal' => $subtotal,
+                'subtotal' => $subtotal,  // subtotal ini didapat dari variabel yang sudah didefinisikan/dijelaskan di line no 212
             ]);
 
             // Tambahkan riwayat dan kurangi stok
             foreach ($keranjang as $item) {
+                $produk = $item->produk;
+                $subtotal = $produk->harga_produk * $item->qty;  //variabel subtotal ini dibuat untuk menghitung subtotal_perproduk yang ada di tabel transaksi
+
                 Riwayat::create([
                     'transaksi_id' => $transaksi->id,
                     'produk_id' => $item->produk_id,
                     'qty' => $item->qty,
+                    'subtotal_perproduk' => $subtotal,  // subtotal ini didapat dari variabel yang sudah didefinisikan/dijelaskan di line no 47
                 ]);
 
                 // Kurangi stok produk
@@ -314,10 +318,14 @@ class TransaksiController extends Controller
 
         // Proses setiap item di keranjang dan tambahkan ke riwayat serta kurangi stok produk
         foreach ($keranjang as $item) {
+            $produk = $item->produk;
+            $subtotal = $produk->harga_produk * $item->qty;
+
             Riwayat::create([
                 'transaksi_id' => $transaksi->id,
                 'produk_id' => $item->produk_id,
                 'qty' => $item->qty,
+                'subtotal_perproduk' => $subtotal,
             ]);
 
             // Kurangi stok produk

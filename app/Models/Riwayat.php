@@ -12,6 +12,7 @@ class Riwayat extends Model
         'transaksi_id',
         'produk_id',
         'qty',
+        'subtotal_perproduk',
     ];
 
     

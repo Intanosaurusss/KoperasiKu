@@ -73,13 +73,9 @@
     </thead>
     <tbody>
         @php
-            $grandTotal = 0;
             $no = 1;
         @endphp
         @foreach ($data as $transaksi)
-            @php
-                $grandTotal += $transaksi['total'];
-            @endphp
             <tr>
                 <td>{{ $no++ }}</td>
                 <td>{{ Carbon::parse($transaksi['tanggal'])->translatedFormat('d F Y') }}</td>

@@ -72,7 +72,6 @@
     </thead>
     <tbody>
         @php
-            $grandTotal = 0;
             $no = 1;
         @endphp
         @foreach ($data as $transaksi)
@@ -93,9 +92,6 @@
                 </td>
                 <td>Rp {{ number_format($transaksi['total'], 0, ',', '.') }}</td>
             </tr>
-            @php
-                $grandTotal += $transaksi['total'];
-            @endphp
         @endforeach
     </tbody>  
 </table>

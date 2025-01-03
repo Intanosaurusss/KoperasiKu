@@ -49,16 +49,19 @@ class RiwayatController extends Controller
             'transaksi' => $transaksi,
             'user' => $transaksi->user,
             'riwayat' => $transaksi->riwayat->map(function ($item) {
-                $hargaProduk = $item->produk->harga_produk ?? 0; // Default harga 0 jika produk tidak ditemukan
-                $subtotal = $hargaProduk * $item->qty; // Hitung subtotal
+                $subtotalPerProduk = $item->subtotal_perproduk ?? 0; // Ambil nilai dari kolom subtotal_perproduk
+                $qty = $item->qty ?? 1; // Default qty 1 jika null
+                $harga = $qty > 0 ? $subtotalPerProduk / $qty : 0; // Hitung harga dengan membagi subtotal_perproduk dengan qty
+
                 return [
                     'produk' => $item->produk->nama_produk ?? 'Produk tidak ditemukan', // Mendapatkan nama produk
                     'qty' => $item->qty,
-                    'harga' => $item->produk->harga_produk ?? 'gatau harganya', // kirim harga produknya ges
-                    'subtotal' => $subtotal, // Kirim subtotal
+                    'harga' => $harga, // kirim harga produknya ges
+                    'subtotal' => $subtotalPerProduk, // Kirim subtotal
                 ];
             }),
             'created_at' => $transaksi->created_at->toISOString(), // Pastikan tanggal dikirim dalam format ISO 8601
+            'total' => $transaksi->subtotal, // Ambil total dari tabel transaksi
         ]);
     }
 
@@ -70,12 +73,15 @@ class RiwayatController extends Controller
 
         // Format data riwayat untuk PDF
         $riwayatData = $transaksi->riwayat->map(function ($riwayat) {
-            $subtotal = $riwayat->qty * $riwayat->produk->harga_produk; // Perhitungan subtotal
+            $subtotalPerProduk = $riwayat->subtotal_perproduk; // Ambil nilai dari kolom subtotal_perproduk
+            $qty = $riwayat->qty;
+            $harga = $qty > 0 ? $subtotalPerProduk / $qty : 0; // Hitung harga (subtotal_perproduk dibagi qty)
+
             return [
                 'produk' => $riwayat->produk->nama_produk, // Pastikan atribut 'nama' sesuai dengan model Produk Anda
                 'qty' => $riwayat->qty,
-                'harga' => $riwayat->produk->harga_produk, // Pastikan atribut harga tersedia
-                'subtotal' => $subtotal,
+                'harga' => $harga, // Pastikan atribut harga tersedia
+                'subtotal' => $subtotalPerProduk,
             ];
         });
 
@@ -84,7 +90,7 @@ class RiwayatController extends Controller
             'email' => $transaksi->user->email,
             'tanggal' => $transaksi->created_at,
             'riwayat' => $riwayatData,
-            'total' => $riwayatData->sum('subtotal'),
+            'total' => $transaksi->subtotal, // Total belanja dari kolom subtotal di tabel transaksi
         ];
 
         // Generate PDF
@@ -104,6 +110,7 @@ class RiwayatController extends Controller
 
         // Ambil data transaksi berdasarkan rentang tanggal
         $transaksi = Transaksi::with(['user', 'riwayat.produk'])
+            ->where('status_pembayaran', 'success') // Filter hanya transaksi dengan status_pembayaran = 'success'
             ->whereDate('created_at', '>=', $request->date_start)
             ->whereDate('created_at', '<=', $request->date_end)
             ->get();
@@ -112,28 +119,38 @@ class RiwayatController extends Controller
             return redirect()->back()->with('error', 'Tidak ada transaksi pada rentang tanggal yang dipilih.');
         }
 
+         // Format data untuk PDF dan hitung grand total
+         $grandTotal = 0;
+
         // Format data untuk PDF
-        $data = $transaksi->map(function ($transaksi) {
+        $data = $transaksi->map(function ($transaksi) use (&$grandTotal) {
             $riwayatData = $transaksi->riwayat->map(function ($riwayat) {
-                $subtotal = $riwayat->qty * $riwayat->produk->harga_produk;
+                $subtotalPerProduk = $riwayat->subtotal_perproduk; // Ambil nilai dari kolom subtotal_perproduk
+                $qty = $riwayat->qty;
+                $harga = $qty > 0 ? $subtotalPerProduk / $qty : 0; // Hitung harga produknya (subtotal_perproduk dibagi qty)
+
                 return [
                     'produk' => $riwayat->produk->nama_produk,
                     'qty' => $riwayat->qty,
-                    'harga' => $riwayat->produk->harga_produk,
-                    'subtotal' => $subtotal,
+                    'harga' => $harga,
+                    'subtotal' => $subtotalPerProduk,
                 ];
             });
+
+            // Hitung total transaksi dan tambahkan ke grand total
+            $totalTransaksi = $riwayatData->sum('subtotal');
+            $grandTotal += $totalTransaksi;
 
             return [
                 'email' => $transaksi->user->email,
                 'tanggal' => $transaksi->created_at,
                 'riwayat' => $riwayatData,
-                'total' => $riwayatData->sum('subtotal'),
+                'total' => $transaksi->subtotal,
             ];
         });
 
         // Generate PDF
-        $pdf = PDF::loadView('pages.cetak-laporan-riwayat.cetak-laporan-riwayat-admin-by-date', ['data' => $data]);
+        $pdf = PDF::loadView('pages.cetak-laporan-riwayat.cetak-laporan-riwayat-admin-by-date', ['data' => $data, 'grandTotal' => $grandTotal]);
 
         // Unduh file PDF
         return $pdf->download('Laporan_Transaksi_by_Date.pdf');
@@ -182,53 +199,60 @@ class RiwayatController extends Controller
             ->where('id', $id)
             ->firstOrFail();
 
-        return response()->json([
-            'transaksi' => $transaksi,
-            'user' => $transaksi->user,
-            'riwayat' => $transaksi->riwayat->map(function ($item) {
-                $hargaProduk = $item->produk->harga_produk ?? 0; // Default harga 0 jika produk tidak ditemukan
-                $subtotal = $hargaProduk * $item->qty; // Hitung subtotal
-                return [
-                    'produk' => $item->produk->nama_produk ?? 'Produk tidak ditemukan', // Mendapatkan nama produk
-                    'qty' => $item->qty,
-                    'harga' => $item->produk->harga_produk ?? 'gatau harganya', // kirim harga produknya ges
-                    'subtotal' => $subtotal, // Kirim subtotal
-                ];
-            }),
-            'created_at' => $transaksi->created_at->toISOString(), // Pastikan tanggal dikirim dalam format ISO 8601
-        ]);
+            return response()->json([
+                'transaksi' => $transaksi,
+                'user' => $transaksi->user,
+                'riwayat' => $transaksi->riwayat->map(function ($item) {
+                    $subtotalPerProduk = $item->subtotal_perproduk ?? 0; // Ambil nilai dari kolom subtotal_perproduk
+                    $qty = $item->qty ?? 1; // Default qty 1 jika null
+                    $harga = $qty > 0 ? $subtotalPerProduk / $qty : 0; // Hitung harga dengan membagi subtotal_perproduk dengan qty
+        
+                    return [
+                        'produk' => $item->produk->nama_produk ?? 'Produk tidak ditemukan', // Mendapatkan nama produk
+                        'qty' => $qty,
+                        'harga' => $harga, // Kirim harga yang dihitung
+                        'subtotal' => $subtotalPerProduk, // Kirim nilai subtotal_perproduk
+                    ];
+                }),
+                'created_at' => $transaksi->created_at->toISOString(), // Pastikan tanggal dikirim dalam format ISO 8601
+                'total' => $transaksi->subtotal, // Ambil total dari tabel transaksi
+            ]);
     }
 
     public function cetakriwayat($id)
     {
         // Ambil data transaksi berdasarkan ID
         $transaksi = Transaksi::with(['user', 'riwayat.produk'])->findOrFail($id);
-
+    
         // Format data riwayat untuk PDF
         $riwayatData = $transaksi->riwayat->map(function ($riwayat) {
-            $subtotal = $riwayat->qty * $riwayat->produk->harga_produk; // Perhitungan subtotal
+            $subtotalPerProduk = $riwayat->subtotal_perproduk; // Ambil nilai dari kolom subtotal_perproduk
+            $qty = $riwayat->qty;
+            $harga = $qty > 0 ? $subtotalPerProduk / $qty : 0; // Hitung harga (subtotal_perproduk dibagi qty)
+    
             return [
-                'produk' => $riwayat->produk->nama_produk, // Pastikan atribut 'nama' sesuai dengan model Produk Anda
-                'qty' => $riwayat->qty,
-                'harga' => $riwayat->produk->harga_produk, // Pastikan atribut harga tersedia
-                'subtotal' => $subtotal,
+                'produk' => $riwayat->produk->nama_produk ?? 'Produk tidak ditemukan', // Nama produk atau default
+                'qty' => $qty,
+                'harga' => $harga, // Harga per produk
+                'subtotal' => $subtotalPerProduk, // Subtotal dari kolom subtotal_perproduk
             ];
         });
-
+    
         // Data yang akan dikirim ke PDF
         $data = [
             'email' => $transaksi->user->email,
             'tanggal' => $transaksi->created_at,
             'riwayat' => $riwayatData,
-            'total' => $riwayatData->sum('subtotal'),
+            'total' => $transaksi->subtotal, // Total belanja dari kolom subtotal di tabel transaksi
         ];
-
+    
         // Generate PDF
         $pdf = PDF::loadView('pages.cetak-laporan-riwayat.cetak-laporan-riwayat-by-id', $data);
-
+    
         // Unduh file PDF
         return $pdf->download("Riwayat_Transaksi_{$id}.pdf");
     }
+    
 
     public function cetakriwayatdate(Request $request)
     {
@@ -249,28 +273,38 @@ class RiwayatController extends Controller
             return redirect()->back()->with('error', 'Tidak ada transaksi pada rentang tanggal yang dipilih.');
         }
 
+         // Format data untuk PDF dan hitung grand total
+        $grandTotal = 0;
+
         // Format data untuk PDF
-        $data = $transaksi->map(function ($transaksi) {
+        $data = $transaksi->map(function ($transaksi) use (&$grandTotal) {
             $riwayatData = $transaksi->riwayat->map(function ($riwayat) {
-                $subtotal = $riwayat->qty * $riwayat->produk->harga_produk;
+                $subtotalPerProduk = $riwayat->subtotal_perproduk; // Ambil nilai dari kolom subtotal_perproduk
+                $qty = $riwayat->qty;
+                $harga = $qty > 0 ? $subtotalPerProduk / $qty : 0; // Hitung harga produknya (subtotal_perproduk dibagi qty)
+
                 return [
                     'produk' => $riwayat->produk->nama_produk,
                     'qty' => $riwayat->qty,
-                    'harga' => $riwayat->produk->harga_produk,
-                    'subtotal' => $subtotal,
+                    'harga' => $harga, // Harga per produk
+                    'subtotal' => $subtotalPerProduk,
                 ];
             });
+
+             // Hitung total transaksi dan tambahkan ke grand total
+            $totalTransaksi = $riwayatData->sum('subtotal');
+            $grandTotal += $totalTransaksi;
 
             return [
                 'email' => $transaksi->user->email,
                 'tanggal' => $transaksi->created_at,
                 'riwayat' => $riwayatData,
-                'total' => $riwayatData->sum('subtotal'),
+                'total' => $transaksi->subtotal,
             ];
         });
 
         // Generate PDF
-        $pdf = PDF::loadView('pages.cetak-laporan-riwayat.cetak-laporan-riwayat-by-date', ['data' => $data]);
+        $pdf = PDF::loadView('pages.cetak-laporan-riwayat.cetak-laporan-riwayat-by-date', ['data' => $data, 'grandTotal' => $grandTotal, ]);
 
         // Unduh file PDF
         return $pdf->download('Laporan_Transaksi_by_Date.pdf');

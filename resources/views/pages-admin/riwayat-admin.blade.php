@@ -233,8 +233,7 @@
                 modal.querySelector('.modal-content .produk-list').innerHTML = produkHtml;
 
                 // Total berdasarkan subtotal yang sudah dihitung di controller
-                const total = data.riwayat.reduce((sum, item) => sum + item.subtotal, 0);
-                modal.querySelector('.modal-content .total').innerText = `Rp.${new Intl.NumberFormat('id-ID').format(total)}`;
+                modal.querySelector('.modal-content .total').innerText = `Rp.${new Intl.NumberFormat('id-ID').format(data.total)}`;
 
                 // Tampilkan modal
                 modal.classList.remove('hidden');
