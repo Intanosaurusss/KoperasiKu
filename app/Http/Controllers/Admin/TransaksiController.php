@@ -216,39 +216,51 @@ class TransaksiController extends Controller
         $metodePembayaran = $request->input('metode_pembayaran');
 
         if ($metodePembayaran === 'cash') {
-            // Simpan transaksi ke database
-            $transaksi = Transaksi::create([
-                'user_id' => $user->id,
-                'metode_pembayaran' => 'cash',
-                'status_pembayaran' => 'success',
-                'subtotal' => $subtotal,  // subtotal ini didapat dari variabel yang sudah didefinisikan/dijelaskan di line no 212
-            ]);
-
-            // Tambahkan riwayat dan kurangi stok
-            foreach ($keranjang as $item) {
-                $produk = $item->produk;
-                $subtotal = $produk->harga_produk * $item->qty;  //variabel subtotal ini dibuat untuk menghitung subtotal_perproduk yang ada di tabel transaksi
-
-                Riwayat::create([
-                    'transaksi_id' => $transaksi->id,
-                    'produk_id' => $item->produk_id,
-                    'qty' => $item->qty,
-                    'subtotal_perproduk' => $subtotal,  // subtotal ini didapat dari variabel yang sudah didefinisikan/dijelaskan di line no 47
+            try {
+                // Simpan transaksi ke database
+                $transaksi = Transaksi::create([
+                    'user_id' => $user->id,
+                    'metode_pembayaran' => 'cash',
+                    'status_pembayaran' => 'success',
+                    'subtotal' => $subtotal,  // subtotal ini didapat dari variabel yang sudah didefinisikan/dijelaskan di line no 212
                 ]);
 
-                // Kurangi stok produk
-                $produk = $item->produk;
-                $produk->stok_produk -= $item->qty;
-                $produk->save();
+                // Tambahkan riwayat dan kurangi stok
+                foreach ($keranjang as $item) {
+                    $produk = $item->produk;
+                    $subtotal = $produk->harga_produk * $item->qty;  // subtotal ini untuk subtotal_perproduk di tabel transaksi
+        
+                    Riwayat::create([
+                        'transaksi_id' => $transaksi->id,
+                        'produk_id' => $item->produk_id,
+                        'qty' => $item->qty,
+                        'subtotal_perproduk' => $subtotal,
+                    ]);
+        
+                    // Kurangi stok produk
+                    $produk->stok_produk -= $item->qty;
+                    $produk->save();
+                }
+        
+                // Kosongkan keranjang
+                $keranjang->each->delete();
+        
+                return response()->json([
+                    'message' => 'Pembayaran berhasil dengan metode cash!',
+                    'transaksi' => $transaksi,
+                ]);
+            } catch (\Exception $e) {
+                // Jika terjadi error, ubah status pembayaran menjadi 'failed'
+                if (isset($transaksi)) {
+                    $transaksi->status_pembayaran = 'failed';
+                    $transaksi->save();
+                }
+        
+                return response()->json([
+                    'message' => 'Terjadi kesalahan saat memproses pembayaran.',
+                    'error' => $e->getMessage(),
+                ], 500);
             }
-
-            // Kosongkan keranjang
-            $keranjang->each->delete();
-
-            return response()->json([
-                'message' => 'Pembayaran berhasil dengan metode cash!',
-                'transaksi' => $transaksi,
-            ]);
         } elseif ($metodePembayaran === 'digital') {
             // Buat transaksi sementara di database
             $transaksi = Transaksi::create([
