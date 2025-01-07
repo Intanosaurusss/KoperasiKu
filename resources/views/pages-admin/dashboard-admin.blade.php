@@ -6,8 +6,8 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 @section('content')
-    <div class="p-2">
-        <h2 class="text-xl font-semibold text-gray-700 mb-6">Hai Admin, selamat datang!</h2>
+<div class="p-2">
+        <h2 class="text-xl font-semibold text-gray-700 mb-6">Hai {{ Auth::user()->nama }}, selamat datang!</h2>
 
         <!-- Kotak Informasi -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -86,12 +86,12 @@
         </div>
 
        <!-- Produk Terlaris dan Member Terroyal -->
-        <div class="mt-6">
-            <!-- Container Tabel -->
-            <div class="flex flex-col md:flex-row justify-between gap-4">
-                <!-- Tabel 1 : Produk Terlaris -->
-                <div class="w-full md:w-1/2 overflow-x-auto rounded-lg bg-white px-2 py-2 shadow-md">
-                    <h2 class="text-lg font-semibold text-center mb-2 text-gray-700">Produk Terlaris Bulan {{ $bulanini }}</h2>
+    <div class="mt-6">
+        <!-- Container Tabel -->
+        <div class="flex flex-col md:flex-row justify-between gap-4">
+            <!-- Tabel 1 : Produk Terlaris -->
+            <div class="w-full md:w-1/2 overflow-x-auto rounded-lg bg-white px-2 py-2 shadow-md">
+                <h2 class="text-lg font-medium text-center mb-2 text-gray-700">Produk Terlaris Bulan {{ $bulanini }}</h2>
                     <table class="min-w-full text-sm border">
                         <thead class="bg-gray-200">
                             <tr>
@@ -100,25 +100,25 @@
                                 <th class="px-2 py-2 font-semibold text-gray-700 border">Total Terjual</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200">
-                            @forelse ($produkterlaris as $index => $item)
-                                <tr class="hover:bg-gray-100">
-                                    <td class="px-2 py-2 text-center text-gray-700 border">{{ $index + 1 }}</td>
-                                    <td class="px-2 py-2 text-gray-700 border">{{ $item->produk->nama_produk ?? 'Tidak Diketahui' }}</td>
-                                    <td class="px-2 py-2 text-gray-700 border text-center">{{ $item->total_qty }}</td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="3" class="px-2 py-2 text-center text-gray-700">Tidak ada data</td>
-                                </tr>
-                            @endforelse
+                    <tbody class="divide-y divide-gray-200">
+                        @forelse ($produkterlaris as $index => $item)
+                            <tr class="hover:bg-gray-100">
+                                <td class="px-2 py-2 text-center text-gray-700 border">{{ $index + 1 }}</td>
+                                <td class="px-2 py-2 text-gray-700 border">{{ $item->produk->nama_produk ?? 'Tidak Diketahui' }}</td>
+                                <td class="px-2 py-2 text-gray-700 border text-center">{{ $item->total_qty }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3" class="px-2 py-2 text-center text-gray-700">Tidak ada data</td>
+                            </tr>
+                        @endforelse
                         </tbody>
                     </table>
-                </div>
+            </div>
 
                 <!-- Tabel 2 : Member teroyall-->
                 <div class="w-full md:w-1/2 overflow-x-auto rounded-lg bg-white px-2 py-2 shadow-md">
-                    <h2 class="text-lg font-semibold text-center mb-2 text-gray-700">Member Terbanyak Belanja Bulan {{ $bulanini }}</h2>
+                    <h2 class="text-lg font-medium text-center mb-2 text-gray-700">Member Terbanyak Belanja Bulan {{ $bulanini }}</h2>
                     <table class="min-w-full text-sm border">
                         <thead class="bg-gray-200">
                             <tr>
@@ -145,76 +145,95 @@
             </div>
         </div>
 
-        <div class="container mx-auto px-4 py-6">
-            <h1 class="text-xl font-semibold text-center mb-6 text-gray-700">Grafik Batang Pemasukan dan Pengeluaran Per Bulan </h1>
-            <div class="bg-white shadow-lg rounded-lg p-6">
-            <canvas id="barChart" class="w-full"></canvas>
-        </div>
+    <div class="flex justify-center items-center my-6">
+        <h1 class="text-lg font-medium text-gray-700 mr-4">Grafik Batang Pemasukan dan Pengeluaran Per Bulan</h1>
+        <select id="tahunFilter" class="border-gray-300 p-1 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+            <!-- Generate tahun saat ini hingga 5 tahun ke belakang -->
+            @for ($i = date('Y'); $i >= date('Y') - 5; $i--)
+                <option value="{{ $i }}">{{ $i }}</option>
+            @endfor
+        </select>
     </div>
+    <div class="bg-white shadow-lg rounded-lg p-6">
+        <canvas id="barChart" class="w-full"></canvas>
+    </div>
+</div>
 
-    <script>
-         async function fetchData() {
-            try {
-                const response = await fetch('/grafik-data');
-                const data = await response.json();
+<script>
+    async function fetchData(tahun) {
+        try {
+            const response = await fetch(`/grafik-data?tahun=${tahun}`);
+            const data = await response.json();
 
-                // Render chart setelah data diambil
-                renderChart(data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
+            // Render chart setelah data diambil
+            renderChart(data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
         }
-        function renderChart(data) {
-            const ctx = document.getElementById('barChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: data.labels, // Label bulan
-                    datasets: [
-                        {
-                            label: 'Pemasukan',
-                            data: data.pemasukan, // Data pemasukan
-                            backgroundColor: 'rgba(75, 192, 192, 0.7)',
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1,
-                        },
-                        {
-                            label: 'Pengeluaran',
-                            data: data.pengeluaran, // Data pengeluaran
-                            backgroundColor: 'rgba(255, 99, 132, 0.7)',
-                            borderColor: 'rgba(255, 99, 132, 1)',
-                            borderWidth: 1,
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            grid: {
-                                display: false
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return 'Rp' + value.toLocaleString(); // Format angka
-                                }
-                            }
-                        }
+    }
+
+    function renderChart(data) {
+        const ctx = document.getElementById('barChart').getContext('2d');
+        
+        // Hapus instance chart sebelumnya jika ada
+        if (window.myBarChart) {
+            window.myBarChart.destroy();
+        }
+
+        // Buat chart baru
+        window.myBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [
+                    {
+                        label: 'Pemasukan',
+                        data: data.pemasukan,
+                        backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
                     },
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
+                    {
+                        label: 'Pengeluaran',
+                        data: data.pengeluaran,
+                        backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
                     }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: { display: false }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return 'Rp' + value.toLocaleString(); // Format angka
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'top' }
                 }
-            });
-        }
-        // Ambil data dan render grafik
-        fetchData();
-    </script>
+            }
+        });
+    }
+
+    // Event listener untuk dropdown tahun
+    document.getElementById('tahunFilter').addEventListener('change', function() {
+        const selectedYear = this.value;
+        fetchData(selectedYear);
+    });
+
+    // Ambil data tahun default (tahun saat ini)
+    fetchData(new Date().getFullYear());
+</script>
+
 @endsection

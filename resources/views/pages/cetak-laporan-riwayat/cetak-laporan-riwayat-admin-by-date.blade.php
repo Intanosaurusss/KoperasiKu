@@ -45,6 +45,22 @@
         .detail-pembelian {
             text-align: left;
         }
+        .header {
+            text-align: center;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center; 
+            gap: 10px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .logo {
+            width: 50px; 
+            height: auto;
+        }
     </style>
 </head>
 <body>
@@ -54,7 +70,10 @@
     Carbon::setLocale('id'); // Set locale ke Indonesia
 @endphp
 
-<h1 class="header">KoperasiKu</h1>
+<div class="header">
+    <img src="./assets/logo_koperasiku.png" alt="Logo KoperasiKu" class="logo">
+    <h1>KoperasiKu</h1>
+</div>
 <p class="info"><strong>Tanggal Pembelian :</strong> 
     {{ Carbon::parse(request('date_start'))->translatedFormat('d F Y') }} 
     s.d. 

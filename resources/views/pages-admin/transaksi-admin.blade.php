@@ -23,11 +23,13 @@
     <!-- popup pesan sukses/gagal respon dari backend -->
     @if(session('success'))
         <div id="success-message" class="alert bg-green-100 text-green-700 text-sm border border-green-400 rounded p-2 mb-2">
+        <strong class="font-bold">Sukses!</strong>
              {{ session('success') }}
         </div>
         @endif
     @if(session('error'))
         <div id="error-message" class="alert bg-red-100 text-red-700 text-sm border border-red-400 rounded p-2 mb-2">
+        <strong class="font-bold">Gagal!</strong>
             {{ session('error') }}
         </div>
     @endif

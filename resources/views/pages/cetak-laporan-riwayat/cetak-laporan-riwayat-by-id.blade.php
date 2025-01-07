@@ -14,11 +14,18 @@
         .header {
             text-align: center;
             margin-bottom: 10px;
+            display: flex;
+            align-items: center; 
+            gap: 10px;
         }
         .header h1 {
             margin: 0;
             font-size: 20px;
             font-weight: bold;
+        }
+        .logo {
+            width: 50px; 
+            height: auto; 
         }
         .info {
             margin-bottom: 10px;
@@ -60,6 +67,7 @@
 
     <!-- Header Section -->
     <div class="header">
+        <img src="./assets/logo_koperasiku.png" alt="Logo KoperasiKu" class="logo">
         <h1>KoperasiKu</h1>
     </div>
 

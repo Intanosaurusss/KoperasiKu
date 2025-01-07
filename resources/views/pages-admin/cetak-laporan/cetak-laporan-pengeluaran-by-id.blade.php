@@ -9,9 +9,21 @@
             font-family: sans-serif; 
             font-size: 12px;
         }
-        .header { 
-            text-align: center; 
-            font-size: 10px;
+        .header {
+            text-align: center;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center; 
+            gap: 10px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .logo {
+            width: 50px; 
+            height: auto;
         }
         table {
         width: 100%;
@@ -43,9 +55,10 @@
         Carbon::setLocale('id'); // Set locale ke Indonesia
     @endphp
 
-    <div class="header">
-        <h1>Pengeluaran KoperasiKu</h1>
-    </div>
+<div class="header">
+    <img src="./assets/logo_koperasiku.png" alt="Logo KoperasiKu" class="logo">
+    <h1>Laporan Pengeluaran KoperasiKu</h1>
+</div>
     <div class="content">
         <table>
             <thead>

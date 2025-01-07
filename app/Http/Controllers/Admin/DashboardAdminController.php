@@ -64,17 +64,21 @@ class DashboardAdminController extends Controller
         return view('pages-admin.dashboard-admin', compact('totalproduk', 'totalpengeluaran', 'totaluser', 'totalpemasukan', 'totalriwayat', 'produkterlaris', 'bulanini', 'memberterroyal')); // Sesuaikan dengan nama view yang Anda gunakan
     }
 
-    public function getgrafikdata()
+    public function getgrafikdata(Request $request)
     {
+        $tahun = $request->input('tahun', date('Y')); // Default ke tahun saat ini jika tidak dipilih
+
         // Data pemasukan (status_pembayaran = 'success' dan subtotal dijumlahkan)
         $pemasukan = Transaksi::where('status_pembayaran', 'success')
+            ->whereYear('created_at', $tahun)
             ->selectRaw('MONTH(created_at) as bulan, SUM(subtotal) as total')
             ->groupBy('bulan')
             ->orderBy('bulan')
             ->pluck('total', 'bulan');
 
         // Data pengeluaran (total_pengeluaran dijumlahkan per bulan)
-        $pengeluaran = Pengeluaran::selectRaw('MONTH(tanggal_pengeluaran) as bulan, SUM(total_pengeluaran) as total')
+        $pengeluaran = Pengeluaran::whereYear('tanggal_pengeluaran', $tahun)
+            ->selectRaw('MONTH(tanggal_pengeluaran) as bulan, SUM(total_pengeluaran) as total')
             ->groupBy('bulan')
             ->orderBy('bulan')
             ->pluck('total', 'bulan');
