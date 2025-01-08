@@ -24,7 +24,7 @@
             font-weight: bold;
         }
         .logo {
-            width: 50px; 
+            width: 55px; 
             height: auto; 
         }
         .info {
@@ -67,8 +67,16 @@
 
     <!-- Header Section -->
     <div class="header">
-        <img src="./assets/logo_koperasiku.png" alt="Logo KoperasiKu" class="logo">
-        <h1>KoperasiKu</h1>
+        <table style="margin: 0 auto; text-align: center;">
+            <tr>
+                <td>
+                    <img src="./assets/logo_koperasiku.png" alt="Logo KoperasiKu" class="logo" />
+                </td>
+                <td>
+                    <h1 style="margin: 0; font-size: 20px; font-weight: bold;">KoperasiKu</h1>
+                </td>
+            </tr>
+        </table>
     </div>
 
     <!-- User Info Section -->

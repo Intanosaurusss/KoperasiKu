@@ -68,10 +68,20 @@
         Carbon::setLocale('id'); // Set locale ke Indonesia
     @endphp
 
-<div class="header">
-    <img src="./assets/logo_koperasiku.png" alt="Logo KoperasiKu" class="logo">
-    <h1>Laporan Pengeluaran KoperasiKu</h1>
-</div>
+    <!-- Header Section -->
+    <div class="header">
+        <table style="margin: 0 auto; text-align: center; border-collapse: collapse; border: none; width: auto;">
+            <tr class="border: none;">
+                <td style="gap: 2px; vertical-align: middle; border: none;">
+                    <img src="./assets/logo_koperasiku.png" alt="Logo KoperasiKu" style="display: block; width: 55px; height: auto;" />
+                </td>
+                <td style="vertical-align: middle; border: none;">
+                    <h1 style="margin: 0; font-size: 15px; font-weight: bold;">Laporan Pengeluaran KoperasiKu</h1>
+                </td>
+            </tr>
+        </table>
+    </div>
+
     <p>Tanggal: {{ Carbon::parse($dateStart)->translatedFormat('d F Y') }} s.d. {{ Carbon::parse($dateEnd)->translatedFormat('d F Y') }}</p>
 
     <table class="pengeluaran-table">
