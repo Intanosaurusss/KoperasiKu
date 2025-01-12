@@ -59,7 +59,7 @@
                     </div>
                     <div class="w-1/5">
                         <label for="qty" class="block text-sm font-medium text-gray-700">Qty</label>
-                        <input type="number" name="qty[]" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Qty">
+                        <input type="number" name="qty[]" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Qty" min="1">
                     </div>
                     <button type="button" class="px-1.5 py-0.5 bg-green-500 text-white rounded hover:bg-green-600 add-row">+</button>
                     <button type="button" class="px-1.5 py-0.5 bg-red-500 text-white rounded hover:bg-red-600 remove-row hidden">-</button>
@@ -147,10 +147,10 @@
     <div class="bg-white rounded-lg shadow-lg p-6 w-80">
         <h2 class="text-lg font-semibold text-gray-800 mb-4">Pilih Metode Pembayaran</h2>
         <div class="flex justify-between space-x-4">
-            <button class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md" onclick="selectPayment('cash')">
+            <button id="cashButton" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md" onclick="selectPayment('cash')">
                 Cash
             </button>
-            <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md" onclick="selectPayment('digital')">
+            <button id="digitalButton" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md" onclick="selectPayment('digital')">
                 Digital Payment
             </button>
         </div>
@@ -303,14 +303,17 @@
         if (errorMessage) errorMessage.style.display = 'none';
     }, 3000); 
 
-    //javascript untuk mengatur popup metode pembayaran saat checkout
+    // javascript untuk mengatur popup metode pembayaran saat checkout
     const modal = document.getElementById('paymentModal');
+    const cashButton = document.getElementById('cashButton');
+    const digitalButton = document.getElementById('digitalButton');
 
     // Fungsi untuk membuka modal
     function openModal() {
         modal.classList.remove('hidden');
     }
 
+    // Fungsi untuk menutup modal
     function closeModal() {
         modal.classList.add('hidden');
     }
@@ -324,91 +327,98 @@
 
     // Fungsi untuk memilih metode pembayaran
     function selectPayment(method) {
-    // Tampilkan pesan metode pembayaran yang dipilih
-    alert(`Anda memilih metode pembayaran: ${method}`);
+        // Disable kedua tombol dan beri warna abu-abu
+        cashButton.disabled = true;
+        digitalButton.disabled = true;
+        cashButton.classList.add('bg-gray-500', 'hover:bg-gray-500', 'cursor-not-allowed');
+        digitalButton.classList.add('bg-gray-500', 'hover:bg-gray-500', 'cursor-not-allowed');
 
-    // Tentukan logika untuk masing-masing metode pembayaran
-    if (method === 'cash') {
-        // Kirim permintaan ke server untuk pembayaran cash
-        fetch("{{ route('checkoutbyadmin') }}", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': "{{ csrf_token() }}"
-            },
-            body: JSON.stringify({ metode_pembayaran: 'cash' })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Gagal melakukan checkout.');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Tampilkan pesan sukses
-            alert(data.message);
-            // Refresh halaman
-            location.reload();
-        })
-        .catch(error => {
-            // Tampilkan pesan error
-            alert('Terjadi kesalahan: ' + error.message);
-        });
-    } else if (method === 'digital') {
-    fetch("{{ route('checkoutbyadmin') }}", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': "{{ csrf_token() }}"
-        },
-        body: JSON.stringify({ metode_pembayaran: 'digital' })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Gagal melakukan checkout.');
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.snapToken) {
-            snap.pay(data.snapToken, {
-                onSuccess: function (result) {
-                    // Kirim data ke server untuk memperbarui status pembayaran
-                    fetch("{{ route('paymentsuccessbyadmin') }}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                        },
-                        body: JSON.stringify({ order_id: result.order_id })
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Gagal memperbarui status pembayaran.');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        alert(data.message);
-                        location.reload(); // Refresh halaman setelah sukses
-                    })
-                    .catch(error => {
-                        alert('Terjadi kesalahan: ' + error.message);
-                    });
+        // Tampilkan pesan metode pembayaran yang dipilih
+        alert(`Anda memilih metode pembayaran: ${method}`);
+
+        // Tentukan logika untuk masing-masing metode pembayaran
+        if (method === 'cash') {
+            // Kirim permintaan ke server untuk pembayaran cash
+            fetch("{{ route('checkoutbyadmin') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
                 },
-                onPending: function () {
-                    alert('Menunggu pembayaran...');
-                },
-                onError: function () {
-                    alert('Pembayaran gagal!');
+                body: JSON.stringify({ metode_pembayaran: 'cash' })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Gagal melakukan checkout.');
                 }
+                return response.json();
+            })
+            .then(data => {
+                // Tampilkan pesan sukses
+                alert(data.message);
+                closeModal(); // Menutup modal setelah proses selesai
+                location.reload(); // Refresh halaman
+            })
+            .catch(error => {
+                // Tampilkan pesan error
+                alert('Terjadi kesalahan: ' + error.message);
+            });
+        } else if (method === 'digital') {
+            fetch("{{ route('checkoutbyadmin') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({ metode_pembayaran: 'digital' })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Gagal melakukan checkout.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.snapToken) {
+                    snap.pay(data.snapToken, {
+                        onSuccess: function (result) {
+                            // Kirim data ke server untuk memperbarui status pembayaran
+                            fetch("{{ route('paymentsuccessbyadmin') }}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                                },
+                                body: JSON.stringify({ order_id: result.order_id })
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Gagal memperbarui status pembayaran.');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                alert(data.message);
+                                closeModal(); // Menutup modal setelah proses selesai
+                                location.reload(); // Refresh halaman setelah sukses
+                            })
+                            .catch(error => {
+                                alert('Terjadi kesalahan: ' + error.message);
+                            });
+                        },
+                        onPending: function () {
+                            alert('Menunggu pembayaran...');
+                        },
+                        onError: function () {
+                            alert('Pembayaran gagal!');
+                        }
+                    });
+                }
+            })
+            .catch(error => {
+                alert('Terjadi kesalahan: ' + error.message);
             });
         }
-    })
-    .catch(error => {
-        alert('Terjadi kesalahan: ' + error.message);
-    });
-}
-}
+    }
 </script>
 @endsection

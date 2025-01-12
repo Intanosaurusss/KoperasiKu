@@ -109,15 +109,16 @@
     <div class="bg-white rounded-lg shadow-lg p-6 w-80">
         <h2 class="text-lg font-semibold text-gray-800 mb-4 text-center">Pilih Metode Pembayaran</h2>
         <div class="flex justify-between space-x-4">
-            <button class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md" onclick="selectPayment('cash')">
+            <button id="cashButton" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md" onclick="selectPayment('cash')">
                 Cash
             </button>
-            <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md" onclick="selectPayment('digital')">
+            <button id="digitalButton" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md" onclick="selectPayment('digital')">
                 Digital Payment
             </button>
         </div>
     </div>
 </div>
+
 
 <script>
     // Ambil semua kontrol jumlah
@@ -163,8 +164,9 @@
         }
     });
 
-    //javascript untuk mengatur popup metode pembayaran saat checkout
+    // JavaScript untuk mengatur popup metode pembayaran saat checkout
     const modal = document.getElementById('paymentModal');
+    let isProcessing = false; // Menandai apakah sedang dalam proses
 
     function openModal() {
         modal.classList.remove('hidden');
@@ -176,92 +178,89 @@
 
     // Fungsi untuk memilih metode pembayaran
     function selectPayment(method) {
-    // Tampilkan pesan metode pembayaran yang dipilih
-    alert(`Anda memilih metode pembayaran: ${method}`);
+        if (isProcessing) return; // Cegah jika sedang dalam proses (untuk logika disable button agar tidak bisa mengklik berkali kali saat proses checkout sedang berlangsung)
+        isProcessing = true;
 
-    // Tentukan logika untuk masing-masing metode pembayaran
-    if (method === 'cash') {
-        // Kirim permintaan ke server untuk pembayaran cash
-        fetch("{{ route('checkout') }}", {
+        // Disable tombol
+        const buttons = modal.querySelectorAll('button');
+        buttons.forEach(button => {
+            button.disabled = true;
+            button.classList.add('opacity-50', 'cursor-not-allowed');
+        });
+
+        // Tampilkan pesan metode pembayaran yang dipilih
+        alert(`Anda memilih metode pembayaran: ${method}`);
+
+        // Tentukan logika untuk masing-masing metode pembayaran
+        let fetchUrl = method === 'cash' ? "{{ route('checkout') }}" : "{{ route('checkout') }}";
+        let fetchBody = { metode_pembayaran: method };
+
+        fetch(fetchUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': "{{ csrf_token() }}"
             },
-            body: JSON.stringify({ metode_pembayaran: 'cash' })
+            body: JSON.stringify(fetchBody)
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Gagal melakukan checkout.');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Tampilkan pesan sukses
-            alert(data.message);
-            // Refresh halaman
-            location.reload();
-        })
-        .catch(error => {
-            // Tampilkan pesan error
-            alert('Terjadi kesalahan: ' + error.message);
-        });
-    } else if (method === 'digital') {
-    fetch("{{ route('checkout') }}", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': "{{ csrf_token() }}"
-        },
-        body: JSON.stringify({ metode_pembayaran: 'digital' })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Gagal melakukan checkout.');
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.snapToken) {
-            snap.pay(data.snapToken, {
-                onSuccess: function (result) {
-                    // Kirim data ke server untuk memperbarui status pembayaran
-                    fetch("{{ route('payment.success') }}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                        },
-                        body: JSON.stringify({ order_id: result.order_id })
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Gagal memperbarui status pembayaran.');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        alert(data.message);
-                        location.reload(); // Refresh halaman setelah sukses
-                    })
-                    .catch(error => {
-                        alert('Terjadi kesalahan: ' + error.message);
-                    });
-                },
-                onPending: function () {
-                    alert('Menunggu pembayaran...');
-                },
-                onError: function () {
-                    alert('Pembayaran gagal!');
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Gagal melakukan checkout.');
                 }
+                return response.json();
+            })
+            .then(data => {
+                if (method === 'digital' && data.snapToken) {
+                    snap.pay(data.snapToken, {
+                        onSuccess: function (result) {
+                            // Kirim data ke server untuk memperbarui status pembayaran
+                            fetch("{{ route('payment.success') }}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                                },
+                                body: JSON.stringify({ order_id: result.order_id })
+                            })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Gagal memperbarui status pembayaran.');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    alert(data.message);
+                                    location.reload(); // Refresh halaman setelah sukses
+                                })
+                                .catch(error => {
+                                    alert('Terjadi kesalahan: ' + error.message);
+                                });
+                        },
+                        onPending: function () {
+                            alert('Menunggu pembayaran...');
+                        },
+                        onError: function () {
+                            alert('Pembayaran gagal!');
+                        }
+                    });
+                } else {
+                    alert(data.message); // Tampilkan pesan sukses untuk metode 'cash'
+                    location.reload(); // Refresh halaman
+                }
+            })
+            .catch(error => {
+                alert('Terjadi kesalahan: ' + error.message);
+            })
+            .finally(() => {
+                // Proses selesai
+                isProcessing = false;
+                buttons.forEach(button => {
+                    button.disabled = false;
+                    button.classList.remove('opacity-50', 'cursor-not-allowed');
+                });
+                closeModal(); // Sembunyikan popup
             });
-        }
-    })
-    .catch(error => {
-        alert('Terjadi kesalahan: ' + error.message);
-    });
-}
-}
+    }
 
     // Tutup modal jika mengklik di luar area modal
     function closeModalOnOutsideClick(event) {

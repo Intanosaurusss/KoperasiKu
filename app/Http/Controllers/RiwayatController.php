@@ -265,6 +265,7 @@ class RiwayatController extends Controller
         // Ambil data transaksi berdasarkan rentang tanggal
         $transaksi = Transaksi::with(['user', 'riwayat.produk'])
             ->where('user_id', Auth::id())  // Filter berdasarkan user yang sedang login
+            ->where('status_pembayaran', 'success') // Filter hanya transaksi dengan status_pembayaran = 'success'
             ->whereDate('created_at', '>=', $request->date_start)
             ->whereDate('created_at', '<=', $request->date_end)
             ->get();
