@@ -23,7 +23,7 @@
       <!-- End Logo -->
 
       <!-- Teks hanya muncul di layar md ke atas -->
-      <span class="hidden md:block text-lg font-semibold text-white">SI Kantin</span>
+      <span class="md:block text-lg font-semibold text-purple-400">KoperasiKu</span>
     </div>
 
     <!-- Button Group -->
