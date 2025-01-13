@@ -253,7 +253,6 @@ class RiwayatController extends Controller
         return $pdf->download("Riwayat_Transaksi_{$id}.pdf");
     }
     
-
     public function cetakriwayatdate(Request $request)
     {
         // Validasi input tanggal

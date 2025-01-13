@@ -67,11 +67,22 @@
             </td>
         </tr>
         @else
-    <!-- card 1 -->
+    <!-- card produk -->
     @foreach ($produk as $produk)
-    <div class="group shadow-sm rounded-lg bg-white">
-    <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75 lg:h-60 flex justify-center items-center">
-        <img src="{{ asset('storage/' . $produk->foto_produk) }}" alt="foto produk" class="max-w-[80%] max-h-[80%] object-cover object-center mt-2">
+    <div class="group shadow-sm rounded-lg bg-white {{ $produk->stok_produk == 0 ? 'pointer-events-none' : '' }}">
+
+     <!-- Banner "HABIS" -->
+     <div class="relative">
+        <!-- Banner "HABIS" -->
+        @if ($produk->stok_produk == 0)
+            <div class="absolute top-2 left-[-15px] bg-yellow-400 text-white text-xs font-semibold px-3 py-0.5 rounded-bl-lg z-10 transform rotate-[-45deg] shadow-md">
+                HABIS
+            </div>
+        @endif
+    </div>
+
+    <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75 lg:h-60 flex justify-center items-center {{ $produk->stok_produk == 0 ? 'opacity-50 pointer-events-none' : 'group-hover:opacity-75' }}">
+        <img src="{{ asset('storage/' . $produk->foto_produk) }}" alt="foto produk" class="max-w-[80%] max-h-[80%] object-cover object-center mt-2  transition {{ $produk->stok_produk == 0 ? 'pointer-events-none cursor-not-allowed' : 'group-hover:opacity-75' }}">
     </div>
     <div class="ml-2">
         <div>

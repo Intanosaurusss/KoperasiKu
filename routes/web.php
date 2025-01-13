@@ -41,6 +41,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('/tambah-member', [RegisterMemberController::class, 'create'])->name('tambah-member.create');
     Route::post('/member', [RegisterMemberController::class, 'store'])->name('tambah-member');
     Route::delete('/member/{id}', [RegisterMemberController::class, 'destroy'])->name('member.destroy');
+    Route::post('/tambah-member-excel', [RegisterMemberController::class, 'importexcel'])->name('import-excel.member');
 
     // Route untuk menampilkan menu pengeluaran admin
     Route::get('/pengeluaran-admin', [PengeluaranController::class, 'index'])->name('pages-admin.pengeluaran-admin');

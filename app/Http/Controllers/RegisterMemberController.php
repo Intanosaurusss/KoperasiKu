@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\MembersImport;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 
 class RegisterMemberController extends Controller
@@ -58,7 +59,7 @@ class RegisterMemberController extends Controller
             'nama' => 'required|string|max:255',
             'kelas' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'id_member' => 'required|string|max:10|regex:/^\d+$/|unique:users', // regex agar hanya menerima angka
+            'id_member' => 'required|string|min:10|max:18|regex:/^\d+$/|unique:users', // regex agar hanya menerima angka
             'no_telepon' => 'required|string|max:15|regex:/^\d+$/|unique:users',
         ]);
 
@@ -91,5 +92,63 @@ class RegisterMemberController extends Controller
 
         // Redirect ke halaman member dengan pesan sukses
         return redirect()->route('pages-admin.member')->with('success', 'Member berhasil dihapus.');
+    }
+
+    // import data member melalui excel (pakai library spreadsheet)
+    public function importexcel(Request $request)
+    {
+        // Validasi file yang diunggah
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls|max:2048',
+        ]);
+
+        // Ambil file yang diunggah
+        $file = $request->file('file');
+        
+        // Baca file Excel menggunakan PHPSpreadsheet
+        $spreadsheet = IOFactory::load($file);
+
+        // Ambil data dari sheet pertama
+        $sheet = $spreadsheet->getActiveSheet();
+        $data = $sheet->toArray();
+
+        // Proses data dan simpan ke database
+        foreach ($data as $row) {
+            // Menghindari header row
+            if ($row[0] == 'Nama') continue; // Sesuaikan dengan header di file Excel Anda
+            
+            // Validasi dan simpan data member ke database
+            $validator = Validator::make([
+                'nama' => $row[0],
+                'kelas' => $row[1],
+                'email' => $row[2],
+                'id_member' => $row[3],
+                'no_telepon' => $row[4],
+            ], [
+                'nama' => 'required|string|max:255',
+                'kelas' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'id_member' => 'required|string|min:10|max:18|regex:/^\d+$/|unique:users',
+                'no_telepon' => 'required|string|max:15|regex:/^\d+$/|unique:users',
+            ]);
+
+            // Jika validasi gagal, lanjutkan ke baris berikutnya
+            if ($validator->fails()) {
+                continue;
+            }
+
+            // Simpan data member ke dalam database
+            User::create([
+                'nama' => $row[0],
+                'kelas' => $row[1],
+                'email' => $row[2],
+                'no_telepon' => $row[4],
+                'id_member' => $row[3],
+                'role' => 'user',  // Default role untuk member adalah 'user'
+            ]);
+        }
+
+        // Redirect ke halaman member setelah proses impor selesai
+        return redirect()->route('pages-admin.member')->with('success', 'Data member berhasil diimpor!');
     }
 }
