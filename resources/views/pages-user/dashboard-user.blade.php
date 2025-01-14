@@ -75,7 +75,7 @@
      <div class="relative">
         <!-- Banner "HABIS" -->
         @if ($produk->stok_produk == 0)
-            <div class="absolute top-2 left-[-15px] bg-yellow-400 text-white text-xs font-semibold px-3 py-0.5 rounded-bl-lg z-10 transform rotate-[-45deg] shadow-md">
+            <div class="absolute top-2 left-[-15px] bg-red-400 text-white text-xs font-semibold px-3 py-0.5 rounded-bl-lg z-10 transform rotate-[-45deg] shadow-md">
                 HABIS
             </div>
         @endif

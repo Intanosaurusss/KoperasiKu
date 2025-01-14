@@ -189,7 +189,7 @@
         });
 
         // Tampilkan pesan metode pembayaran yang dipilih
-        alert(`Anda memilih metode pembayaran: ${method}`);
+        showFlashMessage(`Anda memilih metode pembayaran: ${method}`, 'info');
 
         // Tentukan logika untuk masing-masing metode pembayaran
         let fetchUrl = method === 'cash' ? "{{ route('checkout') }}" : "{{ route('checkout') }}";
@@ -229,27 +229,27 @@
                                     return response.json();
                                 })
                                 .then(data => {
-                                    alert(data.message);
+                                    showFlashMessage(data.message, 'success');
                                     location.reload(); // Refresh halaman setelah sukses
                                 })
                                 .catch(error => {
-                                    alert('Terjadi kesalahan: ' + error.message);
+                                    showFlashMessage('Terjadi kesalahan: ' + error.message, 'error');
                                 });
                         },
                         onPending: function () {
-                            alert('Menunggu pembayaran...');
+                            showFlashMessage('Menunggu pembayaran...', 'info');
                         },
                         onError: function () {
-                            alert('Pembayaran gagal!');
+                            showFlashMessage('Pembayaran gagal!', 'error');
                         }
                     });
                 } else {
-                    alert(data.message); // Tampilkan pesan sukses untuk metode 'cash'
+                    showFlashMessage(data.message, 'success'); // Tampilkan pesan sukses untuk metode 'cash'
                     location.reload(); // Refresh halaman
                 }
             })
             .catch(error => {
-                alert('Terjadi kesalahan: ' + error.message);
+                showFlashMessage('Terjadi kesalahan: ' + error.message, 'error');
             })
             .finally(() => {
                 // Proses selesai
@@ -260,6 +260,45 @@
                 });
                 closeModal(); // Sembunyikan popup
             });
+    }
+
+    // Fungsi untuk menampilkan flash message
+    function showFlashMessage(message, type) {
+        // Tentukan kelas CSS berdasarkan jenis pesan
+        let flashMessageClass = '';
+        let flashMessageTitle = '';
+
+        if (type === 'success') {
+            flashMessageClass = 'bg-green-100 border border-green-400 text-green-700';
+            flashMessageTitle = 'Sukses!';
+        } else if (type === 'error') {
+            flashMessageClass = 'bg-red-100 border border-red-400 text-red-700';
+            flashMessageTitle = 'Gagal!';
+        } else if (type === 'info') {
+            flashMessageClass = 'bg-blue-100 border border-blue-400 text-blue-700';
+            flashMessageTitle = 'Informasi';
+        }
+
+        // Buat elemen flash message
+        const flashMessage = document.createElement('div');
+        flashMessage.className = `px-4 py-3 rounded my-4 ${flashMessageClass} max-w-full w-full mx-auto sm:max-w-xl md:max-w-full`;
+        flashMessage.setAttribute('role', 'alert');
+        
+        flashMessage.innerHTML = `
+            <strong class="font-bold">${flashMessageTitle}</strong>
+            <span class="block sm:inline">${message}</span>
+        `;
+
+        // Cari container utama konten
+        const mainContent = document.querySelector('main');
+        if (mainContent) {
+            mainContent.prepend(flashMessage);
+        }
+
+        // Hapus flash message setelah 5 detik
+        setTimeout(() => {
+            flashMessage.remove();
+        }, 5000);
     }
 
     // Tutup modal jika mengklik di luar area modal
