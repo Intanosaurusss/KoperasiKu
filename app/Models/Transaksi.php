@@ -42,4 +42,10 @@ class Transaksi extends Model
     {
         return $this->hasMany(Produk::class);
     }
+
+     // Relasi ke tabel notifikasi
+     public function notifikasi()
+    {
+        return $this->hasMany(Notifikasi::class);
+    }
 }

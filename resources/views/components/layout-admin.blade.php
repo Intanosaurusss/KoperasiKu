@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title')</title>
     @vite('resources/css/app.css')
     <script src="https://cdn.tailwindcss.com"></script> <!-- import tailwind  (pake CDN juga soalnya pas di hosting ga muncul style nya) -->
@@ -153,15 +154,18 @@
                 </button>
                 <h5 class="text-md font-semibold pl-2 text-gray-700">@yield('title')</h5>
                 <!-- Icon Notifikasi -->
-                <!-- <div class="relative ml-auto">
+                <div class="relative ml-auto">
                     <button class="text-gray-700 rounded-md">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
                         <path d="M5.85 3.5a.75.75 0 0 0-1.117-1 9.719 9.719 0 0 0-2.348 4.876.75.75 0 0 0 1.479.248A8.219 8.219 0 0 1 5.85 3.5ZM19.267 2.5a.75.75 0 1 0-1.118 1 8.22 8.22 0 0 1 1.987 4.124.75.75 0 0 0 1.48-.248A9.72 9.72 0 0 0 19.266 2.5Z" />
                         <path fill-rule="evenodd" d="M12 2.25A6.75 6.75 0 0 0 5.25 9v.75a8.217 8.217 0 0 1-2.119 5.52.75.75 0 0 0 .298 1.206c1.544.57 3.16.99 4.831 1.243a3.75 3.75 0 1 0 7.48 0 24.583 24.583 0 0 0 4.83-1.244.75.75 0 0 0 .298-1.205 8.217 8.217 0 0 1-2.118-5.52V9A6.75 6.75 0 0 0 12 2.25ZM9.75 18c0-.034 0-.067.002-.1a25.05 25.05 0 0 0 4.496 0l.002.1a2.25 2.25 0 1 1-4.5 0Z" clip-rule="evenodd" />
                     </svg>
                     </button>
-                    <span class="absolute top-0 right-0 inline-block w-2.5 h-2.5 bg-red-500 rounded-full"></span>
-                </div> -->
+                    <!-- Indikator Notifikasi dengan jumlah yang belum dibaca -->
+                    <span class="absolute top-0 right-0 inline-block w-3 h-3 bg-red-500 rounded-full hidden flex items-center justify-center" id="notification-badge">
+                        <span id="notification-count" class="text-[10px] text-white font-bold"></span>
+                    </span>
+                </div>
             </header>
 
             <!-- Main Content -->
@@ -171,5 +175,95 @@
         </div>
     </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const notificationButton = document.querySelector('.relative.ml-auto button');
+        const notificationBadge = document.querySelector('.relative.ml-auto span');
+        const notificationList = document.createElement('div');
+
+        // Tambahkan class Tailwind untuk scrollbar dan styling
+        notificationList.classList.add(
+            'absolute', 'top-12', 'right-0', 'bg-white', 'shadow-lg', 
+            'w-80', 'rounded-lg', 'p-4', 'hidden', 
+            'max-h-64', 'overflow-y-auto' // Tambahan untuk scrollbar
+        );
+        document.querySelector('.relative.ml-auto').appendChild(notificationList);
+
+        notificationButton.addEventListener('click', () => {
+            notificationList.classList.toggle('hidden');
+
+            // Ambil notifikasi dengan AJAX
+            fetch("{{ route('notifikasi.fetch') }}")
+                .then(response => response.json())
+                .then(notifications => {
+                    notificationList.innerHTML = ''; // Kosongkan list
+                    if (notifications.length > 0) {
+                        notifications.forEach(notification => {
+                            const item = document.createElement('div');
+                            item.classList.add('p-2', 'border-b', 'text-sm', 'hover:bg-gray-100');
+                            item.textContent = notification.message;
+
+                            // Tambahkan tombol selesai untuk menandai notifikasi dibaca
+                            const selesaiButton = document.createElement('button');
+                            selesaiButton.classList.add('text-blue-500', 'ml-2', 'text-xs');
+                            selesaiButton.textContent = 'Selesai';
+                            selesaiButton.addEventListener('click', () => {
+                                // Tandai notifikasi sebagai dibaca dengan mengirim request ke backend
+                                fetch(`/notifikasi/mark-as-read/${notification.id}`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.status === 'success') {
+                                        // Setelah sukses, hapus item dari daftar notifikasi
+                                        item.remove();
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error marking notification as read:', error);
+                                });
+                            });
+
+                            item.appendChild(selesaiButton);
+                            notificationList.appendChild(item);
+                        });
+
+                        notificationBadge.classList.add('hidden'); // Hilangkan badge
+                    } else {
+                        notificationList.innerHTML = '<p class="text-gray-500 text-sm">Tidak ada notifikasi baru.</p>';
+                    }
+                })
+                .catch(error => {
+                    notificationList.innerHTML = '<p class="text-red-500 text-sm">Gagal memuat notifikasi.</p>';
+                    console.error('Error fetching notifications:', error);
+                });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Cek jumlah notifikasi yang belum dibaca
+        fetch("/notifikasi/check-unread")
+            .then(response => response.json())
+            .then(data => {
+                const notificationBadge = document.getElementById('notification-badge');
+                const notificationCount = document.getElementById('notification-count');
+                
+                // Jika ada notifikasi yang belum dibaca, tampilkan indikator dan jumlahnya
+                if (data.unread_count > 0) {
+                    notificationBadge.classList.remove('hidden');
+                    notificationCount.textContent = data.unread_count;  // Tampilkan jumlah notifikasi
+                } else {
+                    notificationBadge.classList.add('hidden');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching unread notifications:', error);
+            });
+    });
+</script>
 </body>
 </html>

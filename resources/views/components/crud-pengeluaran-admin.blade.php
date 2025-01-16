@@ -20,7 +20,7 @@
 </a>
 
 <!-- Hapus -->
-<form action="{{ route('pengeluaran.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus pengeluaran ini?');">
+<form action="{{ route('pengeluaran.destroy', $item->id) }}" method="POST">
     @csrf
     @method('DELETE')
     <button class="flex items-center space-x-2 bg-red-400 hover:bg-red-500 p-1 rounded-md text-white">

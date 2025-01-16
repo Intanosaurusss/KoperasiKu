@@ -10,7 +10,7 @@
 </a>
 
 <!-- Hapus -->
-<form action="{{ route('member.destroy', $member->id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus member ini?');">
+<form action="{{ route('member.destroy', $member->id) }}" method="POST" class="inline">
     @csrf
     @method('DELETE')
 <button class="flex items-center space-x-2 bg-red-400 hover:bg-red-500 p-1 rounded-md text-white">

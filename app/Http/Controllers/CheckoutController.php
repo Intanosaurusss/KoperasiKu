@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaksi;
 use App\Models\Riwayat;
+use App\Models\Notifikasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Midtrans\Config;
@@ -52,7 +53,7 @@ class CheckoutController extends Controller
                         'qty' => $item->qty,
                         'subtotal_perproduk' => $subtotal,  // subtotal ini didapat dari variabel yang sudah didefinisikan/dijelaskan di line no 47
                     ]);
-        
+
                     // Kurangi stok produk
                     $produk = $item->produk;
                     if ($produk->stok_produk < $item->qty) {
@@ -64,11 +65,18 @@ class CheckoutController extends Controller
         
                 // Kosongkan keranjang
                 $keranjang->each->delete();
-        
+
+                // Tambahkan notifikasi ke database
+                Notifikasi::create([
+                    'transaksi_id' => $transaksi->id,
+                    'user_id' => $user->id,
+                    'message' => "User {$user->nama} berhasil melakukan transaksi sebesar Rp{$subtotal}.",
+                ]);
+
                 return response()->json([
                     'message' => 'Pembayaran berhasil dengan metode cash!',
                     'transaksi' => $transaksi,
-                ]);
+                ]); 
         
             } catch (\Exception $e) {
                 // Update status pembayaran menjadi 'failed' jika terjadi error
@@ -133,6 +141,13 @@ class CheckoutController extends Controller
         // Perbarui status pembayaran
         $transaksi->status_pembayaran = 'success';
         $transaksi->save();
+
+        // Tambahkan notifikasi ke database
+        Notifikasi::create([
+            'transaksi_id' => $transaksi->id,
+            'user_id' => $transaksi->user_id,
+            'message' => "User {$transaksi->user->nama} berhasil melakukan transaksi sebesar Rp{$transaksi->subtotal}.",
+        ]);
 
         // Ambil keranjang milik pengguna
         $keranjang = $transaksi->user->keranjang;

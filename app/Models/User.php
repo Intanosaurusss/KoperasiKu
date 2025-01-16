@@ -37,6 +37,13 @@ class User extends Authenticatable
      {
          return $this->hasMany(Transaksi::class, 'user_id', 'id');
      }
+
+     // Relasi ke tabel notifikasi
+     public function notifikasi()
+    {
+        return $this->hasMany(Notifikasi::class);
+    }
+
      
      /**
      * LOGIKA PENGHAPUSAN USER JIKA TIDAK MENGGUNAKAN SOFTDELETE ( semua yang berkaitan dengan user tsb akan terhapus)

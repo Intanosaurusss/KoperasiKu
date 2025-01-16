@@ -15,6 +15,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\SaranController;
 use App\Http\Controllers\Admin\TransaksiController;
+use App\Http\Controllers\Admin\NotifikasiController;
 use App\Models\Produk;
 
 // route untuk halaman default
@@ -84,6 +85,11 @@ Route::middleware(['auth:admin'])->group(function () {
     // Route untuk menampilkan menu saran admin
     Route::get('/saran-admin', [SaranController::class, 'indexadmin'])->name('saran.indexadmin');
     Route::delete('/saran-admin/{id}', [SaranController::class, 'destroy'])->name('saran.destroy');
+
+    // Route untuk menampilkan notifikasi transaksi yang berhasil
+    Route::get('/admin/notifikasi', [NotifikasiController::class, 'fetchNotifikasi'])->name('notifikasi.fetch');
+    Route::post('/notifikasi/mark-as-read/{id}', [NotifikasiController::class, 'markAsRead']);
+    Route::get('/notifikasi/check-unread', [NotifikasiController::class, 'checkUnreadNotifikasi']);
 });
 
 // route untuk menampilkan menu profile admin dan user kode : (['auth:admin,web']), web = user
