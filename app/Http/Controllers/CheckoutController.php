@@ -70,7 +70,7 @@ class CheckoutController extends Controller
                 Notifikasi::create([
                     'transaksi_id' => $transaksi->id,
                     'user_id' => $user->id,
-                    'message' => "User {$user->nama} berhasil melakukan transaksi sebesar Rp{$subtotal}.",
+                    'message' => "{$user->nama} berhasil melakukan transaksi sebesar Rp{$subtotal}.",
                 ]);
 
                 return response()->json([
@@ -146,7 +146,7 @@ class CheckoutController extends Controller
         Notifikasi::create([
             'transaksi_id' => $transaksi->id,
             'user_id' => $transaksi->user_id,
-            'message' => "User {$transaksi->user->nama} berhasil melakukan transaksi sebesar Rp{$transaksi->subtotal}.",
+            'message' => "{$transaksi->user->nama} berhasil melakukan transaksi sebesar Rp{$transaksi->subtotal}.",
         ]);
 
         // Ambil keranjang milik pengguna
