@@ -18,16 +18,31 @@ class LoginController extends Controller
      // Proses login
      public function login(Request $request)
      {
-         // Validasi input
-         $request->validate([
-             'email' => 'required|email',
-             'id_member' => 'required',
-         ]);
+         // Validasi input dengan pesan validasi kustom
+        $request->validate([
+            'email' => 'required|email',
+            'id_member' => 'required|string',
+        ], [
+            'email.required' => 'Silahkan isi email terlebih dahulu.',
+            'email.email' => 'Format email tidak valid.',
+            'id_member.required' => 'Silahkan isi ID Member terlebih dahulu.',
+        ]);
  
-         // Coba autentikasi pengguna berdasarkan email dan id_member
-         $user = User::where('email', $request->email)
-                     ->where('id_member', $request->id_member)
-                     ->first();
+         // Cek apakah email ada di database
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return back()->withErrors([
+                'email' => 'Email yang dimasukkan salah.',
+            ])->withInput();
+        }
+
+        // Cek apakah ID Member sesuai dengan email
+        if ($user->id_member !== $request->id_member) {
+            return back()->withErrors([
+                'id_member' => 'ID Member yang dimasukkan salah.',
+            ])->withInput();
+        }
  
          if ($user) {
              // Login pengguna
@@ -49,11 +64,6 @@ class LoginController extends Controller
                  return redirect()->route('pages-user.dashboard-user'); // Rute dashboard user
              }
          }
- 
-         // Jika autentikasi gagal
-         return back()->withErrors([
-             'email' => 'Email atau ID Member salah.',
-         ])->withInput();
      }
 
     // controller logout dipisah antara admin dan user untuk middleware, ditambahin sama mas Roy

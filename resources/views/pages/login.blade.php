@@ -23,7 +23,7 @@
             <h2 class="text-2xl font-semibold mb-5 text-gray-700">Masuk Akun KoperasiKu</h2>
 
             <!-- Tampilkan Error -->
-            @if ($errors->any())
+            <!-- @if ($errors->any())
                 <div class="mb-4 text-red-600">
                     <ul>
                         @foreach ($errors->all() as $error)
@@ -31,18 +31,21 @@
                         @endforeach
                     </ul>
                 </div>
-            @endif
+            @endif -->
 
             <form action="{{ route('login') }}" method="POST" id="form">
             @csrf
                 <div class="mb-4">
                     <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                    <input type="email" name="email" id="email" class="mt-1 block w-full border border-gray-300  focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md p-2" placeholder="email@example.com" required>
+                    <input type="" name="email" id="email" class="mt-1 block w-full border border-gray-300  focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md p-2 @error('email') border-red-500 focus:ring-red-500 @enderror" placeholder="email@example.com">
+                    @error('email')
+                        <p class="text-red-600 text-sm mt-1" id="email-error">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div class="mb-4">
                     <label for="id_member" class="block text-sm font-medium text-gray-700">ID Member</label>
                     <div class="relative">
-                        <input type="number" name="id_member" id="id_member" class="mt-1 block w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md p-2 pr-10" placeholder="Masukkan ID Member" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')" required>
+                        <input type="number" name="id_member" id="id_member" class="mt-1 block w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md p-2 pr-10 @error('id_member') border-red-500 focus:ring-red-500 @enderror" placeholder="Masukkan ID Member" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')">
                         <button type="button" onclick="toggleVisibility()" class="absolute inset-y-0 right-2 flex items-center text-gray-500">
                             <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
                                 <path d="M10 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
@@ -50,6 +53,9 @@
                             </svg>
                         </button>
                     </div>
+                    @error('id_member')
+                        <p class="text-red-600 text-sm mt-1" id="id_member-error">{{ $message }}</p>
+                    @enderror
                 </div>
                 <button type="submit" id="btn-submit" class="inline-flex justify-center items-center w-full bg-purple-400 text-white font-semibold py-2 rounded-md hover:bg-purple-500 transition duration-200">
                     Masuk
@@ -95,6 +101,23 @@
         `;
     }
     }
+    
+    // Menghapus class error dan menyembunyikan pesan error saat pengguna mengetik
+    document.getElementById('email').addEventListener('input', function() {
+        this.classList.remove('border-red-500', 'focus:ring-red-500');
+        const emailError = document.getElementById('email-error');
+        if (emailError) {
+            emailError.style.display = 'none';
+        }
+    });
+
+    document.getElementById('id_member').addEventListener('input', function() {
+        this.classList.remove('border-red-500', 'focus:ring-red-500');
+        const idMemberError = document.getElementById('id_member-error');
+        if (idMemberError) {
+            idMemberError.style.display = 'none';
+        }
+    });
 </script>
 </body>
 </html>
