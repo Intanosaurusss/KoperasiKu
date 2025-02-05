@@ -47,7 +47,23 @@ class ProdukController extends Controller
             'foto_produk' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ], [
             // Custom message untuk validasi
+            'nama_produk.required' => 'Silahkan isi nama produk terlebih dahulu.',
             'nama_produk.unique' => 'Produk dengan nama ini sudah ada.',
+            'nama_produk.max' => 'Nama produk tidak boleh lebih dari 255 karakter',
+
+            'kategori_produk.required' => 'Silahkan isi kategori produk terlebih dahulu.',
+            'kategori_produk.max' => 'Nama produk tidak boleh lebih dari 255 karakter',
+
+            'harga_produk.required' => 'Silahkan isi harga produk terlebih dahulu.',
+            'harga_produk.numeric' => 'Harga produk harus berupa angka',
+
+            'stok_produk.required' => 'Silahkan isi stok produk terlebih dahulu.',
+            'stok_produk.integer' => 'Stok produk harus berupa angka',
+
+            'foto_produk.required' => 'Silahkan isi stok produk terlebih dahulu.',
+            'foto_produk.image' => 'Foto produk harus berupa gambar',
+            'foto_produk.mimes' => 'Foto produk harus berupa jpeg,png,jpg',
+            'foto_produk.max' => 'Ukuran foto produk tidak boleh lebih dari 2 MB',
         ]);
 
         // Menyimpan data produk ke database

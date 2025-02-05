@@ -19,12 +19,12 @@
 
                     <div class="col-span-full mt-1">
                         <label for="" class="block font-medium leading-6 text-gray-700">Harga</label>
-                        <input type="text" id="harga_produk" name="harga_produk" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi harga produk" value="{{ $produk->harga_produk }}">
+                        <input type="number" id="harga_produk" name="harga_produk" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi harga produk" value="{{ $produk->harga_produk }}" maxlength="7" oninput="limitDigitHarga(this)">
                     </div>
 
                     <div class="col-span-full mt-1">
                         <label for="" class="block font-medium leading-6 text-gray-700">Stok</label>
-                        <input type="text" id="stok_produk" name="stok_produk" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi stok produk" value="{{ $produk->stok_produk }}">
+                        <input type="text" id="stok_produk" name="stok_produk" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi stok produk" value="{{ $produk->stok_produk }}" maxlength="4" oninput="limitDigits(this)">
                     </div>
 
                     <div class="col-span-full mt-1">
@@ -51,7 +51,7 @@
                                     </span>  
                                     <p id="file-name" class="text-sm text-gray-600 ml-2"></p>
                                 </div>
-                                <p class="text-xs leading-5 text-gray-600 text-center">PNG, JPG, JPEG up to 2MB</p>
+                                <p class="text-xs leading-5 text-gray-600 text-center">PNG, JPG, JPEG maksimal 2MB</p>
                             </div>
                             <input id="foto_produk" name="foto_produk" type="file" class="sr-only" accept="image/png, image/jpeg, image/jpg">
                         </label>
@@ -64,7 +64,7 @@
                 <a href="{{ route('pages-admin.produk-admin') }}">
                     <button id="cancelbutton" type="button" class="px-2 py-1.5 bg-red-400 text-white rounded-md hover:bg-red-500 mb-6 transition ease-in-out duration-300">Batal</button>
                 </a>
-                <button id="submitbutton" type="submit" class="px-2 py-1.5 bg-purple-500 text-white rounded-md hover:bg-purple-600 mb-6 transition ease-in-out duration-300">Edit</button>
+                <button id="submitbutton" type="submit" class="px-2 py-1.5 bg-purple-500 text-white rounded-md hover:bg-purple-600 mb-6 transition ease-in-out duration-300">Simpan</button>
             </div>
         </div>
     </form>
@@ -82,5 +82,19 @@
             fileNameDisplay.textContent = ''; // Menghapus teks jika file dihapus
         }
     });
+
+    // limit digit untuk menginput stok_produk (4 digit angka)
+    function limitDigits(input) {
+    if (input.value.length > 4) {
+        input.value = input.value.slice(0, 4);
+    }
+    }
+
+    // limit digit untuk menginput harga_produk (18 digit angka)
+    function limitDigitHarga(input) {
+    if (input.value.length > 7) {
+        input.value = input.value.slice(0, 7);
+    }
+    }
 </script>
 @endsection

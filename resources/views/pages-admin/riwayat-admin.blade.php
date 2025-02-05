@@ -28,6 +28,17 @@
         </div>
     @endif
 
+    @if ($errors->any())
+    <div id="flash-message" class="alert bg-red-100 text-red-700 text-sm border border-red-400 rounded p-2 mb-2">
+        <strong class="font-bold">Kesalahan!</strong>
+        <ul class="list-disc list-inside">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
 <div class="bg-white pt-1 px-2 pb-2 rounded-md shadow-sm">
     <!-- searchbar -->
     <div class="flex flex-col md:flex-row items-center mt-4 w-full space-y-3">
@@ -44,11 +55,15 @@
 
         <!-- input date awal dan akhir beserta tombol cetak -->
         <form  action="{{ route('cetakriwayatadminbydate') }}" method="POST" class="flex flex-wrap justify-end md:flex-nowrap items-center gap-2 md:pl-2 ml-auto order-2 md:order-1 w-full max-w-full">
-        @csrf
+            @csrf
             <div class="flex items-center gap-0.5 w-full md:w-auto max-w-full">
-                <input type="date" name="date_start" class="border border-gray-300 rounded-lg p-1.5 text-xs" placeholder="Tanggal Awal" required />
+                <div class="flex flex-col">
+                    <input type="date" name="date_start" class="border rounded-lg p-1.5 text-xs @error('date_start') border-red-500 @else border-gray-300 @enderror" placeholder="Tanggal Awal" max="{{ now()->toDateString() }}" />
+                </div>
                 <span class="mx-0.25">s.d.</span>
-                <input type="date" name="date_end" class="border border-gray-300 rounded-lg p-1.5 text-xs" placeholder="Tanggal Akhir" required />
+                <div class="flex flex-col">
+                    <input type="date" name="date_end" class="border rounded-lg p-1.5 text-xs @error('date_end') border-red-500 @else border-gray-300 @enderror" placeholder="Tanggal Akhir" max="{{ now()->toDateString() }}" />
+                </div>
             </div>
 
             <button type="submit" class="bg-blue-400 hover:bg-blue-500 p-1 rounded-md flex items-center ml-1 text-white">
@@ -184,13 +199,23 @@
 </div>
 
 <script>
-    // Menghilangkan popup pesan flash selama 3 detik saat produk dimasukkan ke keranjang
+    // Menghilangkan popup pesan flash selama 3 detik
     setTimeout(() => {
         const flashMessage = document.getElementById('flash-message');
         if (flashMessage) {
             flashMessage.remove();
         }
     }, 3000); // 3000 ms = 3 detik
+
+    // Menghilangkan pesan error input/validasi tanggal untuk mencetak riwayat setelah 5 detik
+    document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(() => {
+            document.querySelectorAll("input.border-red-500").forEach(el => {
+                el.classList.remove("border-red-500");
+                el.classList.add("border-gray-300");
+            });
+        }, 3000);
+    });
 
     document.addEventListener('DOMContentLoaded', () => {
     const modal = document.querySelector('.modal');

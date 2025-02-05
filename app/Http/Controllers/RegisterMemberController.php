@@ -59,8 +59,35 @@ class RegisterMemberController extends Controller
             'nama' => 'required|string|max:255',
             'kelas' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'id_member' => 'required|string|min:10|max:18|regex:/^\d+$/|unique:users', // regex agar hanya menerima angka
-            'no_telepon' => 'required|string|max:15|regex:/^\d+$/|unique:users',
+            'id_member' => 'required|string|min:10|max:18|regex:/^\d+$/|unique:users', // hanya menerima angka
+            'no_telepon' => 'required|string|max:13|regex:/^\d+$/|unique:users',
+        ], [ // pesan jika validasi gagal
+            'nama.required' => 'Silahkan isi nama terlebih dahulu.', 
+            'nama.string' => 'Nama harus berupa teks.',
+            'nama.max' => 'Nama tidak boleh lebih dari 255 karakter.',
+        
+            'kelas.required' => 'Silahkan isi kelas terlebih dahulu.',
+            'kelas.string' => 'Kelas harus berupa teks.',
+            'kelas.max' => 'Kelas tidak boleh lebih dari 255 karakter.',
+        
+            'email.required' => 'Silahkan isi email terlebih dahulu.',
+            'email.string' => 'Email harus berupa teks.',
+            'email.email' => 'Format email tidak valid.',
+            'email.max' => 'Email tidak boleh lebih dari 255 karakter.',
+            'email.unique' => 'Email sudah digunakan, silahkan gunakan email lain.',
+        
+            'id_member.required' => 'Silahkan isi ID Member terlebih dahulu.',
+            'id_member.string' => 'ID Member harus berupa teks.',
+            'id_member.min' => 'ID Member harus memiliki minimal 10 digit.',
+            'id_member.max' => 'ID Member tidak boleh lebih dari 18 digit.',
+            'id_member.regex' => 'ID Member hanya boleh berisi angka.',
+            'id_member.unique' => 'ID Member sudah terdaftar, gunakan ID lain.',
+        
+            'no_telepon.required' => 'Silahkan isi nomor telepon terlebih dahulu.',
+            'no_telepon.string' => 'Nomor telepon harus berupa teks.',
+            'no_telepon.max' => 'Nomor telepon tidak boleh lebih dari 13 digit.',
+            'no_telepon.regex' => 'Nomor telepon hanya boleh berisi angka.',
+            'no_telepon.unique' => 'Nomor telepon sudah digunakan, silahkan gunakan nomor lain.',
         ]);
 
         // Jika validasi gagal

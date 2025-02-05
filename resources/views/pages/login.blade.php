@@ -37,7 +37,7 @@
             @csrf
                 <div class="mb-4">
                     <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                    <input type="" name="email" id="email" class="mt-1 block w-full border border-gray-300  focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md p-2 @error('email') border-red-500 focus:ring-red-500 @enderror" placeholder="email@example.com">
+                    <input type="" name="email" id="email" class="mt-1 block w-full border border-gray-300  focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md p-2 @error('email') border-red-500 focus:ring-red-500 @enderror" placeholder="email@example.com" value="{{ old('email') }}">
                     @error('email')
                         <p class="text-red-600 text-sm mt-1" id="email-error">{{ $message }}</p>
                     @enderror
@@ -45,7 +45,7 @@
                 <div class="mb-4">
                     <label for="id_member" class="block text-sm font-medium text-gray-700">ID Member</label>
                     <div class="relative">
-                        <input type="number" name="id_member" id="id_member" class="mt-1 block w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md p-2 pr-10 @error('id_member') border-red-500 focus:ring-red-500 @enderror" placeholder="Masukkan ID Member" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')">
+                        <input type="number" name="id_member" id="id_member" class="mt-1 block w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md p-2 pr-10 @error('id_member') border-red-500 focus:ring-red-500 @enderror" placeholder="Masukkan ID Member" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')" value="{{ old('id_member') }}" maxlength="18" oninput="limitDigits(this)">
                         <button type="button" onclick="toggleVisibility()" class="absolute inset-y-0 right-2 flex items-center text-gray-500">
                             <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
                                 <path d="M10 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
@@ -102,7 +102,7 @@
     }
     }
     
-    // Menghapus class error dan menyembunyikan pesan error saat pengguna mengetik
+    // Menghapus class error email dan menyembunyikan pesan error saat pengguna mengetik
     document.getElementById('email').addEventListener('input', function() {
         this.classList.remove('border-red-500', 'focus:ring-red-500');
         const emailError = document.getElementById('email-error');
@@ -111,6 +111,7 @@
         }
     });
 
+    // Menghapus class error id member dan menyembunyikan pesan error saat pengguna mengetik
     document.getElementById('id_member').addEventListener('input', function() {
         this.classList.remove('border-red-500', 'focus:ring-red-500');
         const idMemberError = document.getElementById('id_member-error');
@@ -118,6 +119,13 @@
             idMemberError.style.display = 'none';
         }
     });
+
+    // limit digit untuk menginput id member (18 digit angka)
+    function limitDigits(input) {
+    if (input.value.length > 18) {
+        input.value = input.value.slice(0, 18);
+    }
+    }
 </script>
 </body>
 </html>

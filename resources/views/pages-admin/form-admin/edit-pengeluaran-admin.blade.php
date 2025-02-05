@@ -23,12 +23,12 @@
                 <div class="mt-1 grid grid-cols-1 gap-x-6 gap-y-2 md:grid-cols-2">
                     <div class="col-span-full mt-1">
                         <label for="tanggal_pengeluaran" class="block font-medium leading-6 text-gray-700">Tanggal Pengeluaran</label>
-                        <input type="date" id="tanggal_pengeluaran" name="tanggal_pengeluaran" class="block text-sm w-full py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md text-gray-600" value="{{ $pengeluaran->tanggal_pengeluaran }}">
+                        <input type="date" id="tanggal_pengeluaran" name="tanggal_pengeluaran" class="block text-sm w-full py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md text-gray-600" value="{{ $pengeluaran->tanggal_pengeluaran }}" max="{{ now()->toDateString() }}">
                     </div>
 
                     <div class="col-span-full mt-1">
                         <label for="total_pengeluaran" class="block font-medium leading-6 text-gray-700">Jumlah Pengeluaran</label>
-                        <input type="text" id="total_pengeluaran" name="total_pengeluaran" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi jumlah pengeluaran" value="{{ $pengeluaran->total_pengeluaran }}">
+                        <input type="number" id="total_pengeluaran" name="total_pengeluaran" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400" placeholder="Silahkan isi jumlah pengeluaran" value="{{ $pengeluaran->total_pengeluaran }}" maxlength="9" oninput="limitDigits(this)">
                     </div>
 
                     <div class="col-span-full mt-1">
@@ -42,11 +42,19 @@
                 <a href="{{ route('pages-admin.pengeluaran-admin') }}">
                     <button id="cancelbutton" type="button" class="px-2 py-1.5 bg-red-400 text-white rounded-md hover:bg-red-500 mb-6 transition ease-in-out duration-300">Batal</button>
                 </a>
-                <button id="submitbutton" type="submit" class="px-2 py-1.5 bg-purple-500 text-white rounded-md hover:bg-purple-600 mb-6 transition ease-in-out duration-300">Edit</button>
+                <button id="submitbutton" type="submit" class="px-2 py-1.5 bg-purple-500 text-white rounded-md hover:bg-purple-600 mb-6 transition ease-in-out duration-300">Simpan</button>
             </div>
         </div>
     </form>
     </div>
 </div>
 
+<script>
+    // limit digit untuk menginput total_pengeluaran (9 digit angka)
+    function limitDigits(input) {
+    if (input.value.length > 9) {
+        input.value = input.value.slice(0, 9);
+    }
+    }
+</script>
 @endsection

@@ -52,8 +52,15 @@ class PengeluaranController extends Controller
         // Validasi data yang diterima dari form
         $request->validate([
             'tanggal_pengeluaran' => 'required|date',
-            'total_pengeluaran' => 'required|string|min:0', // Pastikan jumlah pengeluaran tidak negatif
+            'total_pengeluaran' => 'required|integer|min:0', // Pastikan jumlah pengeluaran tidak negatif
             'deskripsi_pengeluaran' => 'required|string', // Deskripsi opsional
+        ], [
+            'tanggal_pengeluaran.required' => 'Tanggal pengeluaran wajib diisi.',
+            'tanggal_pengeluaran.date' => 'Tanggal Pengeluaran tidak valid.',
+            'total_pengeluaran.required' => 'Jumlah pengeluaran wajib diisi.',
+            'total_pengeluaran.integer' => 'Total pengeluaran harus berupa angka.',
+            'deskripsi_pengeluaran.required' => 'Deskripsi pengeluaran wajib diisi.',
+            'deskripsi_pengeluaran.string' => 'Karakter deskripsi pengeluaran tidak valid.',
         ]);
 
         // Simpan data pengeluaran baru ke dalam database
@@ -116,11 +123,17 @@ class PengeluaranController extends Controller
     // fungsi untuk mencetak laporan pengeluaran by date start-end
     public function cetakpengeluaranbydate(Request $request)
     {
-        // Validasi input
-        $request->validate([
+         // validasi kalender untuk mencetak riwayat berdasarkan tanggal
+         $request->validate([
             'date_start' => 'required|date',
             'date_end' => 'required|date|after_or_equal:date_start',
-        ]);
+        ], [ // pesan jika validasi gagal/error
+            'date_start.required' => 'Tanggal awal wajib diisi.',
+            'date_start.date' => 'Format tanggal awal tidak valid.',
+            'date_end.required' => 'Tanggal akhir wajib diisi.',
+            'date_end.date' => 'Format tanggal akhir tidak valid.',
+            'date_end.after_or_equal' => 'Tanggal akhir harus setelah atau sama dengan tanggal awal.',
+        ]); 
 
         $dateStart = $request->input('date_start');
         $dateEnd = $request->input('date_end');

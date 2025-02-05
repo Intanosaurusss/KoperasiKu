@@ -29,26 +29,42 @@
     @endif
 
     <div class="bg-white pt-1 px-2 pb-2 rounded-md shadow-sm">
-    <!-- searchbar -->
-    <div class="flex items-center mt-4 w-full">
-    <form method="GET" action="{{ route('pages-admin.produk-admin') }}"  id="search-form">
-        <div class="flex items-center border border-gray-300 rounded-lg bg-white">
-            <svg class="w-4 h-4 text-gray-500 ml-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-            </svg>
-            <input type="search" name="search" id="default-search" class="block w-full p-2 pl-2 text-sm text-gray-900 border-0 rounded-lg focus:border-purple-500 focus:outline-none" placeholder="Cari produk..." required />
+    <!-- kontainer searchbar dan kedua button tambah -->
+    <div class="flex flex-col md:flex-row items-center md:space-x-4 mt-4 w-full">
+    <!-- Search Bar dan Tombol -->
+    <div class="flex flex-col md:flex-row items-center w-full md:w-auto space-y-2 md:space-y-0 md:space-x-2">
+        <!-- Search Bar -->
+        <form method="GET" action="{{ route('pages-admin.produk-admin') }}"  id="search-form" class="w-full md:w-auto">
+            <div class="flex items-center border border-gray-300 rounded-lg bg-white">
+                <svg class="w-4 h-4 text-gray-500 ml-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                </svg>
+                <input type="search" name="search" id="default-search" class="block w-full p-2 pl-2 text-sm text-gray-900 border-0 rounded-lg focus:border-purple-500 focus:outline-none" placeholder="Cari produk..." required />
+            </div>
+        </form>
+        <!-- button tambah data produk -->
+        <div class="flex space-x-2 ml-2">
+            <a href="{{ route('tambah-produk-admin') }}">
+            <button type="button" class="flex items-center bg-green-400 text-white hover:bg-green-500 focus:outline-none font-medium rounded-lg text-sm px-4 py-2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2">
+                    <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                </svg>
+                Tambah
+            </button>
+            </a>
+        <!-- button tambah data produk menggunakan excel -->
+            <form action="#" method="POST" enctype="multipart/form-data">
+                @csrf
+                <button type="button" id="importExcelBtn" class="flex items-center bg-green-400 text-white hover:bg-green-500 focus:outline-none font-medium rounded-lg text-sm px-4 py-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2">
+                        <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                    </svg>
+                        Excel
+                    </button>
+                    <input type="file" name="file" class="hidden" accept=".xlsx,.xls" id="fileInput" />
+                <button type="submit" class="hidden" id="submitBtn">Submit</button>
+            </form>
         </div>
-    </form>
-    <!-- button tambah data produk -->
-    <div class="flex ml-2">
-        <a href="{{ route('tambah-produk-admin') }}">
-        <button type="button" class="flex items-center bg-green-400 text-white hover:bg-green-500 focus:outline-none font-medium rounded-lg text-sm px-4 py-2">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2">
-                <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
-            </svg>
-            Tambah
-        </button>
-        </a>
     </div>
     </div>
 

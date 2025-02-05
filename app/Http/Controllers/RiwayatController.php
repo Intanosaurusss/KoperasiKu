@@ -102,11 +102,17 @@ class RiwayatController extends Controller
 
     public function cetakriwayatadminbydate(Request $request)
     {
-        // Validasi input tanggal
+        // validasi kalender untuk mencetak riwayat berdasarkan tanggal
         $request->validate([
             'date_start' => 'required|date',
             'date_end' => 'required|date|after_or_equal:date_start',
-        ]);
+        ], [ // pesan jika validasi gagal/error
+            'date_start.required' => 'Tanggal awal wajib diisi.',
+            'date_start.date' => 'Format tanggal awal tidak valid.',
+            'date_end.required' => 'Tanggal akhir wajib diisi.',
+            'date_end.date' => 'Format tanggal akhir tidak valid.',
+            'date_end.after_or_equal' => 'Tanggal akhir harus setelah atau sama dengan tanggal awal.',
+        ]);        
 
         // Ambil data transaksi berdasarkan rentang tanggal
         $transaksi = Transaksi::with(['user', 'riwayat.produk'])
@@ -255,11 +261,17 @@ class RiwayatController extends Controller
     
     public function cetakriwayatdate(Request $request)
     {
-        // Validasi input tanggal
+        // validasi kalender untuk mencetak riwayat berdasarkan tanggal
         $request->validate([
             'date_start' => 'required|date',
             'date_end' => 'required|date|after_or_equal:date_start',
-        ]);
+        ], [ // pesan jika validasi gagal/error
+            'date_start.required' => 'Tanggal awal wajib diisi.',
+            'date_start.date' => 'Format tanggal awal tidak valid.',
+            'date_end.required' => 'Tanggal akhir wajib diisi.',
+            'date_end.date' => 'Format tanggal akhir tidak valid.',
+            'date_end.after_or_equal' => 'Tanggal akhir harus setelah atau sama dengan tanggal awal.',
+        ]); 
 
         // Ambil data transaksi berdasarkan rentang tanggal
         $transaksi = Transaksi::with(['user', 'riwayat.produk'])

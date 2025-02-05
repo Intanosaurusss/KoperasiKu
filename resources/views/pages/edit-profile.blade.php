@@ -61,7 +61,7 @@
                                     </span>
                                     <p id="file-name" class="text-sm text-gray-600 ml-2"></p>
                                 </div>
-                                <p class="text-xs leading-5 text-gray-600 text-center">PNG, JPG, JPEG up to 2MB</p>
+                                <p class="text-xs leading-5 text-gray-600 text-center">PNG, JPG, JPEG maksimal 2MB</p>
                             </div>
                             <input id="foto_profile" name="foto_profile" type="file" class="sr-only" accept="image/png, image/jpeg, image/jpg">
                         </label>
@@ -74,7 +74,7 @@
                 <a href="{{ route('profile', ['id' => Auth::id()]) }}">
                     <button id="cancelbutton" type="button" class="px-2 py-1.5 bg-red-400 text-white rounded-md hover:bg-red-500 mb-6 transition ease-in-out duration-300">Batal</button>
                 </a>
-                <button id="submitbutton" type="submit" class="px-2 py-1.5 bg-purple-500 text-white rounded-md hover:bg-purple-600 mb-6 transition ease-in-out duration-300">Edit</button>
+                <button id="submitbutton" type="submit" class="px-2 py-1.5 bg-purple-500 text-white rounded-md hover:bg-purple-600 mb-6 transition ease-in-out duration-300">Simpan</button>
             </div>
         </div>
     </form>

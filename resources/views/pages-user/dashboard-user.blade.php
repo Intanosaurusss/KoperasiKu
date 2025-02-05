@@ -85,14 +85,10 @@
         <img src="{{ asset('storage/' . $produk->foto_produk) }}" alt="foto produk" class="max-w-[80%] max-h-[80%] object-cover object-center mt-2  transition {{ $produk->stok_produk == 0 ? 'pointer-events-none cursor-not-allowed' : 'group-hover:opacity-75' }}">
     </div>
     <div class="ml-2">
-        <div>
-            <h3 class="text-sm text-gray-700">
-                <a href="#">
-                {{ $produk->nama_produk }}
-                </a>
-            </h3>
+        <div class="flex flex-col flex-grow">
+            <h3 class="text-sm text-gray-700">{{ $produk->nama_produk }}</h3>
             <p class="mt-1 mb-1 text-sm text-gray-400">stok : {{ $produk->stok_produk }}</p>
-            <div class="flex justify-between items-center">
+            <div class="flex justify-between items-center flex-grow">
             <p class="font-semibold text-red-400 mr-2 mb-3">Rp. {{ number_format($produk->harga_produk, 0, ',', '.') }}</p>
             <form action="{{ route('tambah-ke-keranjang') }}" method="POST" class="inline-block">
                 @csrf
