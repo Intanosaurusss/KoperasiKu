@@ -29,14 +29,6 @@
                 </div>
 
                 <div class="col-span-full mt-1">
-                    <label for="id_member" class="block font-medium leading-6 text-gray-700">ID Member</label>
-                    <input type="number" id="id_member" name="id_member" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400 @error('id_member') border-red-500 @enderror" placeholder="Silahkan isi ID Member" value="{{ old('id_member') }}" maxlength="18" oninput="limitDigitsIdMember(this)">
-                    @error('id_member')
-                        <p class="text-red-600 text-sm mt-1" id="id_member-error">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="col-span-full mt-1">
                     <label for="email" class="block font-medium leading-6 text-gray-700">Email</label>
                     <input type="" id="email" name="email" class="block text-sm w-full text-gray-600 py-1.5 pl-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md placeholder:text-gray-400 @error('email') border-red-500 @enderror" placeholder="Silahkan isi Email" value="{{ old('email') }}">
                     @error('email')

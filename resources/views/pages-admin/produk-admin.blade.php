@@ -20,12 +20,22 @@
         <strong class="font-bold">Sukses!</strong>
         {{ session('success') }}
         </div>
-        @endif
+    @endif
     @if(session('error'))
         <div id="flash-message" class="alert bg-red-100 text-red-700 text-sm border border-red-400 rounded p-2 mb-2">
         <strong class="font-bold">Gagal!</strong>
         {{ session('error') }}
         </div>
+    @endif
+    @if ($errors->any())
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4 mb-2" role="alert" id="flash-message">
+        <strong class="font-bold">Terjadi kesalahan saat mengimpor data!</strong>
+        <ul class="mt-2">
+            @foreach ($errors->all() as $error)
+                <li>- {{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
     @endif
 
     <div class="bg-white pt-1 px-2 pb-2 rounded-md shadow-sm">
@@ -53,7 +63,7 @@
             </button>
             </a>
         <!-- button tambah data produk menggunakan excel -->
-            <form action="#" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('import-excel-produk') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <button type="button" id="importExcelBtn" class="flex items-center bg-green-400 text-white hover:bg-green-500 focus:outline-none font-medium rounded-lg text-sm px-4 py-2">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2">
@@ -172,17 +182,29 @@
         }
     }, 3000); // 3000 ms = 3 detik
     
+    // Menangani klik tombol untuk membuka dialog pemilihan file (button tambah produk menggunakan excel)
+    document.getElementById('importExcelBtn').addEventListener('click', function() {
+        document.getElementById('fileInput').click();
+    });
+
+    // Jika file dipilih, otomatis submit form
+    document.getElementById('fileInput').addEventListener('change', function() {
+        if (this.files.length > 0) {
+            document.getElementById('submitBtn').click(); // Submit form
+        }
+    });
+
     document.addEventListener('DOMContentLoaded', function () {
         const form = document.getElementById('search-form');
         const searchInput = document.getElementById('default-search');
 
-        // Trigger form submit on input in search bar (debounced to avoid excessive submits)
+        // Trigger form submit saat search data
         let timeout = null;
         searchInput.addEventListener('input', function () {
             clearTimeout(timeout);
             timeout = setTimeout(() => {
-                form.submit(); // Submit form automatically after 3 seconds of no typing
-            }, 3000); // Delay for 3 seconds
+                form.submit(); // Submit form otomatis setelah 3 detik tidak mengetik
+            }, 3000); // Delay 3 detik
         });
     });
 </script>

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Produk; // Pastikan namespace model ini benar
 use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use Illuminate\Support\Facades\Validator;
 
 class ProdukController extends Controller
 {
@@ -82,6 +84,94 @@ class ProdukController extends Controller
         $produk->save();
 
         return redirect()->route('produk-admin')->with('success', 'Produk berhasil ditambahkan');
+    }
+
+    // Menambah produk dengan cara menimport menggunakan excel
+    public function importProdukByExcel(Request $request)
+    {
+        // Validasi file yang diunggah
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls|max:2048',
+        ], [
+            'file.required' => 'Silahkan unggah file Excel terlebih dahulu.',
+            'file.mimes' => 'Format file harus .xlsx atau .xls.',
+            'file.max' => 'Ukuran file tidak boleh lebih dari 2MB.',
+        ]);
+
+        // Ambil file yang diunggah
+        $file = $request->file('file');
+
+        // Baca file Excel menggunakan PHPSpreadsheet
+        $spreadsheet = IOFactory::load($file->getPathname());
+
+        // Ambil data dari sheet pertama
+        $sheet = $spreadsheet->getActiveSheet();
+        $data = $sheet->toArray();
+
+        $errors = [];
+
+        // Loop melalui setiap baris data
+        foreach ($data as $index => $row) {
+            // Lewati baris header
+            if ($index == 0 || empty($row[0])) continue;
+
+            // Validasi data
+            $validator = Validator::make([
+                'nama_produk' => $row[0],
+                'kategori_produk' => $row[1],
+                'harga_produk' => $row[2],
+                'stok_produk' => $row[3],
+                'foto_produk' => $row[4],
+            ], [
+                'nama_produk' => 'required|string|max:255|unique:produk,nama_produk',
+                'kategori_produk' => 'required|string|max:255',
+                'harga_produk' => 'required|numeric',
+                'stok_produk' => 'required|integer',
+                'foto_produk' => 'required|string|max:255',
+            ], [
+                // Custom pesan validasi
+                'nama_produk.required' => "Baris ke-$index: Nama produk wajib diisi.",
+                'nama_produk.unique' => "Baris ke-$index: Nama produk sudah terdaftar.",
+                'nama_produk.max' => "Baris ke-$index: Nama produk tidak boleh lebih dari 255 karakter.",
+
+                'kategori_produk.required' => "Baris ke-$index: Kategori produk wajib diisi.",
+                'kategori_produk.max' => "Baris ke-$index: Kategori produk tidak boleh lebih dari 255 karakter.",
+
+                'harga_produk.required' => "Baris ke-$index: Harga produk wajib diisi.",
+                'harga_produk.numeric' => "Baris ke-$index: Harga produk harus berupa angka.",
+
+                'stok_produk.required' => "Baris ke-$index: Stok produk wajib diisi.",
+                'stok_produk.integer' => "Baris ke-$index: Stok produk harus berupa angka.",
+
+                'foto_produk.required' => "Baris ke-$index: Foto produk wajib diisi.",
+                'foto_produk.string' => "Baris ke-$index: Foto produk harus berupa path URL.",
+                'foto_produk.max' => "Baris ke-$index: Path foto produk tidak boleh lebih dari 255 karakter.",
+            ]);
+
+            // Jika validasi gagal, kumpulkan error dalam satu pesan per baris
+            if ($validator->fails()) {
+                $errorMessages = implode(", ", $validator->errors()->all());
+                $errors[] = "Baris " . ($index + 1) . ": " . $errorMessages;
+                continue;
+            }
+
+            // Simpan data ke database
+            Produk::create([
+                'nama_produk' => $row[0],
+                'kategori_produk' => $row[1],
+                'harga_produk' => $row[2],
+                'stok_produk' => $row[3],
+                'foto_produk' => $row[4],
+            ]);
+        }
+
+        // Jika ada error, kembali dengan pesan error
+        if (!empty($errors)) {
+            return redirect()->back()->withErrors($errors);
+        }
+
+        // Redirect dengan pesan sukses jika semua data berhasil diimpor
+        return redirect()->back()->with('success', 'Data produk berhasil diimpor!');
     }
 
     // Menampilkan form untuk mengedit produk

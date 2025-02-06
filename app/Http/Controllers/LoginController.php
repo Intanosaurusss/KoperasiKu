@@ -21,11 +21,12 @@ class LoginController extends Controller
          // Validasi input dengan pesan validasi kustom
         $request->validate([
             'email' => 'required|email',
-            'id_member' => 'required|string',
+            'id_member' => 'required|string|digits:5',
         ], [
             'email.required' => 'Silahkan isi email terlebih dahulu.',
             'email.email' => 'Format email tidak valid.',
             'id_member.required' => 'Silahkan isi ID Member terlebih dahulu.',
+            'id_member.digits' => 'id member harus 5 digit angka.',
         ]);
  
          // Cek apakah email ada di database

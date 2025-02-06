@@ -10,6 +10,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\Admin\PengeluaranController;
 use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\User\KeranjangController;
+use App\Http\Controllers\RegisterPetugasController;
 use App\Http\Controllers\RegisterMemberController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\RiwayatController;
@@ -36,6 +37,9 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('/dashboard-admin', [DashboardAdminController::class, 'index'])->name('pages-admin.dashboard-admin');
     Route::get('/grafik-data', [DashboardAdminController::class, 'getgrafikdata']); // Untuk grafik data di dashboard admin
 
+    // Route untuk menampilkan menu produk admin
+    Route::get('/petugas', [RegisterPetugasController::class, 'index'])->name('pages-admin.petugas');
+
     // Menampilkan halaman member
     Route::get('/member', [RegisterMemberController::class, 'index'])->name('pages-admin.member');
     Route::get('/member/{id}', [RegisterMemberController::class, 'show'])->name('detail-member');  // Menampilkan detail member berdasarkan ID
@@ -59,6 +63,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('/produk-admin', [ProdukController::class, 'index'])->name('pages-admin.produk-admin');
     Route::get('/produk-admin/tambah', [ProdukController::class, 'create'])->name('tambah-produk-admin');
     Route::post('/produk-admin', [ProdukController::class, 'store'])->name('produk-admin');
+    Route::post('/tambah-produk-by-excel', [ProdukController::class, 'importProdukByExcel'])->name('import-excel-produk');
     Route::get('/produk/{id}/edit', [ProdukController::class, 'edit'])->name('produk-admin.edit');
     Route::post('/produk/{id}', [ProdukController::class, 'update'])->name('produk-admin.update');
     Route::delete('/produk/{id}', [ProdukController::class, 'destroy'])->name('produk-admin.destroy');

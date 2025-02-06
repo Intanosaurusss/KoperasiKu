@@ -27,6 +27,16 @@
         {{ session('error') }}
         </div>
     @endif
+    @if ($errors->any())
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4 mb-2" role="alert" id="flash-message">
+        <strong class="font-bold">Terjadi kesalahan saat mengimpor data!</strong>
+        <ul class="mt-2">
+            @foreach ($errors->all() as $error)
+                <li>- {{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
 
 <div class="bg-white pt-1 px-2 pb-2 rounded-md shadow-sm">
     <!-- Searchbar dan Button Tambah Member -->
@@ -165,7 +175,7 @@
         }
     });
 
-    // Menghilangkan popup pesan flash selama 3 detik saat produk dimasukkan ke keranjang
+    // Menghilangkan popup pesan flash selama 3 detik
     setTimeout(() => {
         const flashMessage = document.getElementById('flash-message');
         if (flashMessage) {
@@ -183,7 +193,7 @@
             clearTimeout(timeout);
             timeout = setTimeout(() => {
                 form.submit(); // Submit form automatically after 3 seconds of no typing
-            }, 3000); // Delay 3 detik
+            }, 9000); // Delay 3 detik
         });
     });
 </script>

@@ -106,7 +106,7 @@
                         <td class="px-6 py-4">{{ $item->qty }}</td>
                         <td class="px-6 py-4">{{ number_format($item->produk->harga_produk, 0, ',', '.') }}</td>
                         <td class="px-6 py-4">
-                        <form action="{{ route('transaksi.deletekeranjang') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus item ini?');">
+                        <form action="{{ route('transaksi.deletekeranjang') }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <input type="hidden" name="id_keranjang" value="{{ $item->id }}">
