@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Controller; // Pastikan meng-extend Controller
 use App\Models\User;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\MembersImport;

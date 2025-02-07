@@ -16,6 +16,9 @@ class RoleSeeder extends Seeder
         // Menambahkan role 'admin'
         Role::create(['name' => 'admin', 'guard_name' => 'web']);
 
+        // Menambahkan role 'petugas'
+        Role::create(['name' => 'petugas', 'guard_name' => 'web']);
+
         // Menambahkan role 'user'
         Role::create(['name' => 'user', 'guard_name' => 'web']);
     }

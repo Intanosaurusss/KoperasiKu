@@ -4,14 +4,14 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Admin\DashboardAdminController;
+use App\Http\Controllers\Petugas\DashboardPetugasController;
 use App\Http\Controllers\User\DashboardUserController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\Admin\PengeluaranController;
 use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\User\KeranjangController;
-use App\Http\Controllers\RegisterPetugasController;
-use App\Http\Controllers\RegisterMemberController;
+use App\Http\Controllers\Admin\RegisterPetugasController;
+use App\Http\Controllers\Admin\RegisterMemberController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\SaranController;
@@ -30,6 +30,7 @@ Route::get('/login', function () { return view('pages.login'); });
 Route::post('/login', [LoginController::class, 'login'])->name('login'); 
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout'); 
 Route::get('/logoutadmin', [LoginController::class, 'logoutadmin'])->name('logout.admin'); 
+Route::get('/logoutpetugas', [LoginController::class, 'logoutpetugas'])->name('logout.petugas'); 
 
 // Halaman Admin (Hanya untuk admin yang sudah login)
 Route::middleware(['auth:admin'])->group(function () {
@@ -37,8 +38,12 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('/dashboard-admin', [DashboardAdminController::class, 'index'])->name('pages-admin.dashboard-admin');
     Route::get('/grafik-data', [DashboardAdminController::class, 'getgrafikdata']); // Untuk grafik data di dashboard admin
 
-    // Route untuk menampilkan menu produk admin
+    // Route untuk menampilkan halaman petugas 
     Route::get('/petugas', [RegisterPetugasController::class, 'index'])->name('pages-admin.petugas');
+    Route::get('/form-tambah-petugas', [RegisterPetugasController::class, 'create'])->name('tambah-petugas.create');
+    Route::post('/tambah-petugas', [RegisterPetugasController::class, 'store'])->name('tambah-petugas');
+    Route::get('/petugas/{id}', [RegisterPetugasController::class, 'show'])->name('detail-petugas');  // Menampilkan detail member berdasarkan ID
+    Route::delete('/petugas/{id}', [RegisterPetugasController::class, 'destroy'])->name('petugas.destroy');
 
     // Menampilkan halaman member
     Route::get('/member', [RegisterMemberController::class, 'index'])->name('pages-admin.member');
@@ -98,11 +103,16 @@ Route::middleware(['auth:admin'])->group(function () {
 });
 
 // route untuk menampilkan menu profile admin dan user kode : (['auth:admin,web']), web = user
-Route::middleware(['auth:admin,web'])->group(function () {
+Route::middleware(['auth:admin,petugas,web'])->group(function () {
     Route::get('/profile', function () { return view('pages.profile'); });
     Route::get('/profile/{id}', [ProfileController::class, 'showProfile'])->name('profile');
     Route::get('/profile/{id}/edit', [ProfileController::class, 'edit'])->name('pages.edit-profile');
     Route::put('/profile/{id}', [ProfileController::class, 'update'])->name('profile.update');
+});
+
+// HALAMAN/FITUR PETUGAS //
+Route::middleware(['auth:petugas'])->group(function () {
+    Route::get('/dashboard-petugas', [DashboardPetugasController::class, 'index'])->name('pages-petugas.dashboard-petugas');
 });
 
 // HALAMAN/FITUR USER //

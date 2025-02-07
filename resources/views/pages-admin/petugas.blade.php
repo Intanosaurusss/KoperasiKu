@@ -1,6 +1,6 @@
 @extends('components.layout-admin')
 
-@section('title', 'Member')
+@section('title', 'Petugas')
 
 @section('content')
 <div class="p-2">
@@ -14,35 +14,63 @@
         </div>
     </div>
 
-    <div class="bg-white pt-1 px-2 pb-2 rounded-md shadow-sm flex flex-col md:flex-row justify-between items-center">
-    <!-- Tombol Tambah (Paling Kiri) -->
-    <div class="mb-2 md:mb-0 self-start">
-        <a href="#" method="GET">
-            <button type="button" class="flex items-center bg-green-400 text-white hover:bg-green-500 focus:outline-none font-medium rounded-lg text-sm px-4 py-2">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2">
-                    <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
-                </svg>
-                Tambah
-            </button>
-        </a>
+    <!-- popup pesan sukses/gagal respon dari backend -->
+    @if(session('success'))
+        <div id="flash-message" class="alert bg-green-100 text-green-700 text-sm border border-green-400 rounded p-2 mb-2">
+        <strong class="font-bold">Sukses!</strong>
+        {{ session('success') }}
+        </div>
+    @endif
+    @if(session('error'))
+        <div id="flash-message" class="alert bg-red-100 text-red-700 text-sm border border-red-400 rounded p-2 mb-2">
+        <strong class="font-bold">Gagal!</strong>
+        {{ session('error') }}
+        </div>
+    @endif
+    @if ($errors->any())
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4 mb-2" role="alert" id="flash-message">
+        <strong class="font-bold">Terjadi kesalahan saat mengimpor data!</strong>
+        <ul class="mt-2">
+            @foreach ($errors->all() as $error)
+                <li>- {{ $error }}</li>
+            @endforeach
+        </ul>
     </div>
+    @endif
 
-    <!-- Kolom Filter dan Tombol Cetak (Kanan) -->
-    <div class="flex flex-col md:flex-row w-full md:w-auto items-start md:items-center gap-4 md:gap-2">
-        <!-- Filter Dropdown -->
-        <div class="w-full md:w-64">
-            <select id="filter" name="filter" class="block w-full p-1.5 text-xs border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:outline-none">
-                <option value="">Filter</option>
-                <option value="filter1">Filter 1</option>
-                <option value="filter2">Filter 2</option>
-                <option value="filter3">Filter 3</option>
-            </select>
+<!-- container utama konten -->
+<div class="bg-white pt-1 px-2 pb-2 rounded-md shadow-sm md:flex-row justify-between items-center">
+    <!-- container button tambah, filter, tanggal dan cetak -->
+    <div class="flex flex-col md:flex-row items-center mt-5 w-full space-y-3 md:space-y-0 md:space-x-4">
+        <!-- Tombol Tambah di sebelah kiri -->
+        <div class="mb-2 md:mb-0 self-start">
+            <a href="{{ $jumlahPetugas < 5 ? route('tambah-petugas.create') : '#' }}" method="GET">
+                <button type="button" 
+                    class="flex items-center bg-green-400 text-white hover:bg-green-500 focus:outline-none font-medium rounded-lg text-sm px-4 py-2 disabled:opacity-75 disabled:cursor-not-allowed disabled:hover:bg-green-400"
+                    @if($jumlahPetugas >= 5) disabled @endif>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2">
+                        <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                    </svg>
+                    Tambah
+                </button>
+            </a>
         </div>
 
-        <!-- Input Tanggal dan Tombol Cetak -->
-        <form action="#" method="POST" class="flex flex-wrap justify-start md:justify-end items-center gap-2 w-full max-w-full">
+        <!-- Form filter, tanggal, dan tombol cetak di sebelah kanan -->
+        <form action="#" method="POST" class="flex flex-wrap justify-start md:justify-end items-center gap-2 w-full max-w-full ml-auto">
             @csrf
-            <div class="flex items-center gap-1 w-full md:w-auto">
+            <!-- Filter Dropdown untuk layar kecil ke bawah -->
+            <div class="w-full md:w-40">
+                <select id="filter" name="filter" class="block w-full p-1.5 text-xs border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:outline-none">
+                    <option value="">Filter</option>
+                    <option value="filter1">Filter 1</option>
+                    <option value="filter2">Filter 2</option>
+                    <option value="filter3">Filter 3</option>
+                </select>
+            </div>
+
+            <!-- Input Tanggal dan Tombol Cetak -->
+            <div class="flex items-center gap-2 w-full md:w-auto">
                 <div class="flex flex-col">
                     <input type="date" name="date_start" class="border rounded-lg p-1.5 text-xs @error('date_start') border-red-500 @else border-gray-300 @enderror" placeholder="Tanggal Awal" max="{{ now()->toDateString() }}" />
                 </div>
@@ -60,8 +88,59 @@
             </button>
         </form>
     </div>
+    <!-- akhir container button tambah, filter, tanggal dan cetak -->
+
+    <!-- Tabel Responsif -->
+    <div class="overflow-x-auto mt-4">
+        <div class="min-w-full w-64">
+            <table class="min-w-full">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="px-2 py-2 font-semibold text-gray-700">No</th>
+                        <th class="px-2 py-2 font-semibold text-gray-700">Username</th>
+                        <th class="px-2 py-2 font-semibold text-gray-700">ID Member</th>
+                        <th class="px-2 py-2 font-semibold text-gray-700">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                @if($petugas->isEmpty())
+                <!-- Tampilkan pesan jika tidak ada data petugas -->
+                <tr>
+                    <td colspan="5" class="px-4 py-2 text-center text-gray-700">
+                        Data tidak ditemukan
+                    </td>
+                </tr>
+                @else
+                @foreach($petugas as $index => $petugas)
+                    <tr class="hover:bg-gray-100">
+                        <td class="px-4 py-2 text-sm text-center text-gray-700">{{ $loop->iteration }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-700">{{ $petugas->nama }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-700">{{ $petugas->id_member }}</td>
+                        <td class="flex px-6 py-2 whitespace-nowrap text-sm text-gray-900 space-x-2 md:space-x-6 justify-center">
+                            <div class="flex h-full w-full items-center justify-center space-x-2 md:space-x-6">
+                                @include('components.crud-petugas')
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                    @endif
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+<!-- penutup kontainer utama konten-->
 </div>
 
-
 </div>
+
+<script>
+    // Menghilangkan popup pesan flash selama 3 detik
+    setTimeout(() => {
+        const flashMessage = document.getElementById('flash-message');
+        if (flashMessage) {
+            flashMessage.remove();
+        }
+    }, 3000); // 3000 ms = 3 detik
+</script>
 @endsection

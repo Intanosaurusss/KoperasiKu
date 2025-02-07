@@ -26,7 +26,13 @@ class ProfileController extends Controller
         // }
 
         // Tentukan layout berdasarkan role pengguna
-        $layout = $user->role === 'admin' ? 'components.layout-admin' : 'components.layout-user';
+        if ($user->role === 'admin') {
+            $layout = 'components.layout-admin';
+        } elseif ($user->role === 'petugas') {
+            $layout = 'components.layout-petugas';
+        } else {
+            $layout = 'components.layout-user';
+        }
         
         // Tampilkan halaman profil dengan layout yang sesuai
         return view('pages.profile', compact('user', 'layout'));
@@ -37,13 +43,13 @@ class ProfileController extends Controller
     {
         $user = User::findOrFail($id);
 
-        // Menentukan layout berdasarkan role pengguna
-        $layout = 'components.layout-user'; // Default layout
-
+        // Tentukan layout berdasarkan role pengguna
         if ($user->role === 'admin') {
-            $layout = 'components.layout-admin'; // Layout untuk admin
-        } elseif ($user->role === 'user') {
-            $layout = 'components.layout-user'; // Layout untuk user biasa
+            $layout = 'components.layout-admin';
+        } elseif ($user->role === 'petugas') {
+            $layout = 'components.layout-petugas';
+        } else {
+            $layout = 'components.layout-user';
         }
 
         return view('pages.edit-profile', compact('user', 'layout'));
@@ -57,7 +63,7 @@ class ProfileController extends Controller
             'kelas' => 'nullable|string|max:255',
             'no_telepon' => 'nullable|string|max:15',
             'email' => 'required|email|max:255|unique:users,email,' . $id,
-            'id_member' => 'nullable|digits:10', 
+            'id_member' => 'nullable|digits:5', 
             'foto_profile' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 

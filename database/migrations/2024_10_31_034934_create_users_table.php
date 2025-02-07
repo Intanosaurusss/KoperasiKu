@@ -19,7 +19,7 @@ return new class extends Migration
         $table->string('email')->unique();
         $table->integer('id_member'); // Mengganti password dengan id_member
         $table->string('foto_profile')->nullable();
-        $table->enum('role', ['admin', 'user'])->default('user');
+        $table->enum('role', ['admin', 'user', 'petugas'])->nullable();
         $table->timestamps();
     });
     }

@@ -36,15 +36,21 @@ return [
     */
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',     // web itu user ya ges ya ( web = user )
-        ],
-
         //ditambahin sama mas Roy, buat middlewarenya
         'admin' => [
             'driver' => 'session',
             'provider' => 'admins',
+        ],
+
+        //ditambahin sama mas Roy, buat middlewarenya
+        'petugas' => [
+            'driver' => 'session',
+            'provider' => 'petugass',
+        ],
+        
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',     // web itu user ya ges ya ( web = user )
         ],
     ],
 
@@ -66,16 +72,23 @@ return [
     */
 
     'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
-        ],
-
         // ditambahin sama mas Roy, buat middleware nya
         'admins' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
+
+        // ditambahin sama mas Roy, buat middleware nya
+        'petugass' => [
+            'driver' => 'eloquent',
+            'model' => env('AUTH_MODEL', App\Models\User::class),
+        ],
+
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => env('AUTH_MODEL', App\Models\User::class),
+        ],
+        
     ],
 
     /*

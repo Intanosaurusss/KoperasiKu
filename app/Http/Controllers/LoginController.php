@@ -56,7 +56,14 @@ class LoginController extends Controller
                  $request->session()->regenerate();
                  
                  return redirect()->route('pages-admin.dashboard-admin'); // Rute dashboard admin
-             } elseif ($user->role === 'user') {
+             } elseif ($user->role === 'petugas') {
+                // Login sebagai petugas
+                Auth::guard('petugas')->login($user);
+                
+                $request->session()->regenerate();
+                
+                return redirect()->route('pages-petugas.dashboard-petugas'); // Rute dashboard petugas
+            } elseif ($user->role === 'user') {
                 //ditambahin sama mas Roy, buat middleware sampai baris 48
                 Auth::login($user);
                  
@@ -73,6 +80,18 @@ class LoginController extends Controller
     {
         Auth::logout();
         $request->session()->invalidate();
+ 
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
+    }
+
+    // Proses logout
+    public function logoutpetugas(Request $request)
+    {
+        Auth::guard('petugas')->logout();
+        $request->session()->invalidate();
+        
  
         $request->session()->regenerateToken();
 
