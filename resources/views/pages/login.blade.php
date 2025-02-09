@@ -45,7 +45,7 @@
                 <div class="mb-4">
                     <label for="id_member" class="block text-sm font-medium text-gray-700">ID Member</label>
                     <div class="relative">
-                        <input type="number" name="id_member" id="id_member" class="mt-1 block w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md p-2 pr-10 @error('id_member') border-red-500 focus:ring-red-500 @enderror" placeholder="Masukkan ID Member" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')" value="{{ old('id_member') }}" maxlength="18" oninput="limitDigits(this)">
+                        <input type="number" name="id_member" id="id_member" class="mt-1 block w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md p-2 pr-10 @error('id_member') border-red-500 focus:ring-red-500 @enderror" placeholder="Masukkan ID Member" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')" value="{{ old('id_member') }}" maxlength="5" oninput="limitDigits(this)">
                         <button type="button" onclick="toggleVisibility()" class="absolute inset-y-0 right-2 flex items-center text-gray-500">
                             <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
                                 <path d="M10 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
@@ -122,8 +122,8 @@
 
     // limit digit untuk menginput id member (18 digit angka)
     function limitDigits(input) {
-    if (input.value.length > 18) {
-        input.value = input.value.slice(0, 18);
+    if (input.value.length > 5) {
+        input.value = input.value.slice(0, 5);
     }
     }
 </script>

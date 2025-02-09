@@ -39,6 +39,24 @@ class SaranController extends Controller
         return redirect()->route('saran.indexadmin')->with('success', 'Saran berhasil dihapus.');
     }
 
+    //INI FUNCTION UNTUK MENAMPILKAN SARAN YANG ADA DI HALAMAN PETUGAS//
+    public function indexpetugas()
+    {
+        // Ambil semua data dari tabel saran
+        $saran = Saran::all();
+
+        // Set locale ke Bahasa Indonesia, untuk penanggalan
+        Carbon::setLocale('id');
+
+         // Format tanggal sebelum mengirim ke view
+        $saran->each(function($item) {
+            $item->formatted_created_at = $item->created_at->translatedFormat('d F Y');
+        });
+        
+        // Kirim data ke view
+        return view('pages-petugas.saran-petugas', compact('saran'));
+    }
+
 
 
     //INI FUNCTIION UNTUK MENU SARAN DI HALAMAN USER//      

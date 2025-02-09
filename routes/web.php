@@ -17,6 +17,9 @@ use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\SaranController;
 use App\Http\Controllers\Admin\TransaksiController;
 use App\Http\Controllers\Admin\NotifikasiController;
+use App\Http\Controllers\Petugas\TransaksiPetugasController;
+use App\Http\Controllers\Petugas\ProdukPetugasController;
+use App\Http\Controllers\Petugas\MemberPetugasController;
 use App\Models\Produk;
 
 // route untuk halaman default
@@ -31,6 +34,14 @@ Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout'); 
 Route::get('/logoutadmin', [LoginController::class, 'logoutadmin'])->name('logout.admin'); 
 Route::get('/logoutpetugas', [LoginController::class, 'logoutpetugas'])->name('logout.petugas'); 
+
+// route untuk menampilkan menu profile admin, petugas dan user
+Route::middleware(['auth:admin,petugas,web'])->group(function () {
+    Route::get('/profile', function () { return view('pages.profile'); });
+    Route::get('/profile/{id}', [ProfileController::class, 'showProfile'])->name('profile');
+    Route::get('/profile/{id}/edit', [ProfileController::class, 'edit'])->name('pages.edit-profile');
+    Route::put('/profile/{id}', [ProfileController::class, 'update'])->name('profile.update');
+});
 
 // Halaman Admin (Hanya untuk admin yang sudah login)
 Route::middleware(['auth:admin'])->group(function () {
@@ -102,18 +113,43 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('/notifikasi/check-unread', [NotifikasiController::class, 'checkUnreadNotifikasi']);
 });
 
-// route untuk menampilkan menu profile admin dan user kode : (['auth:admin,web']), web = user
-Route::middleware(['auth:admin,petugas,web'])->group(function () {
-    Route::get('/profile', function () { return view('pages.profile'); });
-    Route::get('/profile/{id}', [ProfileController::class, 'showProfile'])->name('profile');
-    Route::get('/profile/{id}/edit', [ProfileController::class, 'edit'])->name('pages.edit-profile');
-    Route::put('/profile/{id}', [ProfileController::class, 'update'])->name('profile.update');
-});
 
 // HALAMAN/FITUR PETUGAS //
 Route::middleware(['auth:petugas'])->group(function () {
+    // Route untuk menampilkan halaman dashboard petugas
     Route::get('/dashboard-petugas', [DashboardPetugasController::class, 'index'])->name('pages-petugas.dashboard-petugas');
+
+    // Route untuk menampilkan halaman transaksi petugas
+    Route::get('/transaksi-petugas', [TransaksiPetugasController::class, 'indexpetugas'])->name('transaksi-petugas.index');
+    Route::post('/transaksi-petugas/addtokeranjang', [TransaksiPetugasController::class, 'addtransaksitokeranjangbypetugas'])->name('transaksi-petugas.addtokeranjang');
+    Route::delete('/transaksi-petugas/delete', [TransaksiPetugasController::class, 'hapuskeranjangbypetugas'])->name('transaksi-petugas.deletekeranjang');
+    Route::post('/transaksi-checkoutbypetugas', [TransaksiPetugasController::class, 'checkoutbypetugas'])->name('checkoutbypetugas');
+    Route::post('/payment/successbypetugas', [TransaksiPetugasController::class, 'paymentsuccessbypetugas'])->name('paymentsuccessbypetugas');
+
+     // Route untuk meng-handle search suggestion di halaman transaksi petugas
+    Route::get('/petugas-search-id-member', [TransaksiPetugasController::class, 'searchidmemberbypetugas'])->name('petugas-search.id-member');
+    Route::get('/petugas-search-produk', [TransaksiPetugasController::class, 'searchprodukbypetugas'])->name('petugas-search.produk');
+
+    // Route untuk menampilkan halaman riwayat petugas
+    Route::get('/riwayat-petugas', [RiwayatController::class, 'indexpetugas'])->name('riwayat-petugas.index');
+    Route::get('/riwayat-petugas/{id}', [RiwayatController::class, 'showpetugas'])->name('riwayat-petugas.show');
+    Route::post('/riwayat-petugas/cetakbydate', [RiwayatController::class, 'cetakriwayatpetugasbydate'])->name('cetakriwayatpetugasbydate');
+    Route::get('/riwayat-petugas/{id}/cetak', [RiwayatController::class, 'cetakriwayatpetugas'])->name('cetakriwayatpetugasbyid');
+
+    // Route untuk menampilkan halaman produk petugas
+    Route::get('/produk-petugas', [ProdukPetugasController::class, 'indexprodukpetugas'])->name('produk-petugas.index');
+
+    // Menampilkan halaman member
+    // Route::get('/member-petugas', [MemberPetugasController::class, 'indexmemberpetugas'])->name('pages-petugas.member-petugas');
+    // Route::get('/member-petugas-create', [MemberPetugasController::class, 'createmember'])->name('create-member-petugas');
+    // Route::post('/tambah-member-petugas', [MemberPetugasController::class, 'storemember'])->name('tambah-member-petugas');
+    // Route::get('/member-petugas-show/{id}', [MemberPetugasController::class, 'showmember'])->name('detail-member-petugas');  
+    // Route::delete('/delete-member-petugas/{id}', [MemberPetugasController::class, 'destroymember'])->name('member-petugas.destroy');
+
+    // Route untuk menampilkan halaman saran petugas
+    Route::get('/saran-petugas', [SaranController::class, 'indexpetugas'])->name('saran.indexpetugas');
 });
+
 
 // HALAMAN/FITUR USER //
 Route::middleware(['auth'])->group(function () {

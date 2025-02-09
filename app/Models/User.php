@@ -20,6 +20,7 @@ class User extends Authenticatable
         'id_member', // Mengganti 'password' dengan 'id_member'
         'foto_profile',
         'role',
+        'is_login'
     ];
 
     protected $hidden = [

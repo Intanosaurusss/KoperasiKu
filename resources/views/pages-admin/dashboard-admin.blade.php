@@ -81,7 +81,7 @@
                     <h3 class="text-lg font-medium text-gray-700">Riwayat</h3>
                 </div>
                 <p class="text-3xl font-bold mt-2 text-gray-700">{{ $totalriwayat }}</p>
-                <p class="text-sm text-gray-500">Ini adalah riwayat pembelian</p>
+                <p class="text-sm text-gray-500">Ini adalah riwayat total pembelian</p>
             </div>
         </div>
 

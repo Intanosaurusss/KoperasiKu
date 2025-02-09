@@ -1,44 +1,52 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Petugas;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller; // Pastikan meng-extend Controller
-use App\Models\User;
-use Exception;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
+use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendIdMembertoMail;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
-class RegisterPetugasController extends Controller
+class MemberPetugasController extends Controller
 {
-    // Menampilkan halaman petugas di role admin
-    public function index()
+    public function indexmemberpetugas(Request $request)
     {
-        // Query untuk mengambil data user dengan role 'user'
-        $query = User::where('role', 'petugas');
+    // Ambil parameter search dari query string
+    $search = $request->input('search');
+    
+    // Query untuk mengambil data user dengan role 'user'
+    $query = User::where('role', 'user');
 
-        // Paginate data
-        $petugas = $query->paginate(5);
+    // Jika ada kata kunci pencarian, tambahkan filter
+    if ($search) {
+        $query->where(function ($q) use ($search) {
+            $q->where('nama', 'like', "%{$search}%")
+              ->orWhere('kelas', 'like', "%{$search}%")
+              ->orWhere('no_telepon', 'like', "%{$search}%")
+              ->orWhere('email', 'like', "%{$search}%")
+              ->orWhere('id_member', 'like', "%{$search}%");
+        });
+    }
 
-        // Hitung jumlah user dengan role 'petugas'
-        $jumlahPetugas = $query->count();
+    // Paginate hasil pencarian
+    $members = $query->paginate(5);
 
-         // Ambil user dengan role 'petugas' yang sedang login (is_login = true)
-        $petugasBertugas = User::where('role', 'petugas')->where('is_login', true)->first();
-
-        return view('pages-admin.petugas', compact('petugas', 'jumlahPetugas', 'petugasBertugas'));
+    // Kirim data ke view
+    return view('pages-petugas.member-petugas', compact('members'));
     }
 
     // Menampilkan form tambah member
-    public function create()
+    public function createmember()
     {
-        return view('pages-admin.form-admin.tambah-petugas');
+        return view('pages-petugas.form-tambah-member-by-petugas');
     }
 
     // Menyimpan data member ke database
-    public function store(Request $request)
+    public function storemember(Request $request)
     {
         try {
             // Validasi input
@@ -88,7 +96,7 @@ class RegisterPetugasController extends Controller
                 'email' => $request->email,
                 'no_telepon' => $request->no_telepon,
                 'id_member' => mt_rand(10000, 99999), // 5 digit angka
-                'role' => 'petugas',  // // rolenya petugas
+                'role' => 'user',  // Default role untuk member adalah 'user'
             ]);
 
             DB::commit();
@@ -97,29 +105,29 @@ class RegisterPetugasController extends Controller
             Mail::to($user->email)->send(new SendIdMembertoMail($user));
 
             // Redirect ke halaman member setelah registrasi berhasil
-            return redirect()->route('pages-admin.petugas')->with('success', 'Petugas berhasil ditambahkan.');
+            return redirect()->route('pages-petugas.member-petugas')->with('success', 'Member berhasil ditambahkan.');
         } catch (Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            dd($e);
         }
     }
 
-    // Menampilkan detail petugas berdasarkan ID
-    public function show($id)
+    // Menampilkan detail member berdasarkan ID
+    public function showmember($id)
     {
-        $petugas = User::findOrFail($id);  // Mencari member berdasarkan ID
-        return view('pages-admin.detail-petugas', compact('petugas'));  // Mengirim data member ke view
+        $member = User::findOrFail($id);  // Mencari member berdasarkan ID
+        return view('pages-petugas.detail-member-petugas', compact('member'));  // Mengirim data member ke view
     }
 
-    // Menghapus petugas berdasarkan ID
-    public function destroy($id)
+    // Menghapus member berdasarkan ID
+    public function destroymember($id)
     {
-        $petugas = User::findOrFail($id); // Mencari member berdasarkan ID
+        $member = User::findOrFail($id); // Mencari member berdasarkan ID
 
         // Menghapus member
-        $petugas->delete();
+        $member->delete();
 
         // Redirect ke halaman member dengan pesan sukses
-        return redirect()->route('pages-admin.petugas')->with('success', 'Petugas berhasil dihapus!');
+        return redirect()->route('pages-petugas.member-petugas')->with('success', 'Member berhasil dihapus.');
     }
 }
