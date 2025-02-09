@@ -10,33 +10,34 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\SendIdMembertoMail;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class MemberPetugasController extends Controller
 {
     public function indexmemberpetugas(Request $request)
     {
-    // Ambil parameter search dari query string
-    $search = $request->input('search');
-    
-    // Query untuk mengambil data user dengan role 'user'
-    $query = User::where('role', 'user');
+        // Ambil parameter search dari query string
+        $search = $request->input('search');
+        
+        // Query untuk mengambil data user dengan role 'user'
+        $query = User::where('role', 'user');
 
-    // Jika ada kata kunci pencarian, tambahkan filter
-    if ($search) {
-        $query->where(function ($q) use ($search) {
-            $q->where('nama', 'like', "%{$search}%")
-              ->orWhere('kelas', 'like', "%{$search}%")
-              ->orWhere('no_telepon', 'like', "%{$search}%")
-              ->orWhere('email', 'like', "%{$search}%")
-              ->orWhere('id_member', 'like', "%{$search}%");
-        });
-    }
+        // Jika ada kata kunci pencarian, tambahkan filter
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                ->orWhere('kelas', 'like', "%{$search}%")
+                ->orWhere('no_telepon', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%")
+                ->orWhere('id_member', 'like', "%{$search}%");
+            });
+        }
 
-    // Paginate hasil pencarian
-    $members = $query->paginate(5);
+        // Paginate hasil pencarian
+        $members = $query->paginate(5);
 
-    // Kirim data ke view
-    return view('pages-petugas.member-petugas', compact('members'));
+        // Kirim data ke view
+        return view('pages-petugas.member-petugas', compact('members'));
     }
 
     // Menampilkan form tambah member
@@ -129,5 +130,102 @@ class MemberPetugasController extends Controller
 
         // Redirect ke halaman member dengan pesan sukses
         return redirect()->route('pages-petugas.member-petugas')->with('success', 'Member berhasil dihapus.');
+    }
+
+    // import data member melalui excel (pakai library spreadsheet)
+    public function importexcelmemberpetugas(Request $request)
+    {
+        // Validasi file yang diunggah
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls|max:2048',
+        ], [
+            'file.required' => 'Silahkan unggah file Excel terlebih dahulu.',
+            'file.mimes' => 'Format file harus .xlsx atau .xls.',
+            'file.max' => 'Ukuran file tidak boleh lebih dari 2MB.',
+        ]);
+
+        // Ambil file yang diunggah
+        $file = $request->file('file');
+        
+        // Baca file Excel menggunakan PHPSpreadsheet
+        $spreadsheet = IOFactory::load($file);
+
+        // Ambil data dari sheet pertama
+        $sheet = $spreadsheet->getActiveSheet();
+        $data = $sheet->toArray();
+
+        // Array untuk menyimpan pesan error
+        $errors = [];
+
+        // Proses data dan simpan ke database
+        foreach ($data as $index => $row) {
+            // Menghindari header row (baris pertama adalah header)
+            if ($index == 0) continue; // Skip header
+            
+             // Generate ID Member otomatis (10 digit angka unik)
+            $id_member = mt_rand(10000, 99999);
+
+            // Validasi dan simpan data member ke database
+            $validator = Validator::make([
+                'nama' => $row[0],
+                'kelas' => $row[1],
+                'email' => $row[2],
+                'no_telepon' => $row[3],
+            ], [
+                'nama' => 'required|string|max:255',
+                'kelas' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'no_telepon' => 'required|string|max:15|regex:/^\d+$/|unique:users',
+            ], [
+                // Custom pesan validasi
+                'nama.required' => "Baris ke-" . ($index) . ": Nama wajib diisi.",
+                'nama.string' => "Baris ke-" . ($index) . ": Nama harus berupa teks.",
+                'nama.max' => "Baris ke-" . ($index) . ": Nama tidak boleh lebih dari 255 karakter.",
+
+                'kelas.required' => "Baris ke-" . ($index) . ": Kelas wajib diisi.",
+                'kelas.string' => "Baris ke-" . ($index) . ": Kelas harus berupa teks.",
+                'kelas.max' => "Baris ke-" . ($index) . ": Kelas tidak boleh lebih dari 255 karakter.",
+
+                'email.required' => "Baris ke-" . ($index) . ": Email wajib diisi.",
+                'email.string' => "Baris ke-" . ($index) . ": Email harus berupa teks.",
+                'email.email' => "Baris ke-" . ($index) . ": Format email tidak valid.",
+                'email.max' => "Baris ke-" . ($index) . ": Email tidak boleh lebih dari 255 karakter.",
+                'email.unique' => "Baris ke-" . ($index) . ": Email sudah terdaftar.",
+
+                'no_telepon.required' => "Baris ke-" . ($index) . ": Nomor telepon wajib diisi.",
+                'no_telepon.string' => "Baris ke-" . ($index) . ": Nomor telepon harus berupa teks.",
+                'no_telepon.max' => "Baris ke-" . ($index) . ": Nomor telepon tidak boleh lebih dari 15 karakter.",
+                'no_telepon.regex' => "Baris ke-" . ($index) . ": Nomor telepon hanya boleh berisi angka.",
+                'no_telepon.unique' => "Baris ke-" . ($index) . ": Nomor telepon sudah terdaftar.",
+            ]);
+
+            // Jika validasi gagal, kumpulkan error dalam satu pesan per baris
+            if ($validator->fails()) {
+                $errorMessages = implode(", ", $validator->errors()->all());
+                $errors[] = "Baris ke-" . ($index + 1) . ": " . $errorMessages;
+                continue;
+            }
+
+            // Simpan data member ke dalam database
+            $user = User::create([
+                'nama' => $row[0],
+                'kelas' => $row[1],
+                'email' => $row[2],
+                'no_telepon' => $row[3],
+                'id_member' => $id_member,
+                'role' => 'user',  // Default role untuk member adalah 'user'
+            ]);
+
+            // Kirim email dengan ID Member
+            Mail::to($user->email)->send(new SendIdMembertoMail($user));
+        }
+
+        // Jika ada error, tampilkan pesan error
+        if (!empty($errors)) {
+            return redirect()->back()->withErrors($errors)->withInput();
+        }
+
+        // Redirect ke halaman member setelah proses impor selesai
+        return redirect()->route('pages-petugas.member-petugas')->with('success', 'Data member berhasil diimpor!');
     }
 }

@@ -1,4 +1,4 @@
-@extends('components.layout-admin')
+@extends('components.layout-petugas')
 
 @section('title', 'Member')
 
@@ -57,7 +57,7 @@
 
             <!-- Button Tambah Data Member -->
             <div class="flex space-x-2">
-                <a href="#" method="GET">
+                <a href="{{ route('create-member-petugas') }}" method="GET">
                     <button type="button" class="flex items-center bg-green-400 text-white hover:bg-green-500 focus:outline-none font-medium rounded-lg text-sm px-4 py-2">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2">
                             <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
@@ -65,6 +65,18 @@
                         Tambah
                     </button>
                 </a>
+
+                <form action="{{ route('import-excel.member-petugas') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <button type="button" id="importExcelBtn" class="flex items-center bg-green-400 text-white hover:bg-green-500 focus:outline-none font-medium rounded-lg text-sm px-4 py-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2">
+                            <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                        </svg>
+                        Excel
+                    </button>
+                    <input type="file" name="file" class="hidden" accept=".xlsx,.xls" id="fileInput" />
+                    <button type="submit" class="hidden" id="submitBtn">Submit</button>
+                </form>
             </div>
         </div>
     </div>
@@ -97,7 +109,7 @@
                     <td class="px-4 py-2 text-sm text-gray-700">{{ $member->id_member }}</td>
                     <td class="flex px-6 py-2 whitespace-nowrap text-sm text-gray-900 space-x-2 md:space-x-6 justify-center">
                         <div class="flex h-full w-full items-center justify-center space-x-2 md:space-x-6">
-                             tes
+                            @include('components.crud-member-petugas')
                         </div>
                     </td>
                 </tr>
@@ -151,6 +163,18 @@
 </div>
 
 <script>
+    // Menangani klik tombol untuk membuka dialog pemilihan file (button tambah excel)
+    document.getElementById('importExcelBtn').addEventListener('click', function() {
+        document.getElementById('fileInput').click();
+    });
+
+    // Jika file dipilih, otomatis submit form
+    document.getElementById('fileInput').addEventListener('change', function() {
+        if (this.files.length > 0) {
+            document.getElementById('submitBtn').click(); // Submit form
+        }
+    });
+    
     // Menghilangkan popup pesan flash selama 3 detik
     setTimeout(() => {
         const flashMessage = document.getElementById('flash-message');

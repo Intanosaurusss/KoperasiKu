@@ -125,7 +125,7 @@
                     </li>
                 </a>
                 
-                <a href="{{ route('transaksi.index') }}" class="block">
+                <!-- <a href="{{ route('transaksi.index') }}" class="block">
                     <li class="flex items-center px-4 py-2 hover:bg-purple-200 rounded-xl space-x-4 {{ request()->is('transaksi-admin') ? 'bg-purple-400 text-white' : 'hover:bg-purple-300' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5">
                         <path d="M12 7.5a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" />
@@ -134,7 +134,7 @@
                     </svg>
                         <span>Transaksi</span>
                     </li>
-                </a>
+                </a> -->
 
                 <a href="{{ route('riwayat-admin.index') }}" class="block">
                     <li class="flex items-center px-4 py-2 hover:bg-purple-200 rounded-xl space-x-4 {{ request()->is('riwayat-admin') ? 'bg-purple-400 text-white' : 'hover:bg-purple-300' }}">

@@ -140,11 +140,12 @@ Route::middleware(['auth:petugas'])->group(function () {
     Route::get('/produk-petugas', [ProdukPetugasController::class, 'indexprodukpetugas'])->name('produk-petugas.index');
 
     // Menampilkan halaman member
-    // Route::get('/member-petugas', [MemberPetugasController::class, 'indexmemberpetugas'])->name('pages-petugas.member-petugas');
-    // Route::get('/member-petugas-create', [MemberPetugasController::class, 'createmember'])->name('create-member-petugas');
-    // Route::post('/tambah-member-petugas', [MemberPetugasController::class, 'storemember'])->name('tambah-member-petugas');
-    // Route::get('/member-petugas-show/{id}', [MemberPetugasController::class, 'showmember'])->name('detail-member-petugas');  
-    // Route::delete('/delete-member-petugas/{id}', [MemberPetugasController::class, 'destroymember'])->name('member-petugas.destroy');
+    Route::get('/member-petugas', [MemberPetugasController::class, 'indexmemberpetugas'])->name('pages-petugas.member-petugas');
+    Route::get('/member-petugas-create', [MemberPetugasController::class, 'createmember'])->name('create-member-petugas');
+    Route::post('/tambah-member-petugas', [MemberPetugasController::class, 'storemember'])->name('tambah-member-petugas');
+    Route::get('/member-petugas-show/{id}', [MemberPetugasController::class, 'showmember'])->name('detail-member-petugas');  
+    Route::delete('/delete-member-petugas/{id}', [MemberPetugasController::class, 'destroymember'])->name('member-petugas.destroy');
+    Route::post('/tambah-member-petugas-excel', [MemberPetugasController::class, 'importexcelmemberpetugas'])->name('import-excel.member-petugas');
 
     // Route untuk menampilkan halaman saran petugas
     Route::get('/saran-petugas', [SaranController::class, 'indexpetugas'])->name('saran.indexpetugas');
