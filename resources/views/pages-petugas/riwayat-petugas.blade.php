@@ -1,6 +1,6 @@
 @extends('components.layout-petugas')
 
-@section('title', 'Riwayat Admin')
+@section('title', 'Riwayat Petugas')
 
 @section('content')
 <div class="p-2">
@@ -164,7 +164,8 @@
     <div class="modal-content bg-white rounded-lg shadow-lg p-4 w-full max-w-xs sm:max-w-sm text-sm overflow-y-auto">
         <h2 class="text-center font-bold text-lg mb-2">KoperasiKu</h2>
         <p class="text-center mb-1"></p> <!-- Email -->
-        <p class="text-center mb-4"></p> <!-- Tanggal -->
+        <p class="text-center mb-1"></p> <!-- Tanggal -->
+        <p class="text-center mb-4"></p> <!-- Nama Petugas -->
 
         <hr class="border-t border-dashed mb-4">
 
@@ -240,6 +241,7 @@
 
                 // Isi data ke modal
                 modal.querySelector('p:nth-of-type(1)').innerText = `Email: ${data.user.email}`;
+                modal.querySelector('p:nth-of-type(3)').innerText = `Petugas: ${data.petugas}`; // Tambahkan informasi nama petugas di modal
                 modal.querySelector('p:nth-of-type(2)').innerText = `Tanggal: ${new Date(data.created_at).toLocaleDateString('id-ID', {
                     day: '2-digit',
                     month: 'long',

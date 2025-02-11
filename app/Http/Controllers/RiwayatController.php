@@ -41,13 +41,14 @@ class RiwayatController extends Controller
     // function untuk menampilkan detail riwayat pembelian dalam bentuk popup di halaman riwayat admin
     public function showadmin($id) 
     {
-        $transaksi = Transaksi::with(['riwayat.produk']) // Memuat relasi produk
+        $transaksi = Transaksi::with(['riwayat.produk', 'user', 'petugas']) // Memuat relasi produk
             ->where('id', $id)
             ->firstOrFail();
 
         return response()->json([
             'transaksi' => $transaksi,
             'user' => $transaksi->user,
+            'petugas' => $transaksi->petugas ? $transaksi->petugas->nama : 'Tidak diketahui', // Ambil nama petugas
             'riwayat' => $transaksi->riwayat->map(function ($item) {
                 $subtotalPerProduk = $item->subtotal_perproduk ?? 0; // Ambil nilai dari kolom subtotal_perproduk
                 $qty = $item->qty ?? 1; // Default qty 1 jika null
@@ -69,7 +70,7 @@ class RiwayatController extends Controller
     public function cetakriwayatadmin($id)
     {
         // Ambil data transaksi berdasarkan ID
-        $transaksi = Transaksi::with(['user', 'riwayat.produk'])->findOrFail($id);
+        $transaksi = Transaksi::with(['user', 'petugas', 'riwayat.produk'])->findOrFail($id);
 
         // Format data riwayat untuk PDF
         $riwayatData = $transaksi->riwayat->map(function ($riwayat) {
@@ -85,10 +86,14 @@ class RiwayatController extends Controller
             ];
         });
 
+        // Ambil nama petugas dari relasi petugas_id
+        $namaPetugas = $transaksi->petugas ? $transaksi->petugas->nama : 'Tidak Diketahui';
+
         // Data yang akan dikirim ke PDF
         $data = [
             'email' => $transaksi->user->email,
             'tanggal' => $transaksi->created_at,
+            'nama_petugas' => $namaPetugas, // Tambahkan nama petugas ke data PDF
             'riwayat' => $riwayatData,
             'total' => $transaksi->subtotal, // Total belanja dari kolom subtotal di tabel transaksi
         ];
@@ -116,7 +121,7 @@ class RiwayatController extends Controller
         ]);        
 
         // Ambil data transaksi berdasarkan rentang tanggal
-        $transaksi = Transaksi::with(['user', 'riwayat.produk'])
+        $transaksi = Transaksi::with(['user', 'petugas', 'riwayat.produk'])
             ->where('status_pembayaran', 'success') // Filter hanya transaksi dengan status_pembayaran = 'success'
             ->whereDate('created_at', '>=', $request->date_start)
             ->whereDate('created_at', '<=', $request->date_end)
@@ -126,8 +131,8 @@ class RiwayatController extends Controller
             return redirect()->back()->with('error', 'Tidak ada transaksi pada rentang tanggal yang dipilih.');
         }
 
-         // Format data untuk PDF dan hitung grand total
-         $grandTotal = 0;
+        // Format data untuk PDF dan hitung grand total
+        $grandTotal = 0;
 
         // Format data untuk PDF
         $data = $transaksi->map(function ($transaksi) use (&$grandTotal) {
@@ -153,6 +158,7 @@ class RiwayatController extends Controller
                 'tanggal' => $transaksi->created_at,
                 'riwayat' => $riwayatData,
                 'total' => $transaksi->subtotal,
+                'nama_petugas' => $transaksi->petugas ? $transaksi->petugas->nama : 'Tidak Diketahui',
             ];
         });
 
@@ -200,13 +206,14 @@ class RiwayatController extends Controller
     // function untuk menampilkan detail riwayat pembelian dalam bentuk popup di halaman riwayat petugas
     public function showpetugas($id) 
     {
-        $transaksi = Transaksi::with(['riwayat.produk']) // Memuat relasi produk
+        $transaksi = Transaksi::with(['riwayat.produk', 'user', 'petugas']) // Memuat relasi produk
             ->where('id', $id)
             ->firstOrFail();
  
         return response()->json([
             'transaksi' => $transaksi,
             'user' => $transaksi->user,
+            'petugas' => $transaksi->petugas ? $transaksi->petugas->nama : 'Tidak diketahui', // Ambil nama petugas
             'riwayat' => $transaksi->riwayat->map(function ($item) {
                 $subtotalPerProduk = $item->subtotal_perproduk ?? 0; // Ambil nilai dari kolom subtotal_perproduk
                 $qty = $item->qty ?? 1; // Default qty 1 jika null
@@ -228,7 +235,7 @@ class RiwayatController extends Controller
     public function cetakriwayatpetugas($id)
     {
         // Ambil data transaksi berdasarkan ID
-        $transaksi = Transaksi::with(['user', 'riwayat.produk'])->findOrFail($id);
+        $transaksi = Transaksi::with(['user', 'petugas', 'riwayat.produk'])->findOrFail($id);
 
         // Format data riwayat untuk PDF
         $riwayatData = $transaksi->riwayat->map(function ($riwayat) {
@@ -244,10 +251,14 @@ class RiwayatController extends Controller
             ];
         });
 
+        // Ambil nama petugas dari relasi petugas_id
+        $namaPetugas = $transaksi->petugas ? $transaksi->petugas->nama : 'Tidak Diketahui';
+
         // Data yang akan dikirim ke PDF
         $data = [
             'email' => $transaksi->user->email,
             'tanggal' => $transaksi->created_at,
+            'nama_petugas' => $namaPetugas, // Tambahkan nama petugas ke data PDF
             'riwayat' => $riwayatData,
             'total' => $transaksi->subtotal, // Total belanja dari kolom subtotal di tabel transaksi
         ];
@@ -275,7 +286,7 @@ class RiwayatController extends Controller
         ]);        
 
         // Ambil data transaksi berdasarkan rentang tanggal
-        $transaksi = Transaksi::with(['user', 'riwayat.produk'])
+        $transaksi = Transaksi::with(['user', 'petugas', 'riwayat.produk'])
             ->where('status_pembayaran', 'success') // Filter hanya transaksi dengan status_pembayaran = 'success'
             ->whereDate('created_at', '>=', $request->date_start)
             ->whereDate('created_at', '<=', $request->date_end)
@@ -312,6 +323,7 @@ class RiwayatController extends Controller
                 'tanggal' => $transaksi->created_at,
                 'riwayat' => $riwayatData,
                 'total' => $transaksi->subtotal,
+                'nama_petugas' => $transaksi->petugas ? $transaksi->petugas->nama : 'Tidak Diketahui',
             ];
         });
 
@@ -360,13 +372,14 @@ class RiwayatController extends Controller
     // function untuk menampilkan detail riwayat pembelian dalam bentuk popup di halaman riwayat user
     public function show($id) 
     {
-        $transaksi = Transaksi::with(['riwayat.produk']) // Memuat relasi produk
+        $transaksi = Transaksi::with(['riwayat.produk', 'user', 'petugas']) // Memuat relasi produk
             ->where('id', $id)
             ->firstOrFail();
 
             return response()->json([
                 'transaksi' => $transaksi,
                 'user' => $transaksi->user,
+                'petugas' => $transaksi->petugas ? $transaksi->petugas->nama : 'Tidak diketahui', // Ambil nama petugas
                 'riwayat' => $transaksi->riwayat->map(function ($item) {
                     $subtotalPerProduk = $item->subtotal_perproduk ?? 0; // Ambil nilai dari kolom subtotal_perproduk
                     $qty = $item->qty ?? 1; // Default qty 1 jika null
@@ -388,7 +401,7 @@ class RiwayatController extends Controller
     public function cetakriwayat($id)
     {
         // Ambil data transaksi berdasarkan ID
-        $transaksi = Transaksi::with(['user', 'riwayat.produk'])->findOrFail($id);
+        $transaksi = Transaksi::with(['user', 'petugas', 'riwayat.produk'])->findOrFail($id);
     
         // Format data riwayat untuk PDF
         $riwayatData = $transaksi->riwayat->map(function ($riwayat) {
@@ -403,11 +416,15 @@ class RiwayatController extends Controller
                 'subtotal' => $subtotalPerProduk, // Subtotal dari kolom subtotal_perproduk
             ];
         });
+
+        // Ambil nama petugas dari relasi petugas_id
+        $namaPetugas = $transaksi->petugas ? $transaksi->petugas->nama : 'Tidak Diketahui';
     
         // Data yang akan dikirim ke PDF
         $data = [
             'email' => $transaksi->user->email,
             'tanggal' => $transaksi->created_at,
+            'nama_petugas' => $namaPetugas, // Tambahkan nama petugas ke data PDF
             'riwayat' => $riwayatData,
             'total' => $transaksi->subtotal, // Total belanja dari kolom subtotal di tabel transaksi
         ];
@@ -435,7 +452,7 @@ class RiwayatController extends Controller
         ]); 
 
         // Ambil data transaksi berdasarkan rentang tanggal
-        $transaksi = Transaksi::with(['user', 'riwayat.produk'])
+        $transaksi = Transaksi::with(['user', 'petugas', 'riwayat.produk'])
             ->where('user_id', Auth::id())  // Filter berdasarkan user yang sedang login
             ->where('status_pembayaran', 'success') // Filter hanya transaksi dengan status_pembayaran = 'success'
             ->whereDate('created_at', '>=', $request->date_start)
@@ -473,6 +490,7 @@ class RiwayatController extends Controller
                 'tanggal' => $transaksi->created_at,
                 'riwayat' => $riwayatData,
                 'total' => $transaksi->subtotal,
+                'nama_petugas' => $transaksi->petugas ? $transaksi->petugas->nama : 'Tidak Diketahui',
             ];
         });
 

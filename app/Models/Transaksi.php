@@ -18,6 +18,7 @@ class Transaksi extends Model
 
     protected $fillable = [
         'user_id',
+        'petugas_id',
         'metode_pembayaran',
         'status_pembayaran',
         'subtotal',
@@ -36,6 +37,11 @@ class Transaksi extends Model
     public function user()
     {
         return $this->belongsTo(User::class)->withTrashed(); //tetap menampilkan relasi ke user (menggunakan withTrashed), walau user sudah dihapus (sttt! tapi di database masih ada lho, soalnya menggunakan softdelete)
+    }
+
+    public function petugas()
+    {
+        return $this->belongsTo(User::class, 'petugas_id')->withTrashed();
     }
 
     public function produk()

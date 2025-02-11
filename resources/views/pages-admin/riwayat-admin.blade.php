@@ -163,8 +163,9 @@
 <div class="modal hidden fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center">
     <div class="modal-content bg-white rounded-lg shadow-lg p-4 w-full max-w-xs sm:max-w-sm text-sm overflow-y-auto">
         <h2 class="text-center font-bold text-lg mb-2">KoperasiKu</h2>
-        <p class="text-center mb-1"></p> <!-- Email -->
-        <p class="text-center mb-4"></p> <!-- Tanggal -->
+        <p class="text-center mb-1"></p> <!-- Email User -->
+        <p class="text-center mb-1"></p> <!-- Tanggal Transaksi -->
+        <p class="text-center mb-4"></p> <!-- Nama Petugas -->
 
         <hr class="border-t border-dashed mb-4">
 
@@ -239,8 +240,9 @@
                 const data = await response.json();
 
                 // Isi data ke modal
-                modal.querySelector('p:nth-of-type(1)').innerText = `Email: ${data.user.email}`;
-                modal.querySelector('p:nth-of-type(2)').innerText = `Tanggal: ${new Date(data.created_at).toLocaleDateString('id-ID', {
+                modal.querySelector('p:nth-of-type(3)').innerText = `Petugas: ${data.petugas}`; // Tambahkan informasi nama petugas di modal
+                modal.querySelector('p:nth-of-type(1)').innerText = `Email: ${data.user.email}`; // Tambahkan informasi email user 
+                modal.querySelector('p:nth-of-type(2)').innerText = `Tanggal: ${new Date(data.created_at).toLocaleDateString('id-ID', { // Tambahkan informasi tanggal terjadi transaksi dalam format tanggal indonesia
                     day: '2-digit',
                     month: 'long',
                     year: 'numeric'

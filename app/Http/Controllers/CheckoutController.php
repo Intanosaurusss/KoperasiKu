@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transaksi;
 use App\Models\Riwayat;
 use App\Models\Notifikasi;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Midtrans\Config;
@@ -26,43 +27,52 @@ class CheckoutController extends Controller
     {
         $user = Auth::user();
         $keranjang = $user->keranjang; // Sesuaikan dengan relasi user ke keranjang
-        $subtotal = $keranjang->sum(function ($item) { // variabel subtotal ini menghitung data yg dikeranjang unuk kemudian menjadi subtotal yang akan disimpan di tabel transaksi (kolom subtotal)
+        $subtotal = $keranjang->sum(function ($item) {
             return $item->produk->harga_produk * $item->qty;
         });
 
         $metodePembayaran = $request->input('metode_pembayaran');
+
+        // Cari petugas yang sedang login
+        $petugas = User::where('role', 'petugas')->where('is_login', true)->first();
+
+        if (!$petugas) {
+            return response()->json([
+                'message' => 'Tidak ada petugas yang sedang menangani transaksi saat ini.',
+            ], 400);
+        }
 
         if ($metodePembayaran === 'cash') {
             try {
                 // Simpan transaksi ke database dengan status default 'success'
                 $transaksi = Transaksi::create([
                     'user_id' => $user->id,
+                    'petugas_id' => $petugas->id, // Tambahkan ID petugas
                     'metode_pembayaran' => 'cash',
                     'status_pembayaran' => 'success',
-                    'subtotal' => $subtotal,   // subtotal ini didapat dari variabel yang sudah didefinisikan/dijelaskan di line no 28
+                    'subtotal' => $subtotal,
                 ]);
-        
+
                 // Tambahkan riwayat dan kurangi stok
                 foreach ($keranjang as $item) {
                     $produk = $item->produk;
-                    $subtotal = $produk->harga_produk * $item->qty;  //variabel subtotal ini dibuat untuk menghitung subtotal_perproduk yang ada di tabel transaksi
+                    $subtotal = $produk->harga_produk * $item->qty;
 
                     Riwayat::create([
                         'transaksi_id' => $transaksi->id,
                         'produk_id' => $item->produk_id,
                         'qty' => $item->qty,
-                        'subtotal_perproduk' => $subtotal,  // subtotal ini didapat dari variabel yang sudah didefinisikan/dijelaskan di line no 47
+                        'subtotal_perproduk' => $subtotal,
                     ]);
 
                     // Kurangi stok produk
-                    $produk = $item->produk;
                     if ($produk->stok_produk < $item->qty) {
                         throw new \Exception('Stok produk tidak mencukupi untuk ' . $produk->nama_produk);
                     }
                     $produk->stok_produk -= $item->qty;
                     $produk->save();
                 }
-        
+
                 // Kosongkan keranjang
                 $keranjang->each->delete();
 
@@ -76,15 +86,14 @@ class CheckoutController extends Controller
                 return response()->json([
                     'message' => 'Pembayaran berhasil dengan metode cash!',
                     'transaksi' => $transaksi,
-                ]); 
-        
+                ]);
             } catch (\Exception $e) {
                 // Update status pembayaran menjadi 'failed' jika terjadi error
                 if (isset($transaksi)) {
                     $transaksi->status_pembayaran = 'failed';
                     $transaksi->save();
                 }
-        
+
                 return response()->json([
                     'message' => 'Pembayaran gagal: ' . $e->getMessage(),
                 ], 500);
@@ -93,6 +102,7 @@ class CheckoutController extends Controller
             // Buat transaksi sementara di database
             $transaksi = Transaksi::create([
                 'user_id' => $user->id,
+                'petugas_id' => $petugas->id, // Tambahkan ID petugas
                 'metode_pembayaran' => 'digital',
                 'status_pembayaran' => 'pending',
                 'subtotal' => $subtotal,
@@ -101,7 +111,7 @@ class CheckoutController extends Controller
             // Siapkan data untuk Snap Midtrans
             $payload = [
                 'transaction_details' => [
-                    'order_id' => $transaksi->id, // Gunakan id sebagai order_id
+                    'order_id' => $transaksi->id,
                     'gross_amount' => $subtotal,
                 ],
                 'customer_details' => [

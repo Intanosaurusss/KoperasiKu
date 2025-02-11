@@ -13,6 +13,7 @@ use Midtrans\Config;
 use Midtrans\Snap;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class TransaksiPetugasController extends Controller
 {
@@ -214,12 +215,14 @@ class TransaksiPetugasController extends Controller
         });
 
         $metodePembayaran = $request->input('metode_pembayaran');
+        $petugas = Auth::id(); // Petugas yang sedang login
 
         if ($metodePembayaran === 'cash') {
             try {
                 // Simpan transaksi ke database
                 $transaksi = Transaksi::create([
                     'user_id' => $user->id,
+                    'petugas_id' => $petugas,
                     'metode_pembayaran' => 'cash',
                     'status_pembayaran' => 'success',
                     'subtotal' => $subtotal,  // subtotal ini didapat dari variabel yang sudah didefinisikan/dijelaskan di line no 212
@@ -265,6 +268,7 @@ class TransaksiPetugasController extends Controller
             // Buat transaksi sementara di database
             $transaksi = Transaksi::create([
                 'user_id' => $user->id,
+                'petugas_id' => $petugas,
                 'metode_pembayaran' => 'digital',
                 'status_pembayaran' => 'pending',
                 'subtotal' => $subtotal,

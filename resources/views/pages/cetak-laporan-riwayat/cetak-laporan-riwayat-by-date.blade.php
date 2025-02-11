@@ -95,6 +95,7 @@
         <tr>
             <th>No</th>
             <th>Tanggal Pembelian</th>
+            <th>Petugas</th>
             <th>Detail</th>
             <th>Subtotal</th>
         </tr>
@@ -107,6 +108,7 @@
             <tr>
                 <td>{{ $no++ }}</td>
                 <td>{{ Carbon::parse($transaksi['tanggal'])->translatedFormat('d F Y') }}</td>
+                <td>{{ $transaksi['nama_petugas'] }}</td>
                 <td class="detail-pembelian">
                     <ul>
                         @foreach ($transaksi['riwayat'] as $riwayat)

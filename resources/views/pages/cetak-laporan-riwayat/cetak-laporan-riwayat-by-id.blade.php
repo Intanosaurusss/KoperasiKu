@@ -83,6 +83,7 @@
     <div class="info">
         <p>Email: {{ $email }}</p>
         <p>Tanggal: {{ Carbon::parse($tanggal)->translatedFormat('d F Y') }}</p>
+        <p>Petugas: {{ $nama_petugas }}</p>
     </div>
 
     <!-- <hr style="border: 1px dashed;"> -->

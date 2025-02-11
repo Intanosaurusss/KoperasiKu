@@ -95,6 +95,7 @@
         <tr>
             <th>No</th>
             <th>Tanggal</th>
+            <th>Petugas</th>
             <th>Email</th>
             <th>Detail</th>
             <th>Total</th>
@@ -108,6 +109,7 @@
             <tr>
                 <td>{{ $no++ }}</td>
                 <td>{{ Carbon::parse($transaksi['tanggal'])->translatedFormat('d F Y') }}</td>
+                <td>{{ $transaksi['nama_petugas'] }}</td>
                 <td>{{ $transaksi['email'] }}</td>
                 <td class="detail-pembelian">
                     <ul>
