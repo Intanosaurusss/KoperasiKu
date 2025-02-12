@@ -89,6 +89,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('/riwayat-admin/{id}', [RiwayatController::class, 'showadmin'])->name('riwayat-admin.show');
     Route::get('/riwayat-admin/{id}/cetak', [RiwayatController::class, 'cetakriwayatadmin'])->name('cetakriwayatadminbyid');
     Route::post('/riwayat-admin/cetakbydate', [RiwayatController::class, 'cetakriwayatadminbydate'])->name('cetakriwayatadminbydate');
+    Route::post('/riwayat-admin/cetakbypetugas', [RiwayatController::class, 'cetakriwayatbypetugas'])->name('cetakriwayatbypetugas');
 
     // Route untuk menampilkan menu transaksi admin
     Route::get('/transaksi-admin', [TransaksiController::class, 'index'])->name('transaksi.index');

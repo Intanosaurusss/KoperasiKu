@@ -117,7 +117,7 @@ class RegisterMemberController extends Controller
             Mail::to($user->email)->send(new SendIdMembertoMail($user));
 
             // Redirect ke halaman member setelah registrasi berhasil
-            return redirect()->route('pages-admin.member')->with('success', 'Member berhasil ditambahkan.');
+            return redirect()->route('pages-admin.member')->with('success', 'Member berhasil ditambahkan, dan email berhasl dikirim.');
         } catch (Exception $e) {
             DB::rollBack();
             dd($e);

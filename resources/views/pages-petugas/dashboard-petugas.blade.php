@@ -36,7 +36,7 @@
                     </div>
                     <h3 class="text-lg font-medium text-gray-700">Pemasukan</h3>
                 </div>
-                <p class="text-3xl font-bold mt-2 text-gray-700">{{ $totalpemasukan}}</p>
+                <p class="text-3xl font-bold mt-2 text-gray-700">{{ number_format($totalpemasukan, 0, ',', '.') }}</p>
                 <p class="text-sm text-gray-500">Ini adalah jumlah pemasukan bulan {{ $bulanini}}</p>
             </div>
 

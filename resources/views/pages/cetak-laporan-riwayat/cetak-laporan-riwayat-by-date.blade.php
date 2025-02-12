@@ -63,7 +63,6 @@
     </style>
 </head>
 <body>
-
     @php
         use Carbon\Carbon;
         Carbon::setLocale('id'); // Set locale ke Indonesia

@@ -203,12 +203,14 @@
             },
             body: JSON.stringify(fetchBody)
         })
-            .then(response => {
+        .then(response => {
+            return response.json().then(data => {
                 if (!response.ok) {
-                    throw new Error('Gagal melakukan checkout.');
+                    throw new Error(data.message || 'Gagal melakukan checkout.');
                 }
-                return response.json();
-            })
+                return data;
+            });
+        })
             .then(data => {
                 if (method === 'digital' && data.snapToken) {
                     snap.pay(data.snapToken, {

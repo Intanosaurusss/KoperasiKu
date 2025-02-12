@@ -6,6 +6,7 @@ use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\User;
 
 class RiwayatController extends Controller
 {
@@ -168,6 +169,91 @@ class RiwayatController extends Controller
         // Unduh file PDF
         return $pdf->download('Laporan_Transaksi_by_Date.pdf');
     }
+
+    // function untuk mengirim id user dengan role "petugas" ke dropdown yang ada di halaman admin (petugas.blade)
+    public function sendpetugas()
+    {
+        User::where('role', 'petugas')->get();
+        return view('pages-admin.petugas', compact('petugas'));
+    }
+
+    public function cetakriwayatbypetugas(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'petugas_id' => 'required|exists:users,id',
+            'date_start' => 'required|date',
+            'date_end' => 'required|date|after_or_equal:date_start',
+        ], [
+            'petugas_id.required' => 'Petugas wajib diisi.',
+            'petugas_id.exists' => 'Petugas yang dipilih tidak valid.',
+            'date_start.required' => 'Tanggal mulai wajib diisi.',
+            'date_start.date' => 'Format tanggal mulai tidak valid.',
+            'date_end.required' => 'Tanggal selesai wajib diisi.',
+            'date_end.date' => 'Format tanggal selesai tidak valid.',
+            'date_end.after_or_equal' => 'Tanggal selesai harus setelah atau sama dengan tanggal mulai.'
+        ]);
+    
+        // Ambil data transaksi berdasarkan filter
+        $transaksi = Transaksi::with(['riwayat.produk', 'petugas', 'user'])
+            ->when($request->petugas_id, function ($query) use ($request) {
+                return $query->where('petugas_id', $request->petugas_id);
+            })
+            ->whereDate('created_at', '>=', $request->date_start)
+            ->whereDate('created_at', '<=', $request->date_end)
+            ->orderBy('created_at', 'desc')
+            ->get();
+    
+        if ($transaksi->isEmpty()) {
+            return redirect()->back()->with('error', 'Tidak ada transaksi pada rentang tanggal yang dipilih.');
+        }
+    
+        // Format data untuk PDF dan hitung grand total
+        $grandTotal = 0;
+    
+        // Format data untuk PDF
+        $data = $transaksi->map(function ($transaksi, $index) use (&$grandTotal) {
+            $riwayatData = $transaksi->riwayat->map(function ($riwayat) {
+                $subtotalPerProduk = $riwayat->subtotal_perproduk; // Ambil nilai dari kolom subtotal_perproduk
+                $qty = $riwayat->qty;
+                $harga = $qty > 0 ? $subtotalPerProduk / $qty : 0; // Hitung harga produknya (subtotal_perproduk dibagi qty)
+    
+                return [
+                    'produk' => $riwayat->produk->nama_produk,
+                    'qty' => $riwayat->qty,
+                    'harga' => $harga,
+                    'subtotal' => $subtotalPerProduk,
+                ];
+            });
+    
+            // Hitung total transaksi dan tambahkan ke grand total
+            $totalTransaksi = $riwayatData->sum('subtotal');
+            $grandTotal += $totalTransaksi;
+    
+            return [
+                'index' => $index + 1,
+                'email' => $transaksi->user->email,
+                'tanggal' => $transaksi->created_at->format('d-m-Y H:i'),
+                'riwayat' => $riwayatData,
+                'total' => $totalTransaksi,
+                'nama_petugas' => $transaksi->petugas ? $transaksi->petugas->nama : 'Tidak Diketahui',
+            ];
+        });
+    
+        // Ambil nama petugas (jika ada filter petugas)
+        $namaPetugas = 'Semua Petugas';
+        if ($request->petugas_id) {
+            $petugas = User::find($request->petugas_id);
+            $namaPetugas = $petugas ? $petugas->nama : 'Tidak Diketahui';
+        }
+    
+        // Generate PDF
+        $pdf = Pdf::loadView('pages-admin.cetak-laporan.cetak-laporan-riwayat-by-petugas', compact('data', 'grandTotal', 'namaPetugas'));
+    
+        // Unduh file PDF
+        return $pdf->download('riwayat_transaksi_petugas.pdf');
+    }
+
 
 
 
