@@ -106,7 +106,7 @@
         @foreach ($data as $transaksi)
             <tr>
                 <td>{{ $no++ }}</td>
-                <td>{{ Carbon::parse($transaksi['tanggal'])->translatedFormat('d F Y') }}</td>
+                <td>{{ Carbon::parse($transaksi['tanggal'])->translatedFormat('d F Y') }} Pukul :{{ Carbon::parse($transaksi['tanggal'])->translatedFormat('H:i:s') }}</td>
                 <td>{{ $transaksi['nama_petugas'] }}</td>
                 <td class="detail-pembelian">
                     <ul>

@@ -242,10 +242,14 @@
                 // Isi data ke modal
                 modal.querySelector('p:nth-of-type(3)').innerText = `Petugas: ${data.petugas}`; // Tambahkan informasi nama petugas di modal
                 modal.querySelector('p:nth-of-type(1)').innerText = `Email: ${data.user.email}`; // Tambahkan informasi email user 
-                modal.querySelector('p:nth-of-type(2)').innerText = `Tanggal: ${new Date(data.created_at).toLocaleDateString('id-ID', { // Tambahkan informasi tanggal terjadi transaksi dalam format tanggal indonesia
+                modal.querySelector('p:nth-of-type(2)').innerText = `Tanggal: ${new Date(data.created_at).toLocaleDateString('id-ID', { 
                     day: '2-digit',
                     month: 'long',
                     year: 'numeric'
+                })} pukul ${new Date(data.created_at).toLocaleTimeString('id-ID', { 
+                    hour: '2-digit', 
+                    minute: '2-digit', 
+                    second: '2-digit' 
                 })}`;
 
                 // Daftar produk

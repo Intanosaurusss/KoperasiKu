@@ -124,10 +124,10 @@ class ProdukController extends Controller
                 'foto_produk' => $row[4],
             ], [
                 'nama_produk' => 'required|string|max:255|unique:produk,nama_produk',
-                'kategori_produk' => 'required|string|max:255',
-                'harga_produk' => 'required|numeric',
+                'harga_produk' => 'required|numeric', 
                 'stok_produk' => 'required|integer',
-                'foto_produk' => 'required|string|max:255',
+                'kategori_produk' => 'required|string|max:255',
+                'foto_produk' => 'nullable|string|max:255',
             ], [
                 // Custom pesan validasi
                 'nama_produk.required' => "Baris ke-$index: Nama produk wajib diisi.",

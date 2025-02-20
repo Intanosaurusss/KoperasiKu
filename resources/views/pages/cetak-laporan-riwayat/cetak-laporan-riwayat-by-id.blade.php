@@ -82,7 +82,7 @@
     <!-- User Info Section -->
     <div class="info">
         <p>Email: {{ $email }}</p>
-        <p>Tanggal: {{ Carbon::parse($tanggal)->translatedFormat('d F Y') }}</p>
+        <p>Tanggal: {{ Carbon::parse($tanggal)->translatedFormat('d F Y') }} Pukul :{{ Carbon::parse($tanggal)->translatedFormat('H:i:s') }}<//p>
         <p>Petugas: {{ $nama_petugas }}</p>
     </div>
 
